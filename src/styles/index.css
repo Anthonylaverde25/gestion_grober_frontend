@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
+@import "tailwindcss";
+
 @layer base, mui, theme, components, utilities;
 
 @layer base {
@@ -9,24 +11,7 @@
     }
 }
 
-
-/**
-Tailwind base styles
-*/
-@import "tailwindcss/preflight.css" layer(base);
-
 @import './app-base.css';
-
-/**
-Tailwind theme styles
-*/
-@import "tailwindcss/theme.css" layer(theme);
-
-/**
-Tailwind utilities styles
-*/
-@import "tailwindcss/utilities.css" layer(utilities);
-
 
 @layer utilities {
     [dir="rtl"] [class*="space-x-"] > :not([hidden]) ~ :not([hidden]) {
@@ -39,36 +24,18 @@ Tailwind plugins
 */
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/aspect-ratio";
-@plugin "../@fuse/tailwind/plugins/icon-size.js";
+/* @plugin "../@fuse/tailwind/plugins/icon-size.js"; */
 
 /**
 Custom variants
 */
-@custom-variant dark (&:where(.dark, .dark *));
-
-@variant dark (&:where(.dark, .dark *)) {
-    --color-background: #0f1117;
-    --color-on-background: #e1e2ec;
-    --color-surface: #0f1117;
-    --color-on-surface: #e1e2ec;
-    --color-surface-variant: #434654;
-    --color-on-surface-variant: #c3c6d6;
-    --color-surface-container-lowest: #000000;
-    --color-surface-container-low: #191c23;
-    --color-surface-container: #1e2129;
-    --color-surface-container-high: #282c35;
-    --color-surface-container-highest: #333942;
-    --color-outline: #8e9099;
-    --color-outline-variant: #434654;
-    --color-inverse-surface: #e1e2ec;
-    --color-inverse-on-surface: #191b23;
-}
-
+/* @custom-variant dark (&:where(.dark, .dark *)); */
 
 /**
 Theme variables
 */
 @theme {
+    --dark-mode: class;
 
     --breakpoint-xs: 0px;
     --breakpoint-sm: 37.5rem; /* 600px */
@@ -174,6 +141,24 @@ Theme variables
 
 }
 
+@variant dark {
+    --color-background: #0f1117;
+    --color-on-background: #e1e2ec;
+    --color-surface: #0f1117;
+    --color-on-surface: #e1e2ec;
+    --color-surface-variant: #434654;
+    --color-on-surface-variant: #c3c6d6;
+    --color-surface-container-lowest: #000000;
+    --color-surface-container-low: #191c23;
+    --color-surface-container: #1e2129;
+    --color-surface-container-high: #282c35;
+    --color-surface-container-highest: #333942;
+    --color-outline: #8e9099;
+    --color-outline-variant: #434654;
+    --color-inverse-surface: #e1e2ec;
+    --color-inverse-on-surface: #191b23;
+}
+
 .container {
     max-width: 100%;
     @media (width >= 40rem) { max-width: 40rem; }
@@ -198,3 +183,4 @@ Tables styles
 @import './tables.css';
 
 @import './tiptap.css';
+

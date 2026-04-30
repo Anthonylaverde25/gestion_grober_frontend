@@ -43,6 +43,8 @@
     "clsx": "2.1.1",
     "crypto-js": "4.2.0",
     "date-fns": "4.1.0",
+    "echarts": "^6.0.0",
+    "echarts-for-react": "^3.0.6",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "firebase": "11.6.0",

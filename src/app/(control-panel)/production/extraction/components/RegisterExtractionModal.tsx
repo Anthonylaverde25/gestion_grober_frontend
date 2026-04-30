@@ -29,7 +29,9 @@ export default function RegisterExtractionModal({
 }: RegisterExtractionModalProps) {
   const [percentage, setPercentage] = useState<string>("");
   const [currentTime, setCurrentTime] = useState(new Date());
-  const { registerExtraction, isRegistering } = useExtractionHistory(machine.id);
+  const { registerExtraction, isRegistering } = useExtractionHistory(
+    machine.id,
+  );
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -44,7 +46,9 @@ export default function RegisterExtractionModal({
     const value = parseFloat(percentage);
 
     if (isNaN(value) || value < 0 || value > 100) {
-      enqueueSnackbar("El porcentaje debe estar entre 0 y 100", { variant: "error" });
+      enqueueSnackbar("El porcentaje debe estar entre 0 y 100", {
+        variant: "error",
+      });
       return;
     }
 
@@ -58,7 +62,9 @@ export default function RegisterExtractionModal({
         isActive: true,
       });
 
-      enqueueSnackbar("Extracción registrada correctamente", { variant: "success" });
+      enqueueSnackbar("Extracción registrada correctamente", {
+        variant: "success",
+      });
       onClose();
     } catch (error) {
       enqueueSnackbar("Error al registrar la extracción", { variant: "error" });
@@ -72,130 +78,252 @@ export default function RegisterExtractionModal({
       maxWidth={false}
       fullWidth
       PaperProps={{
-        className: "rounded-none border border-outline-variant shadow-2xl",
         sx: {
-          backgroundImage: 'none',
-          maxWidth: '640px', // Increased width as requested
-          width: '100%'
-        }
+          borderRadius: 0,
+          border: "1px solid #cbd5e1",
+          backgroundImage: "none",
+          maxWidth: "580px",
+          width: "100%",
+          boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+        },
       }}
     >
-      <DialogTitle className="flex items-center justify-between bg-surface-container-low px-gutter py-4 border-b border-outline-variant">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-            <span className="material-symbols-outlined">add_notes</span>
-          </div>
-          <div>
-            <Typography className="text-[16px] font-bold text-on-surface leading-tight">
-              Registrar Extracción de Producción
+      {/* Header Fiori Style - Simplified */}
+      <DialogTitle
+        sx={{
+          p: 0,
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #f1f5f9",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            py: 2.5,
+            px: 4,
+          }}
+        >
+          <Box>
+            <Typography
+              sx={{
+                fontSize: 10,
+                fontWeight: 800,
+                color: "#94a3b8",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                mb: 0.5,
+              }}
+            >
+              PRODUCCIÓN / EXTRACCIÓN
             </Typography>
-            <Typography className="text-[12px] text-on-surface-variant font-medium">
-              Unidad Operativa: <span className="text-on-surface font-bold">{machine.name}</span>
+            <Typography
+              sx={{ fontSize: 20, fontWeight: 700, color: "#0f172a" }}
+            >
+              Registrar Nueva Medición
             </Typography>
-          </div>
-        </div>
-        <IconButton onClick={onClose} size="small" className="text-on-surface-variant">
-          <Icon>close</Icon>
-        </IconButton>
+          </Box>
+          <IconButton onClick={onClose} size="small" sx={{ color: "#cbd5e1" }}>
+            <Icon>close</Icon>
+          </IconButton>
+        </Box>
       </DialogTitle>
 
-      <DialogContent className="pt-8 pb-4 flex flex-col gap-6 px-gutter">
-        {/* Context Info Stacked Vertically */}
-        <div className="flex flex-col gap-3">
-          {/* Shift Supervisor (Static for now) */}
-          <div className="bg-surface-container-lowest border border-outline-variant p-4 flex items-center justify-between">
-            <div className="flex flex-col gap-1">
-              <Typography className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
-                Jefe de Turno (Autorizante)
-              </Typography>
-              <Typography className="text-[14px] font-bold text-on-surface">
-                Ing. Roberto Quiroz
-              </Typography>
-            </div>
-            <div className="px-2 py-1 bg-primary/5 border border-primary/20 rounded text-[10px] font-bold text-primary uppercase">
-              Sesión Activa
-            </div>
-          </div>
-
-          {/* Current Article */}
-          <div className="bg-surface-container-lowest border border-outline-variant p-4 flex flex-col gap-1">
-            <Typography className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
-              Artículo en Producción
+      <DialogContent
+        sx={{ p: 4, display: "flex", flexDirection: "column", gap: 4 }}
+      >
+        {/* Contextual Data Grid */}
+        <Box
+          className="mt-2"
+          sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 3 }}
+        >
+          <Box>
+            <Typography
+              sx={{
+                fontSize: 9,
+                fontWeight: 800,
+                color: "#94a3b8",
+                textTransform: "uppercase",
+                mb: 0.5,
+              }}
+            >
+              Unidad Operativa
             </Typography>
-            <Typography className="text-[15px] font-semibold text-on-surface">
+            <Typography
+              sx={{ fontSize: 14, fontWeight: 700, color: "#1e293b" }}
+            >
+              {machine.name}
+            </Typography>
+          </Box>
+          <Box>
+            <Typography
+              sx={{
+                fontSize: 9,
+                fontWeight: 800,
+                color: "#94a3b8",
+                textTransform: "uppercase",
+                mb: 0.5,
+              }}
+            >
+              Jefe de Turno
+            </Typography>
+            <Typography
+              sx={{ fontSize: 14, fontWeight: 600, color: "#475569" }}
+            >
+              Ing. Roberto Quiroz
+            </Typography>
+          </Box>
+          <Box sx={{ gridColumn: "span 2" }}>
+            <Typography
+              sx={{
+                fontSize: 9,
+                fontWeight: 800,
+                color: "#94a3b8",
+                textTransform: "uppercase",
+                mb: 0.5,
+              }}
+            >
+              Artículo en Proceso
+            </Typography>
+            <Typography
+              sx={{ fontSize: 14, fontWeight: 700, color: "#0058c2" }}
+            >
               {machine.currentArticleName}
             </Typography>
-          </div>
-
-          {/* Date and Time */}
-          <div className="bg-surface-container-lowest border border-outline-variant p-4 flex flex-col gap-1">
-            <Typography className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
-              Timestamp del Registro
+          </Box>
+          <Box sx={{ gridColumn: "span 2" }}>
+            <Typography
+              sx={{
+                fontSize: 9,
+                fontWeight: 800,
+                color: "#94a3b8",
+                textTransform: "uppercase",
+                mb: 0.5,
+              }}
+            >
+              Timestamp de Operación
             </Typography>
-            <Typography className="text-[15px] font-semibold text-primary font-data-tabular">
-              {format(currentTime, "EEEE, dd 'de' MMMM 'de' yyyy - HH:mm:ss")}
+            <Typography
+              sx={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: "#64748b",
+                fontFamily: "monospace",
+              }}
+            >
+              {format(currentTime, "EEEE, dd 'de' MMMM, yyyy - HH:mm:ss")}
             </Typography>
-          </div>
-        </div>
+          </Box>
+        </Box>
 
-        <Divider />
+        <Divider sx={{ borderColor: "#f1f5f9" }} />
 
-        <div className="flex flex-col gap-2 bg-surface-container-low p-6 border border-outline-variant">
-          <Typography className="text-[12px] font-bold text-center text-on-surface-variant uppercase tracking-widest">
-            VALOR DE MEDICIÓN ACTUAL
-          </Typography>
-          <TextField
-            variant="standard"
-            fullWidth
-            type="number"
-            value={percentage}
-            onChange={(e) => setPercentage(e.target.value)}
-            autoFocus
-            placeholder="00.00"
-            slotProps={{
-              input: {
-                className: "font-data-tabular text-5xl font-black py-4",
-                disableUnderline: true,
-                endAdornment: <Typography variant="h3" className="text-primary font-black ml-2">%</Typography>,
-                sx: {
-                  '& input': {
-                    textAlign: 'center',
-                    '&::-webkit-outer-spin-button, &::-webkit-inner-spin-button': {
-                      '-webkit-appearance': 'none',
-                      margin: 0,
-                    },
-                  }
-                }
-              }
+        {/* Input Area */}
+        <Box
+          sx={{
+            backgroundColor: "#f1f5f9",
+            p: 4,
+            border: "1px solid #e2e8f0",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 1,
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: 10,
+              fontWeight: 800,
+              color: "#64748b",
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
             }}
-            disabled={isRegistering}
-          />
-          <Typography className="text-[11px] text-center text-on-surface-variant font-medium">
-            Ingrese el porcentaje exacto reportado por el sistema de control.
+          >
+            PORCENTAJE DE EXTRACCIÓN
           </Typography>
-        </div>
+
+          <Box sx={{ display: "flex", alignItems: "baseline", gap: 1 }}>
+            <TextField
+              variant="standard"
+              type="number"
+              value={percentage}
+              onChange={(e) => setPercentage(e.target.value)}
+              autoFocus
+              placeholder="00.0"
+              disabled={isRegistering}
+              InputProps={{
+                disableUnderline: true,
+                sx: {
+                  fontSize: "64px",
+                  fontWeight: 900,
+                  color: "#0f172a",
+                  fontFamily: "monospace",
+                  "& input": {
+                    textAlign: "center",
+                    p: 0,
+                    width: "180px",
+                    "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button":
+                      {
+                        "-webkit-appearance": "none",
+                        margin: 0,
+                      },
+                  },
+                },
+              }}
+            />
+            <Typography
+              sx={{ fontSize: 32, fontWeight: 900, color: "#0058c2" }}
+            >
+              %
+            </Typography>
+          </Box>
+
+          <Typography sx={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>
+            Ingrese el valor reportado por el sensor de línea
+          </Typography>
+        </Box>
       </DialogContent>
 
-      <DialogActions className="px-gutter pb-8 pt-4 flex gap-4">
+      <DialogActions sx={{ p: 3, gap: 2, borderTop: "1px solid #f1f5f9" }}>
         <Button
           onClick={onClose}
-          variant="outlined"
-          color="inherit"
-          className="font-bold text-[13px] h-11 px-8 rounded-none border-outline-variant"
+          sx={{
+            color: "#64748b",
+            fontWeight: 700,
+            fontSize: 12,
+            px: 3,
+            "&:hover": { backgroundColor: "#f8fafc" },
+          }}
           disabled={isRegistering}
         >
-          DESCARTAR
+          CANCELAR
         </Button>
         <Button
           onClick={handleSave}
           variant="contained"
-          color="primary"
           fullWidth
-          className="font-bold text-[13px] h-11 rounded-none shadow-none"
           disabled={isRegistering || !percentage}
-          startIcon={isRegistering ? <CircularProgress size={18} color="inherit" /> : <span className="material-symbols-outlined">verified</span>}
+          sx={{
+            backgroundColor: "#0f172a",
+            color: "#fff",
+            borderRadius: 0,
+            py: 1.5,
+            fontWeight: 700,
+            fontSize: 13,
+            boxShadow: "none",
+            "&:hover": { backgroundColor: "#1e293b", boxShadow: "none" },
+            "&.Mui-disabled": { backgroundColor: "#e2e8f0", color: "#94a3b8" },
+          }}
+          startIcon={
+            isRegistering ? (
+              <CircularProgress size={16} color="inherit" />
+            ) : (
+              <Icon sx={{ fontSize: "18px !important" }}>check_circle</Icon>
+            )
+          }
         >
-          {isRegistering ? "PROCESANDO..." : "CONFIRMAR Y REGISTRAR"}
+          {isRegistering ? "PROCESANDO..." : "CONFIRMAR REGISTRO"}
         </Button>
       </DialogActions>
     </Dialog>

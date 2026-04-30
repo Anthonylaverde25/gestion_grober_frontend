@@ -1,5 +1,6 @@
 import { FuseRouteItemType } from "@fuse/utils/FuseUtils";
 import { ExtractionPage, ExtractionMachineHistory } from "./extraction/views";
+import LinesPerformancePage from "./lines/performance/views/LinesPerformancePage";
 
 /**
  * The Production Module routes.
@@ -21,7 +22,16 @@ const route: FuseRouteItemType = {
         {
           path: "history", // For general history if no machineId is provided
           element: <ExtractionMachineHistory />,
-        }
+        },
+      ],
+    },
+    {
+      path: "lines-performance",
+      children: [
+        {
+          path: "",
+          element: <LinesPerformancePage />,
+        },
       ],
     },
   ],

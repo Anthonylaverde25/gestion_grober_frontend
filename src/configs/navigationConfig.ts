@@ -58,6 +58,14 @@ const navigationConfig: FuseNavItemType[] = [
         icon: "lucide:clipboard-check",
         url: "production/extraction",
       },
+      {
+        id: "production.line.performance",
+        title: "Rendimiento de Líneas",
+        subtitle: "Reporte de rendimiento de líneas",
+        type: "item",
+        icon: "lucide:clipboard-check",
+        url: "production/lines-performance",
+      },
     ],
   },
 
