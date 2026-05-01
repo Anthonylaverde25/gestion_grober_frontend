@@ -1,14 +1,15 @@
 import Typography from '@mui/material/Typography';
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { motion } from 'motion/react';
-import Divider from '@mui/material/Divider';
-import useUser from '@auth/useUser';
-import useAuth from '@fuse/core/FuseAuthProvider/useAuth';
+import { useNavigate } from 'react-router';
+import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
 
 interface PageHeaderProps {
 	title: string;
 	subtitle?: string;
 	actions?: React.ReactNode;
+	showBackButton?: boolean;
 }
 
 /**
@@ -16,7 +17,8 @@ interface PageHeaderProps {
  * Clean, spacious, and focused on information hierarchy.
  */
 function PageHeader(props: PageHeaderProps) {
-	const { title, subtitle, actions } = props;
+	const { title, subtitle, actions, showBackButton = true } = props;
+	const navigate = useNavigate();
 
 	return (
 		<div className="flex flex-col flex-0 bg-card shadow-sm border-b-1">
@@ -40,19 +42,31 @@ function PageHeader(props: PageHeaderProps) {
 						initial={{ x: -20, opacity: 0 }}
 						animate={{ x: 0, opacity: 1 }}
 						transition={{ delay: 0.2 }}
-						className="flex flex-col min-w-0"
+						className="flex items-center min-w-0 gap-12"
 					>
-						<Typography className="text-28 md:text-32 font-bold tracking-tight text-[#1d2d3e] leading-tight">
-							{title}
-						</Typography>
-
-						{subtitle && (
-							<Typography
-								className="text-14 md:text-16 font-normal text-[#516171] mt-4"
+						{showBackButton && (
+							<IconButton 
+								onClick={() => navigate(-1)}
+								className="p-8 -ml-8 hover:bg-surface-container-low transition-colors"
+								size="large"
 							>
-								{subtitle}
-							</Typography>
+								<span className="material-symbols-outlined text-24 text-primary">arrow_back</span>
+							</IconButton>
 						)}
+						
+						<Box className="flex flex-col">
+							<Typography className="text-28 md:text-32 font-bold tracking-tight text-[#1d2d3e] leading-tight">
+								{title}
+							</Typography>
+
+							{subtitle && (
+								<Typography
+									className="text-14 md:text-16 font-normal text-[#516171] mt-4"
+								>
+									{subtitle}
+								</Typography>
+							)}
+						</Box>
 					</motion.div>
 
 					{actions && (

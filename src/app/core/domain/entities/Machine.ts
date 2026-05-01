@@ -6,6 +6,8 @@ export class Machine {
   public readonly furnaceId: string;
   public currentArticleId: string | null;
   public currentArticleName: string;
+  public currentCampaignId: string | null;
+  public currentClientName: string;
   public readonly name: string;
   public status: "operational" | "maintenance" | "shutdown";
 
@@ -15,6 +17,8 @@ export class Machine {
     this.furnaceId = props.furnaceId;
     this.currentArticleId = props.currentArticleId ?? null;
     this.currentArticleName = props.currentArticleName ?? 'N/A';
+    this.currentCampaignId = props.currentCampaignId ?? null;
+    this.currentClientName = props.currentClientName ?? 'N/A';
     this.name = props.name;
     this.status = props.status ?? "operational";
   }

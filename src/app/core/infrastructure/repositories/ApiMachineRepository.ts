@@ -1,4 +1,4 @@
-import api from "@/utils/api";
+import { axiosInstance } from "../../../di/container";
 import { Machine } from "../../domain/entities/Machine";
 import { MachineRepository } from "../../domain/repositories/MachineRepository";
 import { MachineDTO } from "../dtos/MachineDTO";
@@ -6,36 +6,30 @@ import { MachineMapper } from "../mappers/MachineMapper";
 
 export class ApiMachineRepository implements MachineRepository {
   async getByCompany(companyId: string): Promise<Machine[]> {
-    const response = await api
-      .get("v1/machines", {
-        searchParams: { company_id: companyId },
-      })
-      .json<{ data?: MachineDTO[] } | MachineDTO[]>();
+    const response = await axiosInstance.get("/api/v1/machines", {
+      params: { company_id: companyId },
+    });
 
-    const data = Array.isArray(response) ? response : (response.data ?? []);
-    return data.map((dto) => MachineMapper.toDomain(dto));
+    const data = Array.isArray(response.data.data) ? response.data.data : (response.data ?? []);
+    return data.map((dto: any) => MachineMapper.toDomain(dto));
   }
 
   async save(machine: Machine): Promise<Machine> {
     const dto = MachineMapper.toDTO(machine);
-    const response = await api
-      .post("v1/machines", { json: dto })
-      .json<{ data?: MachineDTO } | MachineDTO>();
+    const response = await axiosInstance.post("/api/v1/machines", dto);
 
-    return MachineMapper.toDomain(this.unwrapMachineResponse(response));
+    return MachineMapper.toDomain(this.unwrapMachineResponse(response.data));
   }
 
   async changeCurrentArticle(
     machineId: string,
     articleId: string | null,
   ): Promise<Machine> {
-    const response = await api
-      .patch(`v1/machines/${machineId}/current-article`, {
-        json: { article_id: articleId },
-      })
-      .json<{ data?: MachineDTO } | MachineDTO>();
+    const response = await axiosInstance.patch(`/api/v1/machines/${machineId}/current-article`, {
+      article_id: articleId,
+    });
 
-    return MachineMapper.toDomain(this.unwrapMachineResponse(response));
+    return MachineMapper.toDomain(this.unwrapMachineResponse(response.data));
   }
 
   private unwrapMachineResponse(

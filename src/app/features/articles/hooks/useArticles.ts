@@ -21,9 +21,9 @@ export function useArticles() {
   });
 
   const createArticleMutation = useMutation({
-    mutationFn: (name: string) => {
+    mutationFn: ({ name, clientId }: { name: string, clientId?: string }) => {
       if (!activeCompany?.id) throw new Error("No hay una empresa activa seleccionada");
-      return createArticleUseCase.execute(activeCompany.id, name);
+      return createArticleUseCase.execute(activeCompany.id, name, clientId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['articles', activeCompany?.id] });

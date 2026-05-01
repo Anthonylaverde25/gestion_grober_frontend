@@ -40,7 +40,7 @@ export default function ArticlesPage() {
   const handleCloseDialog = () => setIsDialogOpen(false);
 
   const handleSubmit = async (data: ArticleFormData) => {
-    await createArticle(data.name);
+    await createArticle({ name: data.name, clientId: data.clientId });
   };
 
   return (

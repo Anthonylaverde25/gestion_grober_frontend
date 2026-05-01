@@ -9,6 +9,7 @@ import { useState } from 'react';
 import DashboardSubheader from '../components/DashboardSubheader';
 import SummaryView from './sections/SummaryView';
 import BoardsView from './sections/BoardsView';
+import YieldView from './sections/YieldView';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
     '& .FusePageSimple-header': {},
@@ -38,6 +39,15 @@ const container = {
 export default function Dashboard() {
     const [activeTab, setActiveTab] = useState(0);
 
+    const renderContent = () => {
+        switch (activeTab) {
+            case 0: return <SummaryView />;
+            case 1: return <BoardsView />;
+            case 2: return <YieldView />;
+            default: return <SummaryView />;
+        }
+    };
+
     return (
         <Root
             header={
@@ -56,7 +66,7 @@ export default function Dashboard() {
                     <DashboardSubheader activeTab={activeTab} setActiveTab={setActiveTab} />
 
                     <Box sx={{ width: '100%', px: { xs: 3, sm: 4 }, pb: 8 }}>
-                        {activeTab === 0 ? <SummaryView /> : <BoardsView />}
+                        {renderContent()}
                     </Box>
                 </motion.div>
             }

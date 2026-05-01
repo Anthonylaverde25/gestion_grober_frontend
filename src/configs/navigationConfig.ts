@@ -19,13 +19,7 @@ const navigationConfig: FuseNavItemType[] = [
     icon: "heroicons-outline:home",
     url: "dashboard",
   },
-  {
-    id: "articles",
-    title: "Artículos",
-    type: "item",
-    icon: "heroicons-outline:shopping-cart",
-    url: "articles",
-  },
+
   {
     id: "settings",
     title: "Ajustes",
@@ -33,14 +27,32 @@ const navigationConfig: FuseNavItemType[] = [
     icon: "heroicons-outline:cog",
     url: "settings",
   },
-  {
-    id: "example-component",
 
-    title: "Example",
-    translate: "EXAMPLE",
-    type: "item",
-    icon: "lucide:star",
-    url: "example",
+  {
+    id: "general-admin",
+    title: "Administracion General",
+    subtitle: "Panel de administración general",
+    type: "group",
+    icon: "lucide:layout-dashboard",
+    translate: "GENERAL-ADMIN",
+    children: [
+      {
+        id: "admin.clients",
+        title: "Clientes",
+        subtitle: "Administrar clientes",
+        type: "item",
+        icon: "lucide:clipboard-check",
+        url: "/clients",
+      },
+      {
+        id: "admin.articles",
+        title: "Artículos",
+        subtitle: "Administrar artículos",
+        type: "item",
+        icon: "lucide:clipboard-check",
+        url: "articles",
+      },
+    ],
   },
   {
     id: "production",
@@ -66,28 +78,13 @@ const navigationConfig: FuseNavItemType[] = [
         icon: "lucide:clipboard-check",
         url: "production/lines-performance",
       },
-    ],
-  },
-
-  {
-    id: "divider-1",
-    type: "divider",
-    title: "Reports",
-  },
-
-  {
-    id: "apps.ecommerce",
-    title: "Producción",
-    subtitle: "Reportes de producción",
-    type: "collapse",
-    icon: "lucide:shopping-cart",
-    children: [
       {
-        id: "extraction",
-        title: "Extracción",
+        id: "production.campaigns",
+        title: "Campañas",
+        subtitle: "Gestión de campañas activas",
         type: "item",
-        url: "apps/e-commerce/products",
-        end: false,
+        icon: "heroicons-outline:view-boards",
+        url: "campaigns",
       },
     ],
   },

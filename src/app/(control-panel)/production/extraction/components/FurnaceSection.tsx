@@ -10,7 +10,7 @@ export default function FurnaceSection({ furnace }: FurnaceSectionProps) {
 
   return (
     <section className="bg-surface-container-lowest dark:bg-surface-container-lowest border border-outline-variant dark:border-outline-variant overflow-hidden shadow-none rounded-none">
-      <div className="px-gutter py-stack-md border-b border-outline-variant dark:border-outline-variant flex items-center justify-between bg-surface-container-low dark:bg-surface-container-low">
+      <div className="px-gutter py-stack-md border-b border-outline-variant dark:border-outline-variant flex items-center justify-between bg-[#e2e8f0]">
         <div className="flex items-center gap-stack-sm">
           <span className="material-symbols-outlined text-primary">
             heat_pump

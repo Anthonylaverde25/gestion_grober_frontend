@@ -9,6 +9,8 @@ export class ArticleMapper {
     return Article.reconstitute({
       id: dto.id,
       companyId: dto.company_id,
+      clientId: dto.client_id,
+      client: dto.client,
       name: dto.name
     });
   }
@@ -20,6 +22,7 @@ export class ArticleMapper {
     return {
       id: domain.id,
       company_id: domain.companyId,
+      client_id: domain.clientId,
       name: domain.name,
     };
   }

@@ -28,7 +28,7 @@ export default function ArticlesTable() {
     return articles.map((article, index) => ({
       ...article,
       code: `ART-00${index + 101}`,
-      client: 'Cervecería Quilmes S.A.',
+      clientName: article.client?.name || 'Artículo Genérico',
     }));
   }, [articles]);
 
@@ -50,7 +50,7 @@ export default function ArticlesTable() {
         size: 300,
       },
       {
-        accessorKey: 'client',
+        accessorKey: 'clientName',
         header: 'Producido para',
         size: 200,
         Cell: ({ cell }) => (

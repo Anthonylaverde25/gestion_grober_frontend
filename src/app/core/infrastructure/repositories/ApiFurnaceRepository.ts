@@ -1,25 +1,25 @@
+import { axiosInstance } from "../../../di/container";
 import { Furnace } from "../../domain/entities/Furnace";
 import { FurnaceRepository } from "../../domain/repositories/FurnaceRepository";
 import { FurnaceMapper } from "../mappers/FurnaceMapper";
-import api from "@/utils/api";
 
 export class ApiFurnaceRepository implements FurnaceRepository {
     async getByCompany(companyId: string): Promise<Furnace[]> {
-        const response: any = await api.get('v1/furnaces', {
-            searchParams: { company_id: companyId }
-        }).json();
+        const response = await axiosInstance.get('/api/v1/furnaces', {
+            params: { company_id: companyId }
+        });
         
-        const data = response.data || response;
+        const data = response.data.data || response.data;
         return data.map((dto: any) => FurnaceMapper.toDomain(dto));
     }
 
     async save(furnace: Furnace): Promise<Furnace> {
         const dto = FurnaceMapper.toDTO(furnace);
-        const response: any = await api.post('v1/furnaces', { json: dto }).json();
-        return FurnaceMapper.toDomain(response.data || response);
+        const response = await axiosInstance.post('/api/v1/furnaces', dto);
+        return FurnaceMapper.toDomain(response.data.data || response.data);
     }
 
     async delete(id: string): Promise<void> {
-        await api.delete(`v1/furnaces/${id}`);
+        await axiosInstance.delete(`/api/v1/furnaces/${id}`);
     }
 }

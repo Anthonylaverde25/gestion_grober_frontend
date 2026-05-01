@@ -1,20 +1,30 @@
 import { useState, useEffect } from "react";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Typography,
+  Box,
+  CircularProgress,
+  Divider,
+  IconButton,
+  InputAdornment,
+  Paper
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import SensorsIcon from "@mui/icons-material/Sensors";
+import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
+import ArticleIcon from "@mui/icons-material/Article";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Machine } from "@/app/core/domain/entities/Machine";
 import { useExtractionHistory } from "@/app/features/extraction/hooks/useExtractionHistory";
 import { useSnackbar } from "notistack";
-import CircularProgress from "@mui/material/CircularProgress";
 import { format } from "date-fns";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import Icon from "@mui/material/Icon";
+import { es } from "date-fns/locale";
 
 interface RegisterExtractionModalProps {
   open: boolean;
@@ -75,169 +85,115 @@ export default function RegisterExtractionModal({
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth={false}
+      maxWidth="sm"
       fullWidth
       PaperProps={{
         sx: {
-          borderRadius: 0,
-          border: "1px solid #cbd5e1",
-          backgroundImage: "none",
-          maxWidth: "580px",
-          width: "100%",
+          borderRadius: "20px",
           boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+          overflow: "hidden"
         },
       }}
     >
-      {/* Header Fiori Style - Simplified */}
-      <DialogTitle
-        sx={{
-          p: 0,
-          backgroundColor: "#fff",
-          borderBottom: "1px solid #f1f5f9",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
+      <DialogTitle sx={{ p: 0 }}>
+        <Box 
+          sx={{ 
+            p: 3, 
+            display: "flex", 
+            alignItems: "center", 
             justifyContent: "space-between",
-            alignItems: "center",
-            py: 2.5,
-            px: 4,
+            background: (theme) => `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+            color: "primary.contrastText"
           }}
         >
-          <Box>
-            <Typography
-              sx={{
-                fontSize: 10,
-                fontWeight: 800,
-                color: "#94a3b8",
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                mb: 0.5,
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box 
+              sx={{ 
+                mr: 2, 
+                display: "flex", 
+                alignItems: "center", 
+                justifyContent: "center",
+                width: 48,
+                height: 48,
+                borderRadius: "14px",
+                bgcolor: "rgba(255, 255, 255, 0.2)",
+                backdropFilter: "blur(4px)"
               }}
             >
-              PRODUCCIÓN / EXTRACCIÓN
-            </Typography>
-            <Typography
-              sx={{ fontSize: 20, fontWeight: 700, color: "#0f172a" }}
-            >
-              Registrar Nueva Medición
-            </Typography>
+              <SensorsIcon fontSize="large" />
+            </Box>
+            <Box>
+              <Typography variant="h6" component="div" sx={{ fontWeight: 800, lineHeight: 1.2, letterSpacing: "-0.01em" }}>
+                Registrar Medición
+              </Typography>
+              <Typography variant="caption" sx={{ opacity: 0.8, fontWeight: 500, display: "flex", alignItems: "center", mt: 0.5 }}>
+                <PrecisionManufacturingIcon sx={{ fontSize: 14, mr: 0.5 }} /> {machine.name}
+              </Typography>
+            </Box>
           </Box>
-          <IconButton onClick={onClose} size="small" sx={{ color: "#cbd5e1" }}>
-            <Icon>close</Icon>
+          <IconButton onClick={onClose} size="small" sx={{ color: "inherit", opacity: 0.7, "&:hover": { opacity: 1 } }}>
+            <CloseIcon />
           </IconButton>
         </Box>
       </DialogTitle>
 
-      <DialogContent
-        sx={{ p: 4, display: "flex", flexDirection: "column", gap: 4 }}
-      >
-        {/* Contextual Data Grid */}
-        <Box
-          className="mt-2"
-          sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 3 }}
-        >
+      <DialogContent sx={{ p: 4 }}>
+        <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 3, mb: 4 }}>
           <Box>
-            <Typography
-              sx={{
-                fontSize: 9,
-                fontWeight: 800,
-                color: "#94a3b8",
-                textTransform: "uppercase",
-                mb: 0.5,
-              }}
-            >
-              Unidad Operativa
+            <Typography variant="overline" sx={{ color: "text.secondary", fontWeight: 700, display: "block", mb: 0.5 }}>
+              Estado Actual
             </Typography>
-            <Typography
-              sx={{ fontSize: 14, fontWeight: 700, color: "#1e293b" }}
-            >
-              {machine.name}
-            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Box sx={{ width: 8, height: 8, borderRadius: "50%", bgcolor: "success.main", mr: 1 }} />
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>Operativo</Typography>
+            </Box>
           </Box>
+          
           <Box>
-            <Typography
-              sx={{
-                fontSize: 9,
-                fontWeight: 800,
-                color: "#94a3b8",
-                textTransform: "uppercase",
-                mb: 0.5,
-              }}
-            >
-              Jefe de Turno
+            <Typography variant="overline" sx={{ color: "text.secondary", fontWeight: 700, display: "block", mb: 0.5 }}>
+              Referencia Temporal
             </Typography>
-            <Typography
-              sx={{ fontSize: 14, fontWeight: 600, color: "#475569" }}
-            >
-              Ing. Roberto Quiroz
+            <Typography variant="body2" sx={{ fontWeight: 600, display: "flex", alignItems: "center" }}>
+              <AccessTimeIcon sx={{ fontSize: 16, mr: 0.5, color: "primary.main" }} />
+              {format(currentTime, "HH:mm:ss")}
             </Typography>
           </Box>
+
           <Box sx={{ gridColumn: "span 2" }}>
-            <Typography
-              sx={{
-                fontSize: 9,
-                fontWeight: 800,
-                color: "#94a3b8",
-                textTransform: "uppercase",
-                mb: 0.5,
-              }}
-            >
-              Artículo en Proceso
-            </Typography>
-            <Typography
-              sx={{ fontSize: 14, fontWeight: 700, color: "#0058c2" }}
-            >
-              {machine.currentArticleName}
-            </Typography>
-          </Box>
-          <Box sx={{ gridColumn: "span 2" }}>
-            <Typography
-              sx={{
-                fontSize: 9,
-                fontWeight: 800,
-                color: "#94a3b8",
-                textTransform: "uppercase",
-                mb: 0.5,
-              }}
-            >
-              Timestamp de Operación
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: 13,
-                fontWeight: 600,
-                color: "#64748b",
-                fontFamily: "monospace",
-              }}
-            >
-              {format(currentTime, "EEEE, dd 'de' MMMM, yyyy - HH:mm:ss")}
-            </Typography>
+            <Paper variant="outlined" sx={{ p: 2, borderRadius: "12px", bgcolor: "grey.50", borderStyle: "dashed" }}>
+              <Typography variant="overline" sx={{ color: "text.secondary", fontWeight: 700, display: "block", mb: 0.5 }}>
+                Artículo en Proceso
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <ArticleIcon sx={{ mr: 1, color: "secondary.main" }} />
+                <Typography variant="body1" sx={{ fontWeight: 700, color: "secondary.dark" }}>
+                  {machine.currentArticleName}
+                </Typography>
+              </Box>
+            </Paper>
           </Box>
         </Box>
 
-        <Divider sx={{ borderColor: "#f1f5f9" }} />
-
-        {/* Input Area */}
         <Box
           sx={{
-            backgroundColor: "#f1f5f9",
+            background: (theme) => `linear-gradient(to bottom, ${theme.palette.grey[50]}, #ffffff)`,
             p: 4,
-            border: "1px solid #e2e8f0",
+            borderRadius: "20px",
+            border: "1px solid",
+            borderColor: "divider",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 1,
+            boxShadow: "inset 0 2px 4px rgba(0,0,0,0.02)"
           }}
         >
           <Typography
+            variant="subtitle2"
             sx={{
-              fontSize: 10,
+              color: "text.secondary",
               fontWeight: 800,
-              color: "#64748b",
-              textTransform: "uppercase",
               letterSpacing: "0.1em",
+              mb: 2
             }}
           >
             PORCENTAJE DE EXTRACCIÓN
@@ -255,71 +211,63 @@ export default function RegisterExtractionModal({
               InputProps={{
                 disableUnderline: true,
                 sx: {
-                  fontSize: "64px",
+                  fontSize: "72px",
                   fontWeight: 900,
-                  color: "#0f172a",
-                  fontFamily: "monospace",
+                  color: "primary.dark",
+                  fontFamily: "var(--fuse-font-family)",
                   "& input": {
                     textAlign: "center",
                     p: 0,
-                    width: "180px",
-                    "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button":
-                      {
-                        "-webkit-appearance": "none",
-                        margin: 0,
-                      },
+                    width: "200px",
+                    "&::-webkit-outer-spin-button, &::-webkit-inner-spin-button": {
+                      "-webkit-appearance": "none",
+                      margin: 0,
+                    },
                   },
                 },
               }}
             />
-            <Typography
-              sx={{ fontSize: 32, fontWeight: 900, color: "#0058c2" }}
-            >
+            <Typography variant="h3" sx={{ fontWeight: 900, color: "secondary.main", opacity: 0.5 }}>
               %
             </Typography>
           </Box>
 
-          <Typography sx={{ fontSize: 11, color: "#94a3b8", fontWeight: 500 }}>
-            Ingrese el valor reportado por el sensor de línea
+          <Typography variant="caption" sx={{ mt: 2, color: "text.disabled", fontWeight: 600 }}>
+            {format(currentTime, "EEEE, dd 'de' MMMM", { locale: es })}
           </Typography>
         </Box>
       </DialogContent>
 
-      <DialogActions sx={{ p: 3, gap: 2, borderTop: "1px solid #f1f5f9" }}>
+      <DialogActions sx={{ p: 4, pt: 2, justifyContent: "space-between" }}>
         <Button
           onClick={onClose}
-          sx={{
-            color: "#64748b",
-            fontWeight: 700,
-            fontSize: 12,
-            px: 3,
-            "&:hover": { backgroundColor: "#f8fafc" },
-          }}
+          color="inherit"
           disabled={isRegistering}
+          sx={{ fontWeight: 700, px: 3 }}
         >
-          CANCELAR
+          Cancelar
         </Button>
         <Button
           onClick={handleSave}
           variant="contained"
-          fullWidth
+          color="secondary"
           disabled={isRegistering || !percentage}
           sx={{
-            backgroundColor: "#0f172a",
-            color: "#fff",
-            borderRadius: 0,
+            borderRadius: "12px",
             py: 1.5,
-            fontWeight: 700,
-            fontSize: 13,
-            boxShadow: "none",
-            "&:hover": { backgroundColor: "#1e293b", boxShadow: "none" },
-            "&.Mui-disabled": { backgroundColor: "#e2e8f0", color: "#94a3b8" },
+            px: 4,
+            fontWeight: 800,
+            fontSize: 14,
+            boxShadow: (theme) => `0 10px 20px -5px ${theme.palette.secondary.main}40`,
+            "&:hover": {
+              boxShadow: (theme) => `0 12px 25px -5px ${theme.palette.secondary.main}60`,
+            }
           }}
           startIcon={
             isRegistering ? (
-              <CircularProgress size={16} color="inherit" />
+              <CircularProgress size={20} color="inherit" />
             ) : (
-              <Icon sx={{ fontSize: "18px !important" }}>check_circle</Icon>
+              <CheckCircleIcon />
             )
           }
         >

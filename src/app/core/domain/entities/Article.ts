@@ -3,11 +3,15 @@ import { ArticleTypes } from '../types/ArticleTypes';
 export class Article {
   public readonly id: string;
   public readonly companyId: string;
+  public readonly clientId?: string;
+  public readonly client?: { id: string, name: string } | null;
   public name: string;
 
   private constructor(props: ArticleTypes) {
     this.id = props.id;
     this.companyId = props.companyId;
+    this.clientId = props.clientId;
+    this.client = props.client;
     this.name = props.name;
   }
 

@@ -30,7 +30,7 @@ export default function DashboardSubheader({ activeTab, setActiveTab }: Dashboar
                     alignItems: 'center'
                 }}
             >
-                {['Resumen', 'Tableros'].map((label, index) => (
+                {['Resumen', 'Tableros', 'Rendimiento'].map((label, index) => (
                     <Button
                         key={label}
                         onClick={() => setActiveTab(index)}

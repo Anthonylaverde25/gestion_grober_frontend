@@ -428,57 +428,55 @@ export default function ExtractionMachineHistory() {
         />
       }
       content={
-        <div className="pb-16 px-margin-edge max-w-[1600px] mx-auto w-full pt-8 flex flex-col gap-8 h-full">
-          
-          {/* Machine and Article Context Header */}
-          <section className="bg-surface-container-lowest border border-outline-variant p-gutter flex flex-col md:flex-row items-center gap-gutter shadow-none rounded-none">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-               <span className="material-symbols-outlined text-4xl">precision_manufacturing</span>
-            </div>
-            
-            <div className="flex-1 text-center md:text-left">
-              <div className="flex flex-col md:flex-row md:items-center gap-2 mb-1">
-                <Typography variant="h5" className="font-bold text-on-surface">
-                  {machineData?.machine?.name || 'Cargando...'}
-                </Typography>
-                <span className={`px-2 py-0.5 self-center md:self-auto rounded-full text-[10px] font-bold border uppercase tracking-wider ${
-                  machineData?.machine?.status === 'operational' 
-                    ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' 
-                    : 'bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'
-                }`}>
-                  {machineData?.machine?.status || 'N/A'}
-                </span>
-              </div>
-              <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 text-on-surface-variant text-sm">
-                 <div className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">heat_pump</span>
-                    <span className="font-medium">{machineData?.furnace?.name || 'N/A'}</span>
-                 </div>
-                 <div className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">inventory_2</span>
-                    <span>Artículo Actual: <span className="font-bold text-on-surface">{machineData?.machine?.currentArticleName || 'Sin asignar'}</span></span>
-                 </div>
-                 <div className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">event</span>
-                    <span>Última Medición: {latestExtraction ? format(latestExtraction.measuredAt, 'dd/MM/yyyy HH:mm') : 'N/A'}</span>
-                 </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col items-end gap-2 text-right border-l border-outline-variant pl-gutter hidden md:flex">
-               <Typography variant="caption" className="uppercase font-bold text-on-surface-variant tracking-widest">
-                  Eficiencia de Extracción
-               </Typography>
-               <div className="flex items-baseline gap-1">
-                  <Typography variant="h4" className="font-data-tabular font-bold text-primary">
-                     {latestExtraction?.percentage.toFixed(2) || '0.00'}
+        <Box className="flex flex-col flex-auto h-full">
+          {/* Machine and Article Context Header - Ancho Completo */}
+          <section className="bg-[#e2e8f0] border-b border-outline-variant px-margin-edge py-gutter shadow-none rounded-none">
+            <div className="max-w-[1600px] mx-auto w-full flex flex-col md:flex-row items-center gap-gutter">
+              <div className="flex-1 text-center md:text-left">
+                <div className="flex flex-col md:flex-row md:items-center gap-2 mb-1">
+                  <Typography variant="h5" className="font-black text-[#0f172a] uppercase tracking-tight">
+                    {machineData?.machine?.name || 'Cargando...'}
                   </Typography>
-                  <Typography variant="h6" className="text-on-surface-variant">%</Typography>
-               </div>
+                  <span className={`px-2 py-0.5 self-center md:self-auto rounded-full text-[10px] font-bold border uppercase tracking-wider ${
+                    machineData?.machine?.status === 'operational' 
+                      ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' 
+                      : 'bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'
+                  }`}>
+                    {machineData?.machine?.status || 'N/A'}
+                  </span>
+                </div>
+                <div className="flex flex-wrap justify-center md:justify-start items-center gap-x-6 gap-y-1 text-[#475569] text-[13px] font-bold uppercase tracking-wide">
+                  <div className="flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[16px]">heat_pump</span>
+                      <span>Horno: <span className="text-on-surface">{machineData?.furnace?.name || 'N/A'}</span></span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[16px]">inventory_2</span>
+                      <span>Artículo Actual: <span className="text-on-surface uppercase">{machineData?.machine?.currentArticleName || 'Sin asignar'}</span></span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                      <span className="material-symbols-outlined text-[16px]">event</span>
+                      <span>Última Medición: <span className="text-on-surface font-data-tabular">{latestExtraction ? format(latestExtraction.measuredAt, 'dd/MM/yyyy HH:mm') : 'N/A'}</span></span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-end text-right border-l border-white/40 pl-gutter hidden md:flex">
+                <Typography variant="caption" className="uppercase font-black text-[#475569] tracking-widest text-[9px]">
+                    Eficiencia de Extracción
+                </Typography>
+                <div className="flex items-baseline gap-1">
+                    <Typography variant="h4" className="font-data-tabular font-bold text-primary">
+                      {latestExtraction?.percentage.toFixed(2) || '0.00'}
+                    </Typography>
+                    <Typography variant="caption" className="font-bold text-primary">%</Typography>
+                </div>
+              </div>
             </div>
           </section>
 
-          {/* Dashboard Summary Section */}
+          <div className="pb-16 px-margin-edge max-w-[1600px] mx-auto w-full pt-8 flex flex-col gap-8 h-full">
+            {/* Dashboard Summary Section */}
           <section>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
               <div className="bg-surface-container-lowest border border-outline-variant p-stack-md flex flex-col gap-1 rounded-none shadow-none">
