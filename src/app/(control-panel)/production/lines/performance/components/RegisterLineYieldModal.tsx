@@ -18,6 +18,7 @@ import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturi
 import { Machine } from "@/app/core/domain/entities/Machine";
 import { useLineYield } from "@/app/features/production/hooks/useLineYield";
 import { useCampaigns } from "@/app/features/production/hooks/useCampaigns";
+import { useServerTime } from "@/app/features/production/hooks/useServerTime";
 
 interface RegisterLineYieldModalProps {
   open: boolean;
@@ -28,6 +29,7 @@ interface RegisterLineYieldModalProps {
 export default function RegisterLineYieldModal({ open, onClose, machine }: RegisterLineYieldModalProps) {
   const { recordLineYield, isRecording } = useLineYield();
   const { finishCampaign, isFinishing } = useCampaigns();
+  const { serverTime, isLoading: isLoadingTime } = useServerTime();
 
   const [formingYield, setFormingYield] = useState<string>("");
   const [packingYield, setPackingYield] = useState<string>("");
@@ -127,6 +129,7 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
           </Box>
           <Box className="flex gap-4 text-right">
             <span>Operador: <span className="text-on-surface">Juan Pérez</span></span>
+            <span>Hora Oficial: <span className="text-primary">{isLoadingTime ? "Sincronizando..." : serverTime?.formatted}</span></span>
           </Box>
         </Box>
 
@@ -211,7 +214,7 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
         <Button 
           onClick={handleSave} 
           variant="contained" 
-          disabled={(!formingYield && !packingYield) || isRecording}
+          disabled={(!formingYield && !packingYield) || isRecording || isLoadingTime}
           sx={{ 
             borderRadius: 0,
             px: 3,
