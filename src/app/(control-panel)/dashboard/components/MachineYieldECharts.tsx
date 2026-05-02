@@ -153,7 +153,9 @@ export default function MachineYieldECharts({
         name: 'Formación',
         type: "line",
         smooth: true,
-        symbol: "none",
+        symbol: "circle",
+        symbolSize: 10,
+        showSymbol: true,
         lineStyle: { width: 3, color: color },
         data: data.map((item) => item.formingYield),
         markLine: showAverage
@@ -170,7 +172,9 @@ export default function MachineYieldECharts({
         name: 'Empaque',
         type: "line",
         smooth: true,
-        symbol: "none",
+        symbol: "circle",
+        symbolSize: 10,
+        showSymbol: true,
         lineStyle: { width: 3, color: '#94a3b8', type: 'dashed' },
         data: data.map((item) => item.packingYield),
         markLine: showAverage

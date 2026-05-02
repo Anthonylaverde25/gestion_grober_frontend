@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { ApiSystemRepository } from "../../../core/infrastructure/repositories/ApiSystemRepository";
 import { GetServerTimeUseCase } from "../../../core/application/use-cases/GetServerTimeUseCase";
+import { QUERY_KEYS } from "../../../core/infrastructure/QueryKeys";
 
 const systemRepository = new ApiSystemRepository();
 const getServerTimeUseCase = new GetServerTimeUseCase(systemRepository);
@@ -15,7 +16,7 @@ export function useServerTime() {
     error,
     refetch
   } = useQuery({
-    queryKey: ['server-time'],
+    queryKey: QUERY_KEYS.system.serverTime(),
     queryFn: () => getServerTimeUseCase.execute(),
     staleTime: 0,             // Considerar siempre viejo para forzar refetch al montar (abrir modal)
     refetchInterval: 1000 * 60 * 3, // Refrescar automáticamente cada 3 minutos

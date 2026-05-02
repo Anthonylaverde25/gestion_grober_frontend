@@ -6,6 +6,7 @@ import { GetMachinesByCompanyUseCase } from "@/app/core/application/use-cases/Ge
 import { GetLineYieldHistoryUseCase } from "@/app/core/application/use-cases/GetLineYieldHistoryUseCase";
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
+import { QUERY_KEYS } from "@/app/core/infrastructure/QueryKeys";
 
 const machineRepository = new ApiMachineRepository();
 const yieldRepository = new ApiLineYieldRepository();
@@ -27,14 +28,14 @@ export function useYieldOverview() {
     const [timeRange, setTimeRange] = useState<TimeRange>('day'); // Default to day for yield
 
     const { data: machines = [], isLoading: isLoadingMachines } = useQuery({
-        queryKey: ['dashboard-machines', activeCompany?.id],
+        queryKey: QUERY_KEYS.production.machines.dashboard(activeCompany?.id!),
         queryFn: () => getMachinesUseCase.execute(activeCompany!.id),
         enabled: !!activeCompany?.id && !isLoadingContext,
     });
 
     const yieldQueries = useQueries({
         queries: machines.map(machine => ({
-            queryKey: ['machine-yield-history', machine.id, timeRange],
+            queryKey: QUERY_KEYS.production.yields.machineHistory(machine.id, timeRange),
             queryFn: () => getYieldsUseCase.executeByMachine(machine.id, rangeConfig[timeRange].limit),
             staleTime: 1000 * 60 * 5,
         }))
@@ -58,9 +59,6 @@ export function useYieldOverview() {
                     timeMap[timeStr] = { time: timeStr, fullDate: y.recordedAt };
                 }
                 
-                // For Yield we have Forming and Packing. 
-                // We'll show an average for the global chart or just one of them.
-                // Let's use the average of both for the global chart.
                 const avgYield = (y.formingYield + y.packingYield) / 2;
                 timeMap[timeStr][machine.name] = avgYield;
             });
@@ -75,12 +73,9 @@ export function useYieldOverview() {
         setTimeRange,
         machineHistories: yieldQueries.map((q, i) => {
             const data = (q.data || []).slice().reverse();
-            // Assuming the yield record might have article info if we join it in the future, 
-            // for now let's just pass what we have.
             return {
                 machine: machines[i],
                 data,
-                // We might need to fetch the current article for the machine or campaign
                 articleName: machines[i].currentArticle?.name 
             };
         }),

@@ -106,7 +106,9 @@ export default function GlobalECharts({ machines, chartData }: GlobalEChartsProp
             name: machine.name,
             type: 'line',
             smooth: true,
-            symbol: 'none',
+            symbol: 'circle',
+            symbolSize: 10,
+            showSymbol: true,
             lineStyle: { width: 2, color: MACHINE_COLORS[index % MACHINE_COLORS.length] },
             areaStyle: {
                 opacity: 0.08,

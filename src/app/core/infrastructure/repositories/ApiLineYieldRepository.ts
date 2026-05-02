@@ -14,6 +14,18 @@ export class ApiLineYieldRepository {
     }
   }
 
+  async saveBatch(campaignId: string, yields: any[]): Promise<void> {
+    try {
+      await axiosInstance.post('/api/v1/line-yields/batch', {
+        campaign_id: campaignId,
+        items: yields
+      });
+    } catch (error) {
+      console.error('Error in ApiLineYieldRepository.saveBatch:', error);
+      throw new Error('Error al registrar rendimientos en serie');
+    }
+  }
+
   async getHistoryByCampaign(campaignId: string): Promise<LineYield[]> {
     try {
       const response = await axiosInstance.get(`/api/v1/campaigns/${campaignId}/line-yields/history`);
