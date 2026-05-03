@@ -3,19 +3,34 @@
  */
 const authRoles = {
 	/**
-	 * The admin role grants access to users with the 'admin' role.
+	 * Acceso total al sistema
 	 */
-	admin: ['admin'],
+	superAdmin: ['super-admin'],
 
 	/**
-	 * The staff role grants access to users with the 'admin' or 'staff' role.
+	 * Administradores globales y de empresa
 	 */
-	staff: ['admin', 'staff'],
+	admin: ['super-admin', 'admin', 'company-manager'],
 
 	/**
-	 * The user role grants access to users with the 'admin', 'staff', or 'user' role.
+	 * Propietarios y Gerentes (Monitoreo)
 	 */
-	user: ['admin', 'staff', 'user'],
+	owner: ['super-admin', 'admin', 'owner', 'company-manager'],
+
+	/**
+	 * Roles de Supervisión
+	 */
+	allRoles: ['super-admin', 'admin', 'company-manager', 'supervisor'],
+
+	/**
+	 * Roles Operativos (Carga de datos)
+	 */
+	operator: ['super-admin', 'admin', 'company-manager', 'supervisor', 'operator'],
+
+	/**
+	 * Todos los usuarios autenticados
+	 */
+	user: ['super-admin', 'admin', 'owner', 'company-manager', 'supervisor', 'operator', 'viewer'],
 
 	/**
 	 * The onlyGuest role grants access to unauthenticated users.

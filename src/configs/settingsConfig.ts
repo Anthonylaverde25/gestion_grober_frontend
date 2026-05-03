@@ -1,5 +1,6 @@
 import themesConfig from 'src/configs/themesConfig';
 import { FuseSettingsConfigType } from '@fuse/core/FuseSettings/FuseSettings';
+import authRoles from '@auth/authRoles';
 
 import i18n from '@i18n/i18n';
 
@@ -51,7 +52,7 @@ const settingsConfig: FuseSettingsConfigType = {
 	 * To make the whole app accessible without authorization by default set defaultAuth: null
 	 * The individual route configs which have auth option won't be overridden.
 	 */
-	defaultAuth: ['admin'],
+	defaultAuth: authRoles.allRoles,
 
 	/**
 	 * The loginRedirectUrl property defines the default redirect URL for the logged-in user.

@@ -17,6 +17,7 @@ import useThemeMediaQuery from "../../../../@fuse/hooks/useThemeMediaQuery";
 import { AppBar, Divider, IconButton, Tooltip } from "@mui/material";
 import ToolbarTheme from "src/contexts/ToolbarTheme";
 import CompanySwitcher from "@/app/components/toolbar/CompanySwitcher";
+import QuickActions from "@/app/components/toolbar/QuickActions";
 import { Link } from "react-router";
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 
@@ -58,6 +59,8 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
           </div>
           <div className="flex items-center overflow-x-auto">
             <CompanySwitcher />
+            <Divider orientation="vertical" flexItem variant="middle" sx={{ height: 24, alignSelf: 'center', mx: 1 }} />
+            <QuickActions />
           </div>
           <div className="flex items-center overflow-x-auto px-2 py-2 md:px-4">
             {/* <LanguageSwitcher /> */}
