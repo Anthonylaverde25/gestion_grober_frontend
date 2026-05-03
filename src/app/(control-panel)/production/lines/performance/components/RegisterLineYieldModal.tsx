@@ -17,8 +17,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import PrecisionManufacturingIcon from "@mui/icons-material/PrecisionManufacturing";
 import { Machine } from "@/app/core/domain/entities/Machine";
 import { useLineYield } from "@/app/features/production/hooks/useLineYield";
-import { useCampaigns } from "@/app/features/production/hooks/useCampaigns";
 import { useServerTime } from "@/app/features/production/hooks/useServerTime";
+import EnterLegajoModal from "./EnterLegajoModal";
 
 interface RegisterLineYieldModalProps {
   open: boolean;
@@ -28,14 +28,18 @@ interface RegisterLineYieldModalProps {
 
 export default function RegisterLineYieldModal({ open, onClose, machine }: RegisterLineYieldModalProps) {
   const { recordLineYield, isRecording } = useLineYield();
-  const { finishCampaign, isFinishing } = useCampaigns();
   const { serverTime, isLoading: isLoadingTime } = useServerTime();
 
   const [formingYield, setFormingYield] = useState<string>("");
   const [packingYield, setPackingYield] = useState<string>("");
   const [notes, setNotes] = useState("");
+  const [isLegajoModalOpen, setIsLegajoModalOpen] = useState(false);
 
-  const handleSave = async () => {
+  const handleSaveClick = () => {
+    setIsLegajoModalOpen(true);
+  };
+
+  const handleConfirmLegajo = async (aliasId: string | null) => {
     if (!machine.currentCampaignId) return;
 
     try {
@@ -44,8 +48,10 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
         formingYield: formingYield ? parseFloat(formingYield) : undefined,
         packingYield: packingYield ? parseFloat(packingYield) : undefined,
         notes: notes || undefined,
-      });
+        userAliasId: aliasId,
+      } as any);
       onClose();
+      setIsLegajoModalOpen(false);
     } catch (error) {
       console.error(error);
     }
@@ -212,7 +218,7 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
           Descartar
         </Button>
         <Button 
-          onClick={handleSave} 
+          onClick={handleSaveClick} 
           variant="contained" 
           disabled={(!formingYield && !packingYield) || isRecording || isLoadingTime}
           sx={{ 
@@ -239,6 +245,13 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
           {isRecording ? <CircularProgress size={16} color="inherit" /> : "Confirmar Registro"}
         </Button>
       </DialogActions>
+
+      <EnterLegajoModal 
+        open={isLegajoModalOpen} 
+        onClose={() => setIsLegajoModalOpen(false)} 
+        onConfirm={handleConfirmLegajo}
+        isSaving={isRecording}
+      />
     </Dialog>
   );
 }

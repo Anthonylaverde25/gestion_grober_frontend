@@ -14,6 +14,7 @@ import TextField from "@mui/material/TextField";
 import { Machine } from "@/app/core/domain/entities/Machine";
 import { useServerTime } from "@/app/features/production/hooks/useServerTime";
 import { useLineYield } from "@/app/features/production/hooks/useLineYield";
+import EnterLegajoModal from "./EnterLegajoModal";
 
 interface RegisterPackingSheetModalProps {
   open: boolean;
@@ -49,6 +50,8 @@ export default function RegisterPackingSheetModal({
     forming: false,
     packing: false,
   });
+  
+  const [isLegajoModalOpen, setIsLegajoModalOpen] = useState(false);
 
   const handleInputChange = (index: number, field: string, value: string) => {
     const newRows = [...rows];
@@ -78,7 +81,11 @@ export default function RegisterPackingSheetModal({
     return (sum / values.length).toFixed(2);
   };
 
-  const handleSave = async () => {
+  const handleSaveClick = () => {
+    setIsLegajoModalOpen(true);
+  };
+
+  const handleConfirmLegajo = async (aliasId: string | null) => {
     if (!machine.currentCampaignId || !serverTime) return;
 
     try {
@@ -102,6 +109,7 @@ export default function RegisterPackingSheetModal({
             packing_yield: isNaN(pYield) ? 0 : pYield,
             recorded_at: date.toISOString(),
             notes: row.notes || undefined,
+            user_alias_id: aliasId,
           };
         })
         .filter((y) => y !== null);
@@ -114,6 +122,7 @@ export default function RegisterPackingSheetModal({
       });
 
       onClose();
+      setIsLegajoModalOpen(false);
     } catch (error) {
       console.error(error);
     }
@@ -491,7 +500,7 @@ export default function RegisterPackingSheetModal({
           Descartar
         </Button>
         <Button
-          onClick={handleSave}
+          onClick={handleSaveClick}
           variant="contained"
           disabled={!isFormValid || isLoadingTime || isRecording}
           sx={{
@@ -522,6 +531,13 @@ export default function RegisterPackingSheetModal({
           )}
         </Button>
       </DialogActions>
+
+      <EnterLegajoModal 
+        open={isLegajoModalOpen} 
+        onClose={() => setIsLegajoModalOpen(false)} 
+        onConfirm={handleConfirmLegajo}
+        isSaving={isRecording}
+      />
     </Dialog>
   );
 }

@@ -11,6 +11,7 @@ export class LineYieldMapper {
       packingYield: dto.packing_yield,
       recordedAt: dto.recorded_at,
       notes: dto.notes,
+      userAliasId: dto.user_alias_id,
     });
   }
 
@@ -23,6 +24,7 @@ export class LineYieldMapper {
       packing_yield: entity.packingYield,
       recorded_at: entity.recordedAt.toISOString(),
       notes: entity.notes ?? undefined,
+      user_alias_id: entity.userAliasId,
     };
   }
 }

@@ -5,6 +5,7 @@ export interface BatchYieldItem {
   packing_yield: number;
   recorded_at: string;
   notes?: string;
+  user_alias_id?: string | null;
 }
 
 export class RecordLineYieldBatchUseCase {

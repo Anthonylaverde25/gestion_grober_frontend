@@ -6,6 +6,7 @@ export interface LineYieldProps {
   packingYield: number;
   recordedAt?: string;
   notes?: string;
+  userAliasId?: string | null;
 }
 
 export class LineYield {
@@ -16,6 +17,7 @@ export class LineYield {
   public readonly packingYield: number;
   public readonly recordedAt: Date;
   public readonly notes: string | null;
+  public readonly userAliasId: string | null;
 
   private constructor(props: LineYieldProps) {
     this.id = props.id || crypto.randomUUID();
@@ -25,6 +27,7 @@ export class LineYield {
     this.packingYield = props.packingYield;
     this.recordedAt = props.recordedAt ? new Date(props.recordedAt) : new Date();
     this.notes = props.notes ?? null;
+    this.userAliasId = props.userAliasId ?? null;
   }
 
   static create(props: LineYieldProps): LineYield {
@@ -46,7 +49,8 @@ export class LineYield {
         formingYield: props.formingYield || props.forming_yield,
         packingYield: props.packingYield || props.packing_yield,
         recordedAt: props.recordedAt || props.recorded_at,
-        notes: props.notes
+        notes: props.notes,
+        userAliasId: props.userAliasId || props.user_alias_id
     });
   }
 
