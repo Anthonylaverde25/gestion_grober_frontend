@@ -1,11 +1,11 @@
 import { ApiLineYieldRepository } from "../../infrastructure/repositories/ApiLineYieldRepository";
 
 export interface BatchYieldItem {
-  forming_yield: number;
-  packing_yield: number;
-  recorded_at: string;
+  formingYield: number;
+  packingYield: number;
+  recordedAt: string;
   notes?: string;
-  user_alias_id?: string | null;
+  userAliasId?: string | null;
 }
 
 export class RecordLineYieldBatchUseCase {

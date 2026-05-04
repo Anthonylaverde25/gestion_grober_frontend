@@ -8,7 +8,7 @@ export class GetLineYieldHistoryUseCase {
     return await this.lineYieldRepository.getHistoryByCampaign(campaignId);
   }
 
-  async executeByMachine(machineId: string, limit: number = 50): Promise<LineYield[]> {
+  async executeByMachine(machineId: string, limit?: number | null): Promise<LineYield[]> {
     return await this.lineYieldRepository.getHistoryByMachine(machineId, limit);
   }
 }

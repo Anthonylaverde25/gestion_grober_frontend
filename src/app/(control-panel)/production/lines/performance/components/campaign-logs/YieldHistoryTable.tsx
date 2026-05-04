@@ -87,7 +87,7 @@ export default function YieldHistoryTable({
     worksheet.addRow(["Línea:", campaign?.machineName || "N/A", "Campaña:", campaign?.codigo || "N/A"]);
     worksheet.addRow(["Fecha:", format(new Date(), "dd/MM/yyyy HH:mm")]);
     worksheet.addRow([]);
-    const headerRow = worksheet.addRow(["FECHA Y HORA", "FORMING (%)", "PACKING (%)", "OBSERVACIONES"]);
+    const headerRow = worksheet.addRow(["FECHA Y HORA", "OPERADOR", "FORMING (%)", "PACKING (%)", "OBSERVACIONES"]);
     headerRow.eachCell((cell) => {
       cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFE9ECEF" } };
       cell.font = { bold: true };
@@ -95,6 +95,7 @@ export default function YieldHistoryTable({
     data.forEach((row) => {
       worksheet.addRow([
         format(new Date(row.recordedAt), "dd/MM/yyyy HH:mm"),
+        row.alias?.name || "-",
         `${row.formingYield.toFixed(2)}%`,
         `${row.packingYield.toFixed(2)}%`,
         row.notes || "",
@@ -127,6 +128,44 @@ export default function YieldHistoryTable({
           return (
             <Typography className="font-data-tabular">
               {format(new Date(row.original.recordedAt), "dd/MM/yyyy HH:mm")}
+            </Typography>
+          );
+        },
+      },
+      {
+        accessorKey: "alias.name",
+        header: "Operador",
+        size: 200,
+        Cell: ({ row }) => {
+          if (row.original.isSummary) return null;
+          
+          const alias = row.original.alias;
+          const userAliasId = row.original.userAliasId;
+
+          if (alias) {
+            return (
+              <Box className="flex flex-col">
+                <Typography sx={{ fontSize: '12px', fontWeight: 700, color: 'primary.main' }}>
+                  {alias.name}
+                </Typography>
+                <Typography sx={{ fontSize: '10px', color: 'text.secondary', fontFamily: 'JetBrains Mono' }}>
+                  {alias.legajo}
+                </Typography>
+              </Box>
+            );
+          }
+
+          if (userAliasId) {
+            return (
+              <Typography sx={{ fontSize: '11px', color: 'text.secondary', fontStyle: 'italic' }}>
+                Cargando...
+              </Typography>
+            );
+          }
+
+          return (
+            <Typography sx={{ fontSize: '11px', color: 'text.disabled' }}>
+              -
             </Typography>
           );
         },

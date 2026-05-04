@@ -16,9 +16,17 @@ export class ApiLineYieldRepository {
 
   async saveBatch(campaignId: string, yields: any[]): Promise<void> {
     try {
+      const mappedYields = yields.map(item => ({
+        forming_yield: item.formingYield,
+        packing_yield: item.packingYield,
+        recorded_at: item.recordedAt,
+        notes: item.notes,
+        user_alias_id: item.userAliasId
+      }));
+
       await axiosInstance.post('/api/v1/line-yields/batch', {
         campaign_id: campaignId,
-        items: yields
+        items: mappedYields
       });
     } catch (error) {
       console.error('Error in ApiLineYieldRepository.saveBatch:', error);
@@ -35,9 +43,10 @@ export class ApiLineYieldRepository {
     }
   }
 
-  async getHistoryByMachine(machineId: string, limit: number = 50): Promise<LineYield[]> {
+  async getHistoryByMachine(machineId: string, limit?: number | null): Promise<LineYield[]> {
     try {
-      const response = await axiosInstance.get(`/api/v1/machines/${machineId}/line-yields/history?limit=${limit}`);
+      const url = `/api/v1/machines/${machineId}/line-yields/history${limit ? `?limit=${limit}` : ''}`;
+      const response = await axiosInstance.get(url);
       return response.data.data.map((dto: LineYieldDTO) => LineYieldMapper.toDomain(dto));
     } catch (error) {
       throw new Error('Error al obtener historial de rendimiento por máquina');

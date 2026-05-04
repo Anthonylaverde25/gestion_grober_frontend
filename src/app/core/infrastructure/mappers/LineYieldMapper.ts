@@ -12,6 +12,7 @@ export class LineYieldMapper {
       recordedAt: dto.recorded_at,
       notes: dto.notes,
       userAliasId: dto.user_alias_id,
+      alias: dto.alias,
     });
   }
 
@@ -25,6 +26,11 @@ export class LineYieldMapper {
       recorded_at: entity.recordedAt.toISOString(),
       notes: entity.notes ?? undefined,
       user_alias_id: entity.userAliasId,
+      alias: entity.alias ? {
+        id: entity.alias.id,
+        name: entity.alias.name,
+        legajo: entity.alias.legajo,
+      } : null,
     };
   }
 }

@@ -1,3 +1,5 @@
+import { UserAlias } from "./UserAlias";
+
 export interface LineYieldProps {
   id?: string;
   companyId?: string;
@@ -7,6 +9,7 @@ export interface LineYieldProps {
   recordedAt?: string;
   notes?: string;
   userAliasId?: string | null;
+  alias?: UserAlias | null;
 }
 
 export class LineYield {
@@ -18,6 +21,7 @@ export class LineYield {
   public readonly recordedAt: Date;
   public readonly notes: string | null;
   public readonly userAliasId: string | null;
+  public readonly alias: UserAlias | null;
 
   private constructor(props: LineYieldProps) {
     this.id = props.id || crypto.randomUUID();
@@ -28,6 +32,7 @@ export class LineYield {
     this.recordedAt = props.recordedAt ? new Date(props.recordedAt) : new Date();
     this.notes = props.notes ?? null;
     this.userAliasId = props.userAliasId ?? null;
+    this.alias = props.alias ?? null;
   }
 
   static create(props: LineYieldProps): LineYield {
@@ -50,7 +55,8 @@ export class LineYield {
         packingYield: props.packingYield || props.packing_yield,
         recordedAt: props.recordedAt || props.recorded_at,
         notes: props.notes,
-        userAliasId: props.userAliasId || props.user_alias_id
+        userAliasId: props.userAliasId || props.user_alias_id,
+        alias: props.alias ? UserAlias.create(props.alias) : null
     });
   }
 

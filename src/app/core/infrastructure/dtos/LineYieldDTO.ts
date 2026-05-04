@@ -7,4 +7,9 @@ export interface LineYieldDTO {
   recorded_at: string;
   notes?: string;
   user_alias_id?: string | null;
+  alias?: {
+    id: string;
+    name: string;
+    legajo: string;
+  } | null;
 }

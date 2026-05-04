@@ -17,10 +17,10 @@ const getYieldsUseCase = new GetLineYieldHistoryUseCase(yieldRepository);
 export type TimeRange = 'hour' | 'day' | 'week' | 'month';
 
 const rangeConfig = {
-    hour: { limit: 24, format: 'HH:mm' },
-    day: { limit: 30, format: 'dd MMM' }, 
-    week: { limit: 52, format: 'dd/MM' },
-    month: { limit: 24, format: 'MMM yy' }
+    hour: { limit: null, format: 'HH:mm' },
+    day: { limit: null, format: 'dd MMM' }, 
+    week: { limit: null, format: 'dd/MM' },
+    month: { limit: null, format: 'MMM yy' }
 };
 
 export function useYieldOverview() {
