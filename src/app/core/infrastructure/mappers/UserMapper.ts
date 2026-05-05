@@ -5,13 +5,14 @@ import { CompanyMapper } from './CompanyMapper';
 export class UserMapper {
     static toDomain(dto: UserDTO): User {
         return new User({
-            id: dto.id,
+            id: dto.id.toString() as any,
             name: dto.name,
             email: dto.email,
             roles: dto.roles,
             isActive: dto.is_active,
             lastActiveCompanyId: dto.last_active_company_id,
-            companies: dto.companies?.map(c => CompanyMapper.toDomain(c)) ?? []
+            companies: dto.companies?.map(c => CompanyMapper.toDomain(c)) ?? [],
+            modules: dto.modules ?? []
         });
     }
 

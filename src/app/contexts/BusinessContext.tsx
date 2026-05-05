@@ -14,6 +14,7 @@ interface BusinessContextType {
     availableCompanies: Company[];
     switchCompany: (companyId: string) => Promise<void>;
     isLoadingContext: boolean;
+    canSwitchCompany: boolean;
 }
 
 const BusinessContext = createContext<BusinessContextType | undefined>(undefined);
@@ -31,6 +32,13 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
     const [isLoadingContext, setIsLoadingContext] = useState(true);
 
     const availableCompanies = useMemo(() => user?.companies || [], [user]);
+
+    // Un supervisor no puede cambiar de empresa (su switcher es read-only)
+    const canSwitchCompany = useMemo(() => {
+        if (!user) return false;
+        const restrictedRoles = ['supervisor', 'operator'];
+        return !user.roles.some(role => restrictedRoles.includes(role.toLowerCase()));
+    }, [user]);
 
     // Sincronización inicial y cuando el usuario cambia
     useEffect(() => {
@@ -90,8 +98,9 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
         activeCompany,
         availableCompanies,
         switchCompany,
-        isLoadingContext
-    }), [activeCompany, availableCompanies, isLoadingContext]);
+        isLoadingContext,
+        canSwitchCompany
+    }), [activeCompany, availableCompanies, isLoadingContext, canSwitchCompany]);
 
     return (
         <BusinessContext.Provider value={value}>

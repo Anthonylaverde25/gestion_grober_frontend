@@ -8,4 +8,5 @@ export interface UserTypes {
     isActive?: boolean;
     lastActiveCompanyId?: string | null;
     companies?: Company[];
+    modules?: string[];
 }

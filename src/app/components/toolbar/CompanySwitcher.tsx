@@ -13,7 +13,7 @@ import CircularProgress from "@mui/material/CircularProgress";
  * Professional minimalist design. Now powered by BusinessContext.
  */
 export default function CompanySwitcher() {
-  const { activeCompany, availableCompanies, switchCompany, isLoadingContext } = useBusiness();
+  const { activeCompany, availableCompanies, switchCompany, isLoadingContext, canSwitchCompany } = useBusiness();
 
   if (availableCompanies.length === 0) {
     return null;
@@ -26,12 +26,13 @@ export default function CompanySwitcher() {
 
   return (
     <Box 
-      className="flex items-center px-4 h-full transition-colors duration-200 border-x border-transparent hover:bg-action-hover"
+      className={`flex items-center px-4 h-full transition-colors duration-200 border-x border-transparent ${canSwitchCompany ? 'hover:bg-action-hover' : ''}`}
       sx={{ 
         minWidth: 200,
         maxWidth: 300,
         borderLeftColor: 'divider',
         borderRightColor: 'divider',
+        cursor: canSwitchCompany ? 'pointer' : 'default'
       }}
     >
       <Box className="flex items-center justify-center mr-3 opacity-40">
@@ -61,8 +62,8 @@ export default function CompanySwitcher() {
             value={activeCompany?.id || ""}
             onChange={handleChange}
             disableUnderline
-            disabled={isLoadingContext}
-            IconComponent={ExpandMoreIcon}
+            disabled={isLoadingContext || !canSwitchCompany}
+            IconComponent={canSwitchCompany ? ExpandMoreIcon : undefined}
             MenuProps={{
               PaperProps: {
                 sx: {

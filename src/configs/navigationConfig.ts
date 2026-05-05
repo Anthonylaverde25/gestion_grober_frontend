@@ -26,6 +26,7 @@ const navigationConfig: FuseNavItemType[] = [
     type: "item",
     icon: "heroicons-outline:cog",
     url: "settings",
+    module: "settings",
   },
 
   {
@@ -61,15 +62,16 @@ const navigationConfig: FuseNavItemType[] = [
     type: "group",
     icon: "lucide:layout-dashboard",
     translate: "PRODUCTION",
+    module: "production",
     children: [
-      {
-        id: "production.extraction.machines",
-        title: "Extracción de Máquinas",
-        subtitle: "Reporte de extracción de máquinas",
-        type: "item",
-        icon: "lucide:clipboard-check",
-        url: "production/extraction",
-      },
+      // {
+      //   id: "production.extraction.machines",
+      //   title: "Extracción de Máquinas",
+      //   subtitle: "Reporte de extracción de máquinas",
+      //   type: "item",
+      //   icon: "lucide:clipboard-check",
+      //   url: "production/extraction",
+      // },
       {
         id: "production.line.performance",
         title: "Rendimiento de Líneas",

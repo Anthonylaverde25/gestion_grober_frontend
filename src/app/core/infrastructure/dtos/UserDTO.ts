@@ -8,4 +8,5 @@ export interface UserDTO {
     is_active: boolean;
     last_active_company_id?: string | null;
     companies?: CompanyDTO[];
+    modules?: string[];
 }

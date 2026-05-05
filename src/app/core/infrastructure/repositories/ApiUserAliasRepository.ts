@@ -23,4 +23,11 @@ export class ApiUserAliasRepository implements UserAliasRepository {
       throw error;
     }
   }
+
+  async findByUser(userId: number): Promise<UserAlias[]> {
+    const response = await axiosInstance.get<{ data: any[] }>('/api/v1/user-aliases', {
+      params: { user_id: userId },
+    });
+    return response.data.data.map((dto) => UserAliasMapper.toDomain(dto));
+  }
 }

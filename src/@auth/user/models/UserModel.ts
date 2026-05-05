@@ -30,7 +30,8 @@ function UserModel(data?: PartialDeep<User> & { name?: string; roles?: string[];
 			displayName,
 			role,
 			lastActiveCompanyId,
-			companies
+			companies,
+			modules: data.modules || []
 		},
 		{
 			id: null,
@@ -42,7 +43,8 @@ function UserModel(data?: PartialDeep<User> & { name?: string; roles?: string[];
 			settings: {},
 			loginRedirectUrl: '/',
 			companies: [],
-			lastActiveCompanyId: null
+			lastActiveCompanyId: null,
+			modules: []
 		}
 	) as User;
 }

@@ -18,4 +18,5 @@ export type User = FuseAuthUser & {
 	loginRedirectUrl?: string; // The URL to redirect to after login.
 	companies?: Company[];
 	lastActiveCompanyId?: string | null;
+	modules?: string[];
 };

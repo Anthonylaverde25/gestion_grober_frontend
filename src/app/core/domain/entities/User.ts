@@ -9,6 +9,7 @@ export class User {
     public readonly companies: Company[];
     public readonly lastActiveCompanyId: string | null;
     public isActive: boolean;
+    public readonly modules: string[];
 
     constructor(props: UserTypes) {
         this.id = props.id;
@@ -18,5 +19,6 @@ export class User {
         this.companies = props.companies ?? [];
         this.lastActiveCompanyId = props.lastActiveCompanyId ?? null;
         this.isActive = props.isActive ?? true;
+        this.modules = props.modules ?? [];
     }
 }

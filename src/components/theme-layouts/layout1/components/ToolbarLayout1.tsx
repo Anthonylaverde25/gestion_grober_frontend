@@ -20,6 +20,7 @@ import CompanySwitcher from "@/app/components/toolbar/CompanySwitcher";
 import QuickActions from "@/app/components/toolbar/QuickActions";
 import { Link } from "react-router";
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
+import useUser from "@auth/useUser";
 
 type ToolbarLayout1Props = {
   className?: string;
@@ -34,6 +35,8 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
   const settings = useFuseLayoutSettings();
   const config = settings.config as Layout1ConfigDefaultsType;
   const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down("lg"));
+  const { data: user } = useUser();
+  const hasSettingsAccess = user?.modules?.includes('settings');
 
   return (
     <ToolbarTheme>
@@ -71,16 +74,18 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
               darkTheme={_.find(themeOptions, { id: "Default Dark" })}
             />
 
-            <Tooltip title="Ajustes de la aplicación" placement="bottom">
-              <IconButton
-                component={Link}
-                to="/settings"
-                className="h-10 w-10 p-0"
-                color="inherit"
-              >
-                <FuseSvgIcon size={17}>lucide:settings</FuseSvgIcon>
-              </IconButton>
-            </Tooltip>
+            {hasSettingsAccess && (
+              <Tooltip title="Ajustes de la aplicación" placement="bottom">
+                <IconButton
+                  component={Link}
+                  to="/settings"
+                  className="h-10 w-10 p-0"
+                  color="inherit"
+                >
+                  <FuseSvgIcon size={17}>lucide:settings</FuseSvgIcon>
+                </IconButton>
+              </Tooltip>
+            )}
 
             {/* <NavigationSearch /> */}
             {/* <QuickPanelToggleButton /> */}

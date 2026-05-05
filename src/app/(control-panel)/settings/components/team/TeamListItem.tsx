@@ -5,11 +5,11 @@ import { SettingsTeamMember } from '../../types';
 interface TeamListItemProps {
 	member: SettingsTeamMember;
 	onAlias?: (member: SettingsTeamMember) => void;
+	onViewAliases?: (member: SettingsTeamMember) => void;
 	onConfig?: (member: SettingsTeamMember) => void;
-	onDelete?: (member: SettingsTeamMember) => void;
 }
 
-export function TeamListItem({ member, onAlias, onConfig, onDelete }: TeamListItemProps) {
+export function TeamListItem({ member, onAlias, onViewAliases, onConfig }: TeamListItemProps) {
 	return (
 		<Box sx={{ 
 			display: 'flex', 
@@ -53,13 +53,22 @@ export function TeamListItem({ member, onAlias, onConfig, onDelete }: TeamListIt
 			</Box>
 
 			<Stack direction="row" spacing={0.5}>
-				<Tooltip title="Alias">
+				<Tooltip title="Nuevo Alias">
 					<IconButton 
 						size="small" 
 						onClick={(e) => { e.stopPropagation(); onAlias?.(member); }}
 						sx={{ color: '#6a6d70', '&:hover': { color: '#0070f2' } }}
 					>
 						<FuseSvgIcon size={20}>heroicons-outline:finger-print</FuseSvgIcon>
+					</IconButton>
+				</Tooltip>
+				<Tooltip title="Ver todos los Alias">
+					<IconButton 
+						size="small" 
+						onClick={(e) => { e.stopPropagation(); onViewAliases?.(member); }}
+						sx={{ color: '#6a6d70', '&:hover': { color: '#0f172a' } }}
+					>
+						<FuseSvgIcon size={20}>heroicons-outline:identification</FuseSvgIcon>
 					</IconButton>
 				</Tooltip>
 				<Tooltip title="Configurar">
@@ -69,15 +78,6 @@ export function TeamListItem({ member, onAlias, onConfig, onDelete }: TeamListIt
 						sx={{ color: '#6a6d70' }}
 					>
 						<FuseSvgIcon size={20}>heroicons-outline:cog-6-tooth</FuseSvgIcon>
-					</IconButton>
-				</Tooltip>
-				<Tooltip title="Eliminar">
-					<IconButton 
-						size="small" 
-						onClick={(e) => { e.stopPropagation(); onDelete?.(member); }}
-						sx={{ color: '#6a6d70', '&:hover': { color: '#bb0000' } }}
-					>
-						<FuseSvgIcon size={20}>heroicons-outline:trash</FuseSvgIcon>
 					</IconButton>
 				</Tooltip>
 			</Stack>

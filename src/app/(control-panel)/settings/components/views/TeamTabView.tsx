@@ -10,6 +10,7 @@ import { TeamFilterBar } from '../team/TeamFilterBar';
 import { TeamList } from '../team/TeamList';
 import CreateUserModal from '../team/CreateUserModal';
 import { AliasDialog } from '../team/AliasDialog';
+import { ViewAliasesDialog } from '../team/ViewAliasesDialog';
 import { SettingsTeamMember } from '../../types';
 
 function TeamTabView() {
@@ -20,6 +21,7 @@ function TeamTabView() {
 	const [searchTerm, setSearchTerm] = useState('');
 	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 	const [isAliasModalOpen, setIsAliasModalOpen] = useState(false);
+	const [isViewAliasesModalOpen, setIsViewAliasesModalOpen] = useState(false);
 	const [selectedMember, setSelectedMember] = useState<SettingsTeamMember | null>(null);
 
 	const filteredData = useMemo(() => {
@@ -54,6 +56,11 @@ function TeamTabView() {
 		setIsAliasModalOpen(true);
 	};
 
+	const handleViewAliases = (member: SettingsTeamMember) => {
+		setSelectedMember(member);
+		setIsViewAliasesModalOpen(true);
+	};
+
 	const handleConfirmCreateAlias = async (aliasData: any) => {
 		if (!selectedMember) return;
 		
@@ -72,10 +79,6 @@ function TeamTabView() {
 
 	const handleConfig = (member: SettingsTeamMember) => {
 		console.log('Configure member:', member.name);
-	};
-
-	const handleDelete = (member: SettingsTeamMember) => {
-		console.log('Delete member:', member.name);
 	};
 
 	if (isLoading) {
@@ -106,8 +109,8 @@ function TeamTabView() {
 			<TeamList 
 				members={filteredData} 
 				onAlias={handleAlias}
+				onViewAliases={handleViewAliases}
 				onConfig={handleConfig}
-				onDelete={handleDelete}
 			/>
 
 			{/* Modal de Creación (Patrón Hoja de Registro) */}
@@ -129,6 +132,16 @@ function TeamTabView() {
 				}}
 				onSubmit={handleConfirmCreateAlias}
 				isSubmitting={isCreatingAlias}
+			/>
+
+			{/* Modal de Visualización de Alias */}
+			<ViewAliasesDialog 
+				open={isViewAliasesModalOpen}
+				member={selectedMember}
+				onClose={() => {
+					setIsViewAliasesModalOpen(false);
+					setSelectedMember(null);
+				}}
 			/>
 		</Box>
 	);
