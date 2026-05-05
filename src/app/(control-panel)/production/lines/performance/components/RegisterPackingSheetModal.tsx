@@ -50,7 +50,7 @@ export default function RegisterPackingSheetModal({
     forming: false,
     packing: false,
   });
-  
+
   const [isLegajoModalOpen, setIsLegajoModalOpen] = useState(false);
 
   const handleInputChange = (index: number, field: string, value: string) => {
@@ -170,9 +170,7 @@ export default function RegisterPackingSheetModal({
             <span>
               Línea: <span className="text-on-surface">{machine.name}</span>
             </span>
-            <span>
-              Operador: <span className="text-on-surface">Juan Pérez</span>
-            </span>
+
           </Box>
           <Box className="flex gap-6 text-right">
             <span>
@@ -532,9 +530,9 @@ export default function RegisterPackingSheetModal({
         </Button>
       </DialogActions>
 
-      <EnterLegajoModal 
-        open={isLegajoModalOpen} 
-        onClose={() => setIsLegajoModalOpen(false)} 
+      <EnterLegajoModal
+        open={isLegajoModalOpen}
+        onClose={() => setIsLegajoModalOpen(false)}
         onConfirm={handleConfirmLegajo}
         isSaving={isRecording}
       />

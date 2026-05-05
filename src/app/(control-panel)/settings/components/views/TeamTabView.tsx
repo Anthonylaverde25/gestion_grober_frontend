@@ -1,129 +1,101 @@
 'use client';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import IconButton from '@mui/material/IconButton';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
-import Avatar from '@mui/material/Avatar';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import { useTeamMembers } from '../../api/hooks/team/useTeamMembers';
-import { useUpdateTeamMembers } from '../../api/hooks/team/useUpdateTeamMembers';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 
-const roles = [
-	{
-		label: 'Read',
-		value: 'read',
-		description: 'Can read and clone this repository. Can also open and comment on issues and pull requests.'
-	},
-	{
-		label: 'Write',
-		value: 'write',
-		description: 'Can read, clone, and push to this repository. Can also manage issues and pull requests.'
-	},
-	{
-		label: 'Admin',
-		value: 'admin',
-		description:
-			'Can read, clone, and push to this repository. Can also manage issues, pull requests, and repository settings, including adding collaborators.'
-	}
-];
+import { useMemo, useState } from 'react';
+import { Box, Typography } from '@mui/material';
+import { useTeamMembers } from '../../api/hooks/team/useTeamMembers';
+import { useBusiness } from '@/app/contexts/BusinessContext';
+import { TeamHeader } from '../team/TeamHeader';
+import { TeamFilterBar } from '../team/TeamFilterBar';
+import { TeamList } from '../team/TeamList';
+import CreateUserModal from '../team/CreateUserModal';
+import { SettingsTeamMember } from '../../types';
 
 function TeamTabView() {
-	const { data: teamMembers } = useTeamMembers();
-	const { mutate: updateTeamMembers } = useUpdateTeamMembers();
+	const { activeCompany } = useBusiness();
+	const { data: teamMembers, isLoading, createUser, isCreating } = useTeamMembers();
+	const [searchTerm, setSearchTerm] = useState('');
+	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-	function handleRemoveMember(email: string) {
-		updateTeamMembers(teamMembers?.filter((member) => member.email !== email));
+	const filteredData = useMemo(() => {
+		if (!teamMembers) return [];
+		return teamMembers.filter(member => 
+			member.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+			member.email?.toLowerCase().includes(searchTerm.toLowerCase())
+		);
+	}, [teamMembers, searchTerm]);
+
+	const handleAddUser = () => {
+		setIsCreateModalOpen(true);
+	};
+
+	const handleConfirmCreate = async (userData: any) => {
+		try {
+			await createUser({
+				name: userData.name,
+				email: userData.email,
+				password: userData.password,
+				role: userData.role,
+				company_id: userData.companyId
+			});
+			setIsCreateModalOpen(false);
+		} catch (error) {
+			console.error('Error creating user:', error);
+		}
+	};
+
+	const handleAlias = (member: SettingsTeamMember) => {
+		console.log('Assign Alias for:', member.name);
+	};
+
+	const handleConfig = (member: SettingsTeamMember) => {
+		console.log('Configure member:', member.name);
+	};
+
+	const handleDelete = (member: SettingsTeamMember) => {
+		console.log('Delete member:', member.name);
+	};
+
+	if (isLoading) {
+		return (
+			<Box sx={{ p: 4 }}>
+				<Typography sx={{ fontSize: '13px', color: 'text.secondary' }}>
+					Sincronizando con el servidor...
+				</Typography>
+			</Box>
+		);
 	}
 
 	return (
-		<div className="flex flex-col gap-4">
-			<FormControl className="w-full">
-				<FormLabel htmlFor="addTeamMember">Add team member</FormLabel>
-				<TextField
-					className="mb-2 w-full"
-					placeholder="Enter email"
-					id="addTeamMember"
-					slotProps={{
-						input: {
-							startAdornment: <FuseSvgIcon color="action">lucide:user</FuseSvgIcon>,
-							endAdornment: (
-								<IconButton>
-									<FuseSvgIcon color="action">lucide:circle-plus</FuseSvgIcon>
-								</IconButton>
-							)
-						},
-						inputLabel: {
-							shrink: true
-						}
-					}}
-				/>
-			</FormControl>
-			{teamMembers?.length === 0 && (
-				<Typography
-					className="my-8 text-center"
-					color="textSecondary"
-				>
-					No team members found.
-				</Typography>
-			)}
-			<List>
-				{teamMembers?.map((member) => (
-					<ListItem
-						divider
-						key={member.email}
-						disablePadding
-						className="py-3"
-					>
-						<div className="flex flex-1 items-center">
-							<ListItemAvatar>
-								<Avatar
-									src={member.avatar}
-									alt={`Avatar °${member.name}`}
-								/>
-							</ListItemAvatar>
-							<ListItemText
-								primary={member.name}
-								secondary={member.email}
-								classes={{ secondary: 'truncate' }}
-							/>
-						</div>
+		<Box sx={{ bgcolor: 'white', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+			{/* Componente de Cabecera */}
+			<TeamHeader 
+				count={filteredData.length} 
+				onAddUser={handleAddUser} 
+			/>
 
-						<div className="flex items-center gap-1">
-							<div>
-								<Select
-									sx={{
-										'& .MuiSelect-select': {
-											minHeight: '0!important'
-										}
-									}}
-									value={member.role}
-									size="small"
-								>
-									{roles.map((role) => (
-										<MenuItem
-											key={role.value}
-											value={role.value}
-										>
-											{role.label}
-										</MenuItem>
-									))}
-								</Select>
-							</div>
-							<IconButton onClick={() => handleRemoveMember(member.email)}>
-								<FuseSvgIcon>lucide:trash</FuseSvgIcon>
-							</IconButton>
-						</div>
-					</ListItem>
-				))}
-			</List>
-		</div>
+			{/* Barra de Filtros */}
+			<TeamFilterBar 
+				value={searchTerm} 
+				onChange={setSearchTerm} 
+			/>
+
+			{/* Lista de Integrantes */}
+			<TeamList 
+				members={filteredData} 
+				onAlias={handleAlias}
+				onConfig={handleConfig}
+				onDelete={handleDelete}
+			/>
+
+			{/* Modal de Creación (Patrón Hoja de Registro) */}
+			<CreateUserModal 
+				open={isCreateModalOpen}
+				company={activeCompany}
+				onClose={() => setIsCreateModalOpen(false)}
+				onConfirm={handleConfirmCreate}
+				isSubmitting={isCreating}
+			/>
+		</Box>
 	);
 }
 

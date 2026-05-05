@@ -65,7 +65,20 @@ export default function QuickActions() {
   };
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Tooltip title="Notificaciones" placement="bottom">
+        <IconButton
+          sx={{
+            width: 40,
+            height: 40,
+            color: 'inherit',
+            '&:hover': { bgcolor: 'action.hover' }
+          }}
+        >
+          <FuseSvgIcon size={20}>heroicons-outline:bell</FuseSvgIcon>
+        </IconButton>
+      </Tooltip>
+
       <Tooltip title="Acciones Rápidas" placement="bottom">
         <IconButton
           onClick={handleOpen}
@@ -104,11 +117,16 @@ export default function QuickActions() {
                     <FuseSvgIcon size={18}>heroicons-outline:command-line</FuseSvgIcon>
                 </Box>
                 <Box>
-                    <Typography sx={{ fontSize: '14px', fontWeight: 800, color: 'text.primary', lineHeight: 1.2 }}>
-                    Panel de Operaciones
-                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Typography sx={{ fontSize: '14px', fontWeight: 800, color: 'text.primary', lineHeight: 1.2 }}>
+                            Panel de Operaciones
+                        </Typography>
+                        <Box sx={{ display: 'flex', color: 'warning.main' }}>
+                            <FuseSvgIcon size={16}>heroicons-outline:exclamation-triangle</FuseSvgIcon>
+                        </Box>
+                    </Box>
                     <Typography sx={{ fontSize: '11px', fontWeight: 600, color: 'text.secondary' }}>
-                    Acceso rápido a flujos de trabajo críticos
+                        Acceso rápido a flujos de trabajo críticos
                     </Typography>
                 </Box>
               </Box>

@@ -1,4 +1,6 @@
 import ReactECharts from "echarts-for-react";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
@@ -27,6 +29,7 @@ export default function MachineYieldECharts({
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const [showAverage, setShowAverage] = useState(false);
+  const [showGaps, setShowGaps] = useState(false);
 
   const averageForming = useMemo(() => {
     if (!data || data.length === 0) return 0;
@@ -38,6 +41,49 @@ export default function MachineYieldECharts({
     if (!data || data.length === 0) return 0;
     const sum = data.reduce((acc, curr) => acc + curr.packingYield, 0);
     return (sum / data.length).toFixed(1);
+  }, [data]);
+
+  const gapAreas = useMemo(() => {
+    if (!data || data.length < 2) return [];
+    const threshold = 1000 * 60 * 60; // 1 hora
+    const areas: any[] = [];
+    
+    const sorted = [...data].sort((a, b) => new Date(a.recordedAt).getTime() - new Date(b.recordedAt).getTime());
+    
+    for (let i = 0; i < sorted.length - 1; i++) {
+      const start = new Date(sorted[i].recordedAt).getTime();
+      const end = new Date(sorted[i+1].recordedAt).getTime();
+      const diffHours = (end - start) / (1000 * 60 * 60);
+      
+      if (end - start > threshold) {
+        areas.push([
+          {
+            xAxis: start,
+            itemStyle: { 
+                color: 'rgba(245, 158, 11, 0.08)', // Ámbar Alerta sutil
+            },
+            label: {
+              show: true,
+              position: 'insideTop',
+              distance: 15, // Vuelve al interior del área
+              formatter: `{a|SIN REPORTE}\n{b|${diffHours.toFixed(1)}h}`,
+              rich: {
+                  a: { color: '#d97706', fontSize: 8, fontWeight: 800, lineHeight: 12 },
+                  b: { color: '#92400e', fontSize: 7, fontWeight: 600 }
+              },
+              backgroundColor: '#fffbeb',
+              padding: [4, 8],
+              borderRadius: 4,
+              borderWidth: 1,
+              borderColor: '#fcd34d',
+              align: 'center'
+            }
+          },
+          { xAxis: end }
+        ]);
+      }
+    }
+    return areas;
   }, [data]);
 
   const handleAction = (action: string) => {
@@ -107,21 +153,21 @@ export default function MachineYieldECharts({
       left: "2%",
       right: "2%",
       bottom: "18%",
-      top: "5%",
+      top: "10%", // Reducido al volver las etiquetas al interior
       containLabel: true,
     },
     xAxis: {
-      type: "category",
+      type: "time",
       boundaryGap: false,
-      data: data.map((item) =>
-        new Date(item.recordedAt).toLocaleString("es-AR", {
-          hour: "2-digit",
-          minute: "2-digit",
-          day: "2-digit",
-          month: "short",
-        }),
-      ),
-      axisLabel: { color: "#64748b", fontSize: 11, margin: 15 },
+      axisLabel: { 
+        color: "#64748b", 
+        fontSize: 11, 
+        margin: 15,
+        formatter: (value: number) => {
+          const date = new Date(value);
+          return format(date, "HH:mm\ndd MMM", { locale: es });
+        }
+      },
       axisLine: { show: false },
       axisTick: { show: false },
       splitLine: { show: true, lineStyle: { color: "#e2e8f0", type: "solid" } },
@@ -157,7 +203,21 @@ export default function MachineYieldECharts({
         symbolSize: 10,
         showSymbol: true,
         lineStyle: { width: 3, color: color },
-        data: data.map((item) => item.formingYield),
+        data: data.map((item) => [new Date(item.recordedAt), item.formingYield]),
+        areaStyle: {
+            color: {
+                type: 'linear',
+                x: 0, y: 0, x2: 0, y2: 1,
+                colorStops: [
+                    { offset: 0, color: `${color}33` }, // Opacidad 20%
+                    { offset: 1, color: `${color}00` }  // Opacidad 0%
+                ]
+            }
+        },
+        markArea: {
+            silent: true,
+            data: showGaps ? gapAreas : []
+        },
         markLine: showAverage
           ? {
               silent: true,
@@ -176,7 +236,17 @@ export default function MachineYieldECharts({
         symbolSize: 10,
         showSymbol: true,
         lineStyle: { width: 3, color: '#94a3b8', type: 'dashed' },
-        data: data.map((item) => item.packingYield),
+        data: data.map((item) => [new Date(item.recordedAt), item.packingYield]),
+        areaStyle: {
+            color: {
+                type: 'linear',
+                x: 0, y: 0, x2: 0, y2: 1,
+                colorStops: [
+                    { offset: 0, color: 'rgba(148, 163, 184, 0.15)' },
+                    { offset: 1, color: 'rgba(148, 163, 184, 0)' }
+                ]
+            }
+        },
         markLine: showAverage
           ? {
               silent: true,
@@ -280,6 +350,19 @@ export default function MachineYieldECharts({
             </IconButton>
           </Tooltip>
 
+          <Tooltip title={showGaps ? "Ocultar Brechas" : "Analizar Brechas"}>
+            <IconButton
+              size="small"
+              onClick={() => setShowGaps(!showGaps)}
+              sx={{
+                color: showGaps ? "#ef4444" : "#64748b",
+                backgroundColor: showGaps ? "rgba(239, 68, 68, 0.08)" : "transparent",
+              }}
+            >
+              <FuseSvgIcon size={18}>heroicons-outline:clock</FuseSvgIcon>
+            </IconButton>
+          </Tooltip>
+
           <Box sx={{ width: "1px", height: 20, backgroundColor: "#cbd5e1", mx: 1, my: "auto" }} />
 
           <Tooltip title="Zoom">
@@ -310,7 +393,7 @@ export default function MachineYieldECharts({
         <ReactECharts
           ref={chartRef}
           option={option}
-          style={{ height: "480px", width: "100%" }}
+          style={{ height: "600px", width: "100%" }}
           opts={{ renderer: "canvas" }}
         />
       </Box>

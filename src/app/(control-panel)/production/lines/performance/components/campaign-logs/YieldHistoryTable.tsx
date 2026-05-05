@@ -96,8 +96,8 @@ export default function YieldHistoryTable({
       worksheet.addRow([
         format(new Date(row.recordedAt), "dd/MM/yyyy HH:mm"),
         row.alias?.name || "-",
-        `${row.formingYield.toFixed(2)}%`,
-        `${row.packingYield.toFixed(2)}%`,
+        typeof row.formingYield === 'number' ? `${row.formingYield.toFixed(2)}%` : '-',
+        typeof row.packingYield === 'number' ? `${row.packingYield.toFixed(2)}%` : '-',
         row.notes || "",
       ]);
     });
@@ -182,7 +182,7 @@ export default function YieldHistoryTable({
             fontSize: row.original.isSummary ? '16px' : '13px',
             color: row.original.isSummary ? '#38bdf8' : 'text.primary'
           }}>
-            {`${cell.getValue<number>().toFixed(2)}%`}
+            {typeof cell.getValue<number>() === 'number' ? `${cell.getValue<number>().toFixed(2)}%` : '-'}
           </Typography>
         ),
       },
@@ -198,7 +198,7 @@ export default function YieldHistoryTable({
             fontSize: row.original.isSummary ? '16px' : '13px',
             color: row.original.isSummary ? '#38bdf8' : 'text.primary'
           }}>
-            {`${cell.getValue<number>().toFixed(2)}%`}
+            {typeof cell.getValue<number>() === 'number' ? `${cell.getValue<number>().toFixed(2)}%` : '-'}
           </Typography>
         ),
       },

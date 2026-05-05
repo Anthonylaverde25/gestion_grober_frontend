@@ -66,7 +66,7 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
   const addInitialRow = () => {
     if (!serverTime) return;
     const now = new Date(serverTime.timestamp * 1000);
-    
+
     setRows([{
       id: crypto.randomUUID(),
       formingYield: "",
@@ -79,9 +79,9 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
   const handleAddRow = () => {
     let newTime = "";
     if (rows.length > 0) {
-        newTime = rows[rows.length - 1].recordedAt;
+      newTime = rows[rows.length - 1].recordedAt;
     } else if (serverTime) {
-        newTime = formatDateTimeLocal(new Date(serverTime.timestamp * 1000));
+      newTime = formatDateTimeLocal(new Date(serverTime.timestamp * 1000));
     }
 
     setRows([...rows, {
@@ -152,17 +152,22 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
     }
   };
 
-  const isFormValid = rows.some(
-    (row) =>
-      (row.formingYield && !isNaN(parseFloat(row.formingYield))) ||
-      (row.packingYield && !isNaN(parseFloat(row.packingYield))),
-  );
+  const isRowValid = (row: YieldRow) => {
+    const f = parseFloat(row.formingYield);
+    const p = parseFloat(row.packingYield);
+    return (
+      row.formingYield !== "" && !isNaN(f) && f >= 0 && f <= 100 &&
+      row.packingYield !== "" && !isNaN(p) && p >= 0 && p <= 100
+    );
+  };
+
+  const isFormValid = rows.length > 0 && rows.every(isRowValid);
 
   return (
-    <Dialog 
-      open={open} 
-      onClose={onClose} 
-      maxWidth="md" 
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
       fullWidth
       PaperProps={{
         sx: {
@@ -189,10 +194,7 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
             <span>Línea: <span className="text-on-surface">{machine.name}</span></span>
             <span>Ref: <span className="text-on-surface font-data-tabular">{machine.id.split('-')[0]}</span></span>
           </Box>
-          <Box className="flex gap-4 text-right">
-            <span>Operador: <span className="text-on-surface">Juan Pérez</span></span>
-            <span>Hora Oficial: <span className="text-primary">{isLoadingTime ? "Sincronizando..." : serverTime?.formatted}</span></span>
-          </Box>
+
         </Box>
 
         <Box className="overflow-x-auto">
@@ -300,22 +302,22 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
                       className="w-full h-11 px-4 text-[13px] bg-transparent border-none outline-none focus:bg-primary-container/10 transition-colors font-data-tabular font-bold text-primary"
                     />
                   </td>
-                  <td className="p-0 border-r border-outline-variant">
+                  <td className={`p-0 border-r border-outline-variant ${row.formingYield !== "" && (parseFloat(row.formingYield) < 0 || parseFloat(row.formingYield) > 100) ? 'bg-red-50' : ''}`}>
                     <input
                       type="number"
                       placeholder="0.00"
                       value={row.formingYield}
                       onChange={(e) => handleInputChange(row.id, "formingYield", e.target.value)}
-                      className="w-full h-11 px-4 text-[13px] bg-transparent border-none outline-none focus:bg-primary-container/10 transition-colors font-data-tabular font-bold text-center"
+                      className={`w-full h-11 px-4 text-[13px] bg-transparent border-none outline-none focus:bg-primary-container/10 transition-colors font-data-tabular font-bold text-center ${row.formingYield !== "" && (parseFloat(row.formingYield) < 0 || parseFloat(row.formingYield) > 100) ? 'text-red-600' : ''}`}
                     />
                   </td>
-                  <td className="p-0 border-r border-outline-variant">
+                  <td className={`p-0 border-r border-outline-variant ${row.packingYield !== "" && (parseFloat(row.packingYield) < 0 || parseFloat(row.packingYield) > 100) ? 'bg-red-50' : ''}`}>
                     <input
                       type="number"
                       placeholder="0.00"
                       value={row.packingYield}
                       onChange={(e) => handleInputChange(row.id, "packingYield", e.target.value)}
-                      className="w-full h-11 px-4 text-[13px] bg-transparent border-none outline-none focus:bg-primary-container/10 transition-colors font-data-tabular font-bold text-center"
+                      className={`w-full h-11 px-4 text-[13px] bg-transparent border-none outline-none focus:bg-primary-container/10 transition-colors font-data-tabular font-bold text-center ${row.packingYield !== "" && (parseFloat(row.packingYield) < 0 || parseFloat(row.packingYield) > 100) ? 'text-red-600' : ''}`}
                     />
                   </td>
                   <td className="p-0 border-r border-outline-variant">
@@ -330,8 +332,8 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
                   <td className="px-2 py-0 text-center">
                     {rows.length > 1 && (
                       <Tooltip title="Eliminar fila">
-                        <IconButton 
-                          size="small" 
+                        <IconButton
+                          size="small"
                           onClick={() => handleRemoveRow(row.id)}
                           sx={{ color: '#94a3b8', '&:hover': { color: '#ef4444' } }}
                         >
@@ -347,44 +349,44 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
         </Box>
 
         <Box className="p-4 flex justify-start">
-            <Button
-                startIcon={<AddIcon />}
-                onClick={handleAddRow}
-                sx={{
-                    color: '#64748b',
-                    fontWeight: 800,
-                    fontSize: '11px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    '&:hover': { bgcolor: '#f1f5f9', color: '#0f172a' }
-                }}
-            >
-                Agregar nueva línea
-            </Button>
+          <Button
+            startIcon={<AddIcon />}
+            onClick={handleAddRow}
+            sx={{
+              color: '#64748b',
+              fontWeight: 800,
+              fontSize: '11px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              '&:hover': { bgcolor: '#f1f5f9', color: '#0f172a' }
+            }}
+          >
+            Agregar nueva línea
+          </Button>
         </Box>
       </DialogContent>
-      
+
       <DialogActions sx={{ p: 2.5, px: 3, bgcolor: '#f8fafc', borderTop: '1px solid #e2e8f0', justifyContent: 'space-between' }}>
-        <Button 
-            onClick={onClose} 
-            disabled={isRecording} 
-            sx={{ 
-                color: '#64748b', 
-                fontWeight: 800, 
-                fontSize: '11px', 
-                textTransform: 'uppercase', 
-                letterSpacing: '0.05em',
-                borderRadius: 0,
-                '&:hover': { bgcolor: 'transparent', color: '#0f172a' }
-            }}
+        <Button
+          onClick={onClose}
+          disabled={isRecording}
+          sx={{
+            color: '#64748b',
+            fontWeight: 800,
+            fontSize: '11px',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            borderRadius: 0,
+            '&:hover': { bgcolor: 'transparent', color: '#0f172a' }
+          }}
         >
           Descartar
         </Button>
-        <Button 
-          onClick={handleSaveClick} 
-          variant="contained" 
+        <Button
+          onClick={handleSaveClick}
+          variant="contained"
           disabled={!isFormValid || isRecording || isLoadingTime}
-          sx={{ 
+          sx={{
             borderRadius: 0,
             px: 3,
             py: 1,
@@ -400,8 +402,8 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
               boxShadow: 'none',
             },
             '&.Mui-disabled': {
-                bgcolor: '#e2e8f0',
-                color: '#94a3b8'
+              bgcolor: '#e2e8f0',
+              color: '#94a3b8'
             }
           }}
         >
@@ -409,9 +411,9 @@ export default function RegisterLineYieldModal({ open, onClose, machine }: Regis
         </Button>
       </DialogActions>
 
-      <EnterLegajoModal 
-        open={isLegajoModalOpen} 
-        onClose={() => setIsLegajoModalOpen(false)} 
+      <EnterLegajoModal
+        open={isLegajoModalOpen}
+        onClose={() => setIsLegajoModalOpen(false)}
         onConfirm={handleConfirmLegajo}
         isSaving={isRecording}
       />
