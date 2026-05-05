@@ -3,18 +3,24 @@
 import { useMemo, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useTeamMembers } from '../../api/hooks/team/useTeamMembers';
+import { useUserAliases } from '../../api/hooks/team/useUserAliases';
 import { useBusiness } from '@/app/contexts/BusinessContext';
 import { TeamHeader } from '../team/TeamHeader';
 import { TeamFilterBar } from '../team/TeamFilterBar';
 import { TeamList } from '../team/TeamList';
 import CreateUserModal from '../team/CreateUserModal';
+import { AliasDialog } from '../team/AliasDialog';
 import { SettingsTeamMember } from '../../types';
 
 function TeamTabView() {
 	const { activeCompany } = useBusiness();
 	const { data: teamMembers, isLoading, createUser, isCreating } = useTeamMembers();
+	const { createAlias, isCreating: isCreatingAlias } = useUserAliases();
+	
 	const [searchTerm, setSearchTerm] = useState('');
 	const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+	const [isAliasModalOpen, setIsAliasModalOpen] = useState(false);
+	const [selectedMember, setSelectedMember] = useState<SettingsTeamMember | null>(null);
 
 	const filteredData = useMemo(() => {
 		if (!teamMembers) return [];
@@ -44,7 +50,24 @@ function TeamTabView() {
 	};
 
 	const handleAlias = (member: SettingsTeamMember) => {
-		console.log('Assign Alias for:', member.name);
+		setSelectedMember(member);
+		setIsAliasModalOpen(true);
+	};
+
+	const handleConfirmCreateAlias = async (aliasData: any) => {
+		if (!selectedMember) return;
+		
+		try {
+			await createAlias({
+				userId: parseInt(selectedMember.id),
+				name: aliasData.name,
+				legajo: aliasData.legajo
+			});
+			setIsAliasModalOpen(false);
+			setSelectedMember(null);
+		} catch (error) {
+			console.error('Error creating alias:', error);
+		}
 	};
 
 	const handleConfig = (member: SettingsTeamMember) => {
@@ -94,6 +117,18 @@ function TeamTabView() {
 				onClose={() => setIsCreateModalOpen(false)}
 				onConfirm={handleConfirmCreate}
 				isSubmitting={isCreating}
+			/>
+
+			{/* Modal de Alias (Patrón Hoja de Registro Industrial) */}
+			<AliasDialog 
+				open={isAliasModalOpen}
+				member={selectedMember}
+				onClose={() => {
+					setIsAliasModalOpen(false);
+					setSelectedMember(null);
+				}}
+				onSubmit={handleConfirmCreateAlias}
+				isSubmitting={isCreatingAlias}
 			/>
 		</Box>
 	);

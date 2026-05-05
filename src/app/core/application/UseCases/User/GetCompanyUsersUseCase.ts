@@ -4,7 +4,7 @@ import { User } from '../../../domain/entities/User';
 export class GetCompanyUsersUseCase {
     constructor(private userRepository: UserRepository) {}
 
-    async execute(): Promise<User[]> {
-        return this.userRepository.getCompanyUsers();
+    async execute(companyId?: string): Promise<User[]> {
+        return this.userRepository.getCompanyUsers(companyId);
     }
 }

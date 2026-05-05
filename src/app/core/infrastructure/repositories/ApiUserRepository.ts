@@ -5,8 +5,10 @@ import { UserDTO } from '../dtos/UserDTO';
 import { axiosInstance } from '@/app/di/container';
 
 export class ApiUserRepository implements UserRepository {
-    async getCompanyUsers(): Promise<User[]> {
-        const response = await axiosInstance.get<{ data: UserDTO[] }>('/api/v1/users');
+    async getCompanyUsers(companyId?: string): Promise<User[]> {
+        const response = await axiosInstance.get<{ data: UserDTO[] }>('/api/v1/users', {
+            params: companyId ? { company_id: companyId } : {}
+        });
         return response.data.data.map(dto => UserMapper.toDomain(dto));
     }
 

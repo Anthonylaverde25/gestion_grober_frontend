@@ -4,8 +4,9 @@ import { GetCompanyUsersUseCase } from '@/app/core/application/UseCases/User/Get
 import { CreateUserUseCase } from '@/app/core/application/UseCases/User/CreateUserUseCase';
 import { User } from '@/app/core/domain/entities/User';
 import { SettingsTeamMember } from '../../types';
+import { useBusiness } from '@/app/contexts/BusinessContext';
 
-export const teamMembersQueryKey = ['settings', 'team-members'] as const;
+export const teamMembersQueryKey = (companyId?: string) => ['settings', 'team-members', companyId] as const;
 
 const userRepository = new ApiUserRepository();
 const getCompanyUsersUseCase = new GetCompanyUsersUseCase(userRepository);
@@ -13,10 +14,12 @@ const createUserUseCase = new CreateUserUseCase(userRepository);
 
 export function useTeamMembers() {
 	const queryClient = useQueryClient();
+	const { activeCompany, isLoadingContext } = useBusiness();
 
 	const query = useQuery({
-		queryKey: teamMembersQueryKey,
-		queryFn: () => getCompanyUsersUseCase.execute(),
+		queryKey: teamMembersQueryKey(activeCompany?.id),
+		queryFn: () => getCompanyUsersUseCase.execute(activeCompany?.id),
+		enabled: !!activeCompany?.id && !isLoadingContext,
 		select: (users: User[]): SettingsTeamMember[] => 
 			users.map(user => ({
 				id: user.id.toString(),
@@ -30,7 +33,7 @@ export function useTeamMembers() {
 	const createUserMutation = useMutation({
 		mutationFn: (data: any) => createUserUseCase.execute(data),
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: teamMembersQueryKey });
+			queryClient.invalidateQueries({ queryKey: teamMembersQueryKey(activeCompany?.id) });
 		}
 	});
 
@@ -40,3 +43,4 @@ export function useTeamMembers() {
 		isCreating: createUserMutation.isPending
 	};
 }
+
