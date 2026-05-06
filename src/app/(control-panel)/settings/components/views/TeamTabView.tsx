@@ -142,6 +142,7 @@ function TeamTabView() {
 					setIsViewAliasesModalOpen(false);
 					setSelectedMember(null);
 				}}
+				onAddAlias={handleAlias}
 			/>
 		</Box>
 	);

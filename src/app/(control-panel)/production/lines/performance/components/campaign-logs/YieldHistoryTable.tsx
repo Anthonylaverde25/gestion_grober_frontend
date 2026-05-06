@@ -12,7 +12,6 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
   type MRT_ColumnDef,
-  type MRT_Row,
 } from "material-react-table";
 import { MRT_Localization_ES } from "material-react-table/locales/es";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
@@ -23,6 +22,7 @@ import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { Campaign } from "@/app/core/domain/entities/Campaign";
 import { LineYield } from "@/app/core/domain/entities/LineYield";
+import { useTheme, alpha } from "@mui/material/styles";
 
 interface YieldHistoryTableProps {
   history: LineYield[];
@@ -37,6 +37,8 @@ export default function YieldHistoryTable({
   campaign,
   isLoading,
 }: YieldHistoryTableProps) {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [batchSize, setBatchSize] = useState<BatchSize>(1);
   const open = Boolean(anchorEl);
@@ -115,18 +117,18 @@ export default function YieldHistoryTable({
           if (row.original.isSummary) {
             return (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-                 <Box sx={{ bgcolor: '#38bdf8', color: '#1b1b1b', px: 1, py: 0.2, borderRadius: '4px', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                 <Box sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', px: 1, py: 0.2, borderRadius: '4px', display: 'flex', alignItems: 'center', gap: 0.5 }}>
                     <HistoryIcon sx={{ fontSize: 14 }} />
                     <Typography sx={{ fontWeight: 900, fontSize: '10px' }}>LOTE</Typography>
                  </Box>
-                 <Typography sx={{ fontWeight: 800, color: '#fff', fontSize: '12px', letterSpacing: '0.05em' }}>
+                 <Typography sx={{ fontWeight: 800, color: row.original.isSummary ? 'primary.contrastText' : 'text.primary', fontSize: '12px', letterSpacing: '0.05em' }}>
                     {row.original.range}
                  </Typography>
               </Box>
             );
           }
           return (
-            <Typography className="font-data-tabular">
+            <Typography sx={{ fontFamily: 'var(--fuse-font-family, "Inter", sans-serif)', fontSize: '13px', color: 'text.primary' }}>
               {format(new Date(row.original.recordedAt), "dd/MM/yyyy HH:mm")}
             </Typography>
           );
@@ -144,11 +146,11 @@ export default function YieldHistoryTable({
 
           if (alias) {
             return (
-              <Box className="flex flex-col">
+              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Typography sx={{ fontSize: '12px', fontWeight: 700, color: 'primary.main' }}>
                   {alias.name}
                 </Typography>
-                <Typography sx={{ fontSize: '10px', color: 'text.secondary', fontFamily: 'JetBrains Mono' }}>
+                <Typography sx={{ fontSize: '10px', color: 'text.secondary', fontFamily: 'monospace' }}>
                   {alias.legajo}
                 </Typography>
               </Box>
@@ -177,10 +179,10 @@ export default function YieldHistoryTable({
         muiTableBodyCellProps: { align: "right" },
         Cell: ({ cell, row }) => (
           <Typography sx={{ 
-            fontFamily: 'JetBrains Mono', 
+            fontFamily: 'monospace', 
             fontWeight: row.original.isSummary ? 900 : 600,
             fontSize: row.original.isSummary ? '16px' : '13px',
-            color: row.original.isSummary ? '#38bdf8' : 'text.primary'
+            color: row.original.isSummary ? (isDark ? 'primary.light' : 'primary.main') : 'text.primary'
           }}>
             {typeof cell.getValue<number>() === 'number' ? `${cell.getValue<number>().toFixed(2)}%` : '-'}
           </Typography>
@@ -193,10 +195,10 @@ export default function YieldHistoryTable({
         muiTableBodyCellProps: { align: "right" },
         Cell: ({ cell, row }) => (
           <Typography sx={{ 
-            fontFamily: 'JetBrains Mono', 
+            fontFamily: 'monospace', 
             fontWeight: row.original.isSummary ? 900 : 600,
             fontSize: row.original.isSummary ? '16px' : '13px',
-            color: row.original.isSummary ? '#38bdf8' : 'text.primary'
+            color: row.original.isSummary ? (isDark ? 'primary.light' : 'primary.main') : 'text.primary'
           }}>
             {typeof cell.getValue<number>() === 'number' ? `${cell.getValue<number>().toFixed(2)}%` : '-'}
           </Typography>
@@ -214,7 +216,7 @@ export default function YieldHistoryTable({
                     <IconButton 
                         size="small" 
                         onClick={() => exportDataToExcel(row.original.rawItems, `lote-${row.original.range}`)}
-                        sx={{ color: '#fff', bgcolor: 'rgba(255,255,255,0.1)', '&:hover': { bgcolor: 'rgba(255,255,255,0.2)' } }}
+                        sx={{ color: 'primary.contrastText', bgcolor: alpha(theme.palette.primary.contrastText, 0.1), '&:hover': { bgcolor: alpha(theme.palette.primary.contrastText, 0.2) } }}
                     >
                         <TableChartIcon fontSize="small" />
                     </IconButton>
@@ -230,7 +232,7 @@ export default function YieldHistoryTable({
         },
       },
     ],
-    [campaign],
+    [theme.palette.mode, campaign],
   );
 
   const table = useMaterialReactTable({
@@ -252,21 +254,28 @@ export default function YieldHistoryTable({
     },
     muiTablePaperProps: {
       elevation: 0,
-      sx: { borderRadius: "0", border: "none" },
+      sx: { borderRadius: "0", border: "none", bgcolor: 'background.paper' },
     },
     muiTableProps: {
       sx: {
         borderCollapse: "collapse",
-        "& .MuiTableCell-root": { border: "1px solid", borderColor: "divider", fontSize: "13px" },
+        "& .MuiTableCell-root": { border: "1px solid", borderColor: 'divider', fontSize: "13px", color: 'text.primary' },
       },
     },
     muiTableBodyRowProps: ({ row }) => ({
         sx: {
-            backgroundColor: row.original.isSummary ? '#1b1b1b' : 'inherit',
+            backgroundColor: row.original.isSummary 
+                ? (isDark ? alpha(theme.palette.primary.main, 0.2) : '#1b1b1b') 
+                : 'inherit',
             height: row.original.isSummary ? '52px' : 'inherit',
-            '&:hover': { backgroundColor: row.original.isSummary ? '#242424' : 'inherit' },
+            '&:hover': { 
+                backgroundColor: row.original.isSummary 
+                    ? (isDark ? alpha(theme.palette.primary.main, 0.3) : '#2d2d2d') 
+                    : 'inherit' 
+            },
             '& .MuiTableCell-root': {
-                borderBottom: row.original.isSummary ? '2px solid #38bdf8' : '1px solid divider',
+                borderBottom: row.original.isSummary ? '2px solid' : '1px solid',
+                borderBottomColor: row.original.isSummary ? 'primary.main' : 'divider',
             }
         }
     }),
@@ -277,7 +286,7 @@ export default function YieldHistoryTable({
       return (
         <Box sx={{ display: "flex", gap: "24px", alignItems: "center", p: "4px" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography sx={{ fontSize: '10px', fontWeight: 900, color: '#64748b', textTransform: 'uppercase', mr: 1 }}>
+            <Typography sx={{ fontSize: '10px', fontWeight: 900, color: 'text.secondary', textTransform: 'uppercase', mr: 1 }}>
                 Lotes:
             </Typography>
             {[1, 3, 6].map((size) => (
@@ -293,11 +302,11 @@ export default function YieldHistoryTable({
                         fontWeight: 900,
                         borderRadius: 0,
                         border: '1px solid',
-                        borderColor: batchSize === size ? '#1b1b1b' : '#e2e8f0',
-                        bgcolor: batchSize === size ? '#1b1b1b' : 'transparent',
-                        color: batchSize === size ? '#fff' : '#64748b',
+                        borderColor: batchSize === size ? (isDark ? 'primary.main' : '#1b1b1b') : 'divider',
+                        bgcolor: batchSize === size ? (isDark ? 'primary.main' : '#1b1b1b') : 'transparent',
+                        color: batchSize === size ? '#fff' : 'text.secondary',
                         boxShadow: 'none',
-                        '&:hover': { bgcolor: batchSize === size ? '#2d2d2d' : '#f8fafc', boxShadow: 'none' }
+                        '&:hover': { bgcolor: batchSize === size ? (isDark ? 'primary.dark' : '#2d2d2d') : 'background.default', boxShadow: 'none' }
                     }}
                 >
                     {size === 1 ? 'OFF' : `${size}H`}
@@ -318,12 +327,12 @@ export default function YieldHistoryTable({
               fontSize: "10px",
               fontWeight: 900,
               textTransform: "uppercase",
-              bgcolor: '#1b1b1b',
+              bgcolor: isDark ? 'primary.main' : '#1b1b1b',
               color: '#fff',
               boxShadow: 'none',
               borderRadius: 0,
-              '&:hover': { bgcolor: '#2d2d2d', boxShadow: 'none' },
-              '&.Mui-disabled': { bgcolor: '#f1f5f9', color: '#cbd5e1' }
+              '&:hover': { bgcolor: isDark ? 'primary.dark' : '#2d2d2d', boxShadow: 'none' },
+              '&.Mui-disabled': { bgcolor: 'action.disabledBackground', color: 'action.disabled' }
             }}
           >
             Exportar {hasSelection ? `(${selectedRows.length})` : ""}
@@ -344,14 +353,14 @@ export default function YieldHistoryTable({
   });
 
   return (
-    <section className="flex-1 min-h-[500px] flex flex-col bg-surface-container-lowest border border-outline-variant overflow-hidden">
-      <div className="px-gutter py-4 border-b border-outline-variant flex items-center justify-between bg-surface-container-low">
+    <section className="flex-1 min-h-[500px] flex flex-col border overflow-hidden" style={{ backgroundColor: theme.palette.background.paper, borderColor: theme.palette.divider }}>
+      <div className="px-gutter py-4 border-b flex items-center justify-between" style={{ backgroundColor: isDark ? alpha(theme.palette.background.default, 0.5) : '#f8f9fa', borderColor: theme.palette.divider }}>
         <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined text-on-surface-variant">list_alt</span>
-          <h3 className="font-headline-md text-sm text-on-surface">Trazabilidad Histórica de Rendimiento</h3>
+          <span className="material-symbols-outlined" style={{ color: theme.palette.text.secondary }}>list_alt</span>
+          <h3 className="font-headline-md text-sm" style={{ color: theme.palette.text.primary }}>Trazabilidad Histórica de Rendimiento</h3>
         </div>
       </div>
-      <Box className="flex-1 w-full overflow-auto">
+      <Box sx={{ flex: 1, w: '100%', overflow: 'auto' }}>
         <MaterialReactTable table={table} />
       </Box>
     </section>

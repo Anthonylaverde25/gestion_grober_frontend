@@ -10,11 +10,11 @@ import {
   CircularProgress,
   Typography,
   Box,
-  IconButton,
   Stack,
-  MenuItem
+  MenuItem,
+  useTheme,
+  alpha
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import CategoryIcon from '@mui/icons-material/Category';
 import BusinessIcon from '@mui/icons-material/Business';
 import { ArticleSchema, ArticleFormData } from '../schemas/ArticleSchema';
@@ -27,8 +27,15 @@ interface ArticleDialogProps {
   isSubmitting: boolean;
 }
 
+/**
+ * ArticleDialog Component
+ * Standardized industrial dialog for article creation.
+ * Optimized for Dark Mode.
+ */
 export function ArticleDialog({ open, onClose, onSubmit, isSubmitting }: ArticleDialogProps) {
   const { clients, isLoading: isLoadingClients } = useClients();
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
   
   const {
     control,
@@ -61,33 +68,34 @@ export function ArticleDialog({ open, onClose, onSubmit, isSubmitting }: Article
   const inputStyles = {
     '& .MuiOutlinedInput-root': {
       borderRadius: 0,
-      backgroundColor: '#ffffff',
+      backgroundColor: 'background.paper',
       '& fieldset': {
-        borderColor: '#e2e8f0',
+        borderColor: 'divider',
       },
       '&:hover fieldset': {
-        borderColor: '#94a3b8',
+        borderColor: 'primary.main',
       },
       '&.Mui-focused fieldset': {
-        borderColor: '#475569',
+        borderColor: 'primary.main',
         borderWidth: '1px',
       },
     },
     '& .MuiInputBase-input': {
       fontSize: '14px',
       fontWeight: 500,
+      color: 'text.primary'
     },
     '& .MuiInputLabel-root': {
         fontSize: '12px',
         fontWeight: 700,
         textTransform: 'uppercase',
         letterSpacing: '0.05em',
-        color: '#64748b'
+        color: 'text.secondary'
     }
   };
 
   const sectionLabelStyles = {
-    color: '#0f172a',
+    color: 'text.primary',
     fontWeight: 900,
     textTransform: 'uppercase' as const,
     letterSpacing: '0.1em',
@@ -100,7 +108,7 @@ export function ArticleDialog({ open, onClose, onSubmit, isSubmitting }: Article
         content: '""',
         flex: 1,
         height: '1px',
-        bgcolor: '#f1f5f9'
+        bgcolor: 'divider'
     }
   };
 
@@ -113,28 +121,44 @@ export function ArticleDialog({ open, onClose, onSubmit, isSubmitting }: Article
       PaperProps={{
         sx: {
           borderRadius: 0,
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+          boxShadow: theme.shadows[24],
+          bgcolor: 'background.paper',
+          backgroundImage: 'none'
         }
       }}
     >
-      <DialogTitle sx={{ bgcolor: "#e2e8f0", py: 1.5, px: 3 }}>
+      <DialogTitle sx={{ bgcolor: isDark ? alpha(theme.palette.primary.main, 0.1) : "#e2e8f0", py: 1.5, px: 3, borderBottom: 1, borderColor: 'divider' }}>
         <Box className="flex justify-between items-center">
-          <Typography variant="subtitle2" sx={{ fontWeight: 900, color: '#0f172a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          <Typography variant="subtitle2" sx={{ fontWeight: 900, color: 'text.primary', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
             Nuevo Artículo
           </Typography>
           <span className="material-symbols-outlined text-primary text-[20px]">inventory_2</span>
         </Box>
       </DialogTitle>
 
-      <DialogContent sx={{ p: 0 }}>
+      <DialogContent sx={{ p: 0, bgcolor: 'background.paper' }}>
         {/* Barra de Metadatos Minimalista */}
-        <Box className="px-6 py-2 bg-slate-50 border-b border-outline-variant flex justify-between items-center text-[10px] font-bold text-slate-500 uppercase tracking-tight">
+        <Box 
+            sx={{ 
+                px: 3, 
+                py: 1, 
+                bgcolor: isDark ? alpha(theme.palette.background.default, 0.5) : alpha(theme.palette.primary.main, 0.05), 
+                borderBottom: 1, 
+                borderColor: 'divider', 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                fontSize: '10px', 
+                fontWeight: 800, 
+                color: 'text.secondary', 
+                textTransform: 'uppercase' 
+            }}
+        >
           <Box className="flex gap-4">
-            <span>Módulo: <span className="text-on-surface">Gestión de Catálogo</span></span>
+            <span>Módulo: <Typography component="span" sx={{ fontSize: '10px', fontWeight: 900, color: 'text.primary' }}>Gestión de Catálogo</Typography></span>
           </Box>
           <Box className="flex gap-4 text-right">
-            <span>Estado: <span className="text-primary">Borrador de Artículo</span></span>
-            <span>Fecha: <span className="text-on-surface font-data-tabular">22/10/2023</span></span>
+            <span>Estado: <Typography component="span" sx={{ fontSize: '10px', fontWeight: 900, color: 'primary.main' }}>Borrador</Typography></span>
           </Box>
         </Box>
 
@@ -143,7 +167,7 @@ export function ArticleDialog({ open, onClose, onSubmit, isSubmitting }: Article
             <Stack spacing={3.5} sx={{ mt: 1 }}>
               <Box>
                 <Typography variant="caption" sx={sectionLabelStyles}>
-                  <BusinessIcon sx={{ fontSize: 16, color: '#475569' }} /> Vínculo Comercial
+                  <BusinessIcon sx={{ fontSize: 16, color: 'text.secondary' }} /> Vínculo Comercial
                 </Typography>
                 <Controller
                   name="clientId"
@@ -161,7 +185,7 @@ export function ArticleDialog({ open, onClose, onSubmit, isSubmitting }: Article
                       sx={inputStyles}
                     >
                       <MenuItem value="">
-                        <em style={{ fontSize: '13px', fontWeight: 500, color: '#94a3b8' }}>Ninguno (Artículo Genérico)</em>
+                        <em style={{ fontSize: '13px', fontWeight: 500, color: theme.palette.text.secondary }}>Ninguno (Artículo Genérico)</em>
                       </MenuItem>
                       {clients.map((client) => (
                         <MenuItem key={client.id} value={client.id} sx={{ fontSize: '13px', fontWeight: 600 }}>
@@ -175,7 +199,7 @@ export function ArticleDialog({ open, onClose, onSubmit, isSubmitting }: Article
 
               <Box>
                 <Typography variant="caption" sx={sectionLabelStyles}>
-                  <CategoryIcon sx={{ fontSize: 16, color: '#475569' }} /> Especificaciones
+                  <CategoryIcon sx={{ fontSize: 16, color: 'text.secondary' }} /> Especificaciones
                 </Typography>
                 <Controller
                   name="name"
@@ -198,18 +222,18 @@ export function ArticleDialog({ open, onClose, onSubmit, isSubmitting }: Article
             </Stack>
           </Box>
 
-          <DialogActions sx={{ p: 2.5, px: 3, bgcolor: '#f8fafc', borderTop: '1px solid #e2e8f0', justifyContent: 'space-between' }}>
+          <DialogActions sx={{ p: 2.5, px: 3, bgcolor: isDark ? alpha(theme.palette.background.default, 0.4) : '#f8fafc', borderTop: 1, borderColor: 'divider', justifyContent: 'space-between' }}>
               <Button 
                   onClick={handleClose} 
                   disabled={isSubmitting} 
                   sx={{ 
-                      color: '#64748b', 
+                      color: 'text.secondary', 
                       fontWeight: 800, 
                       fontSize: '11px', 
                       textTransform: 'uppercase', 
                       letterSpacing: '0.05em',
                       borderRadius: 0,
-                      '&:hover': { bgcolor: 'transparent', color: '#0f172a' }
+                      '&:hover': { bgcolor: 'transparent', color: 'text.primary' }
                   }}
               >
                   Descartar
@@ -222,7 +246,7 @@ export function ArticleDialog({ open, onClose, onSubmit, isSubmitting }: Article
                       borderRadius: 0,
                       px: 3,
                       py: 1,
-                      bgcolor: '#334155',
+                      bgcolor: isDark ? 'primary.main' : '#334155',
                       color: '#ffffff',
                       fontWeight: 800,
                       fontSize: '11px',
@@ -230,12 +254,12 @@ export function ArticleDialog({ open, onClose, onSubmit, isSubmitting }: Article
                       letterSpacing: '0.1em',
                       boxShadow: 'none',
                       '&:hover': {
-                          bgcolor: '#1e293b',
+                          bgcolor: isDark ? 'primary.dark' : '#1e293b',
                           boxShadow: 'none',
                       },
                       '&.Mui-disabled': {
-                          bgcolor: '#e2e8f0',
-                          color: '#94a3b8'
+                          bgcolor: 'action.disabledBackground',
+                          color: 'action.disabled'
                       }
                   }}
               >

@@ -7,6 +7,7 @@ import Tooltip from "@mui/material/Tooltip";
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 import { useRef, useState, useMemo } from "react";
 import { useNavigate } from "react-router";
+import { useTheme, alpha } from "@mui/material/styles";
 
 interface MachineEChartsProps {
   machineId: string;
@@ -23,6 +24,8 @@ export default function MachineECharts({
   color,
   articleName,
 }: MachineEChartsProps) {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === "dark";
   const chartRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -66,7 +69,7 @@ export default function MachineECharts({
         const url = echartsInstance.getDataURL({
           type: "png",
           pixelRatio: 2,
-          backgroundColor: "#fff",
+          backgroundColor: isDark ? "#121212" : "#fff",
         });
         const link = document.createElement("a");
         link.download = `Analisis-${machineName}.png`;
@@ -80,15 +83,16 @@ export default function MachineECharts({
   };
 
   const option = {
+    backgroundColor: "transparent",
     toolbox: { show: false },
     tooltip: {
       trigger: "axis",
-      axisPointer: { type: "cross", label: { backgroundColor: "#64748b" } },
-      backgroundColor: "rgba(255, 255, 255, 0.98)",
+      axisPointer: { type: "cross", label: { backgroundColor: isDark ? theme.palette.background.paper : "#64748b" } },
+      backgroundColor: isDark ? theme.palette.background.paper : "rgba(255, 255, 255, 0.98)",
       borderWidth: 0,
       shadowBlur: 10,
       shadowColor: "rgba(0,0,0,0.1)",
-      textStyle: { color: "#191c1e", fontSize: 12 },
+      textStyle: { color: theme.palette.text.primary, fontSize: 12 },
     },
     grid: {
       left: "2%",
@@ -108,17 +112,17 @@ export default function MachineECharts({
           month: "short",
         }),
       ),
-      axisLabel: { color: "#64748b", fontSize: 11, margin: 15 },
+      axisLabel: { color: theme.palette.text.secondary, fontSize: 11, margin: 15 },
       axisLine: { show: false },
       axisTick: { show: false },
-      splitLine: { show: true, lineStyle: { color: "#e2e8f0", type: "solid" } },
+      splitLine: { show: true, lineStyle: { color: theme.palette.divider, type: "solid" } },
     },
     yAxis: {
       type: "value",
       min: 0,
       max: 100,
-      axisLabel: { formatter: "{value}%", color: "#64748b", fontSize: 11 },
-      splitLine: { show: true, lineStyle: { color: "#e2e8f0", type: "solid" } },
+      axisLabel: { formatter: "{value}%", color: theme.palette.text.secondary, fontSize: 11 },
+      splitLine: { show: true, lineStyle: { color: theme.palette.divider, type: "solid" } },
     },
     dataZoom: [
       { type: "inside", start: 0, end: 100 },
@@ -127,12 +131,13 @@ export default function MachineECharts({
         bottom: 10,
         height: 24,
         borderColor: "transparent",
-        backgroundColor: "#f1f5f9",
-        fillerColor: "rgba(15, 23, 42, 0.1)",
+        backgroundColor: isDark ? alpha(theme.palette.background.default, 0.5) : "#f1f5f9",
+        fillerColor: isDark ? alpha(theme.palette.primary.main, 0.2) : "rgba(15, 23, 42, 0.1)",
         handleIcon:
           "path://M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z",
         handleSize: "80%",
         showDetail: false,
+        textStyle: { color: theme.palette.text.secondary }
       },
     ],
     series: [
@@ -159,36 +164,37 @@ export default function MachineECharts({
         data: data.map((item) => item.percentage),
         markLine: showAverage
           ? {
-              silent: true,
-              symbol: ["none", "none"],
-              label: { show: false },
-              lineStyle: {
-                color: "#64748b",
-                type: "dashed",
-                width: 2,
-                opacity: 0.8,
-              },
-              data: [{ type: "average" }],
-            }
+            silent: true,
+            symbol: ["none", "none"],
+            label: { show: false },
+            lineStyle: {
+              color: theme.palette.text.secondary,
+              type: "dashed",
+              width: 2,
+              opacity: 0.8,
+            },
+            data: [{ type: "average" }],
+          }
           : undefined,
       },
     ],
   };
 
   return (
-    <Box ref={containerRef} sx={{ mb: 8, backgroundColor: "#fff" }}>
+    <Box ref={containerRef} sx={{ mb: 8, backgroundColor: "background.paper", border: '1px solid', borderColor: 'divider' }}>
       {/* Cabecera Industrial */}
       <Box
         sx={{
-          mb: 2,
+          mb: 0,
           px: 3,
           py: 1.5,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
-          backgroundColor: "#f1f5f9",
+          backgroundColor: isDark ? alpha(theme.palette.background.default, 0.5) : "#f1f5f9",
           borderRadius: 0,
-          border: "1px solid #e2e8f0",
+          borderBottom: "1px solid",
+          borderColor: "divider",
           borderLeft: `4px solid ${color}`,
         }}
       >
@@ -198,7 +204,7 @@ export default function MachineECharts({
               sx={{
                 fontSize: 9,
                 fontWeight: 800,
-                color: "#64748b",
+                color: "text.secondary",
                 textTransform: "uppercase",
                 mb: 0.2,
               }}
@@ -206,7 +212,7 @@ export default function MachineECharts({
               Línea
             </Typography>
             <Typography
-              sx={{ fontSize: 16, fontWeight: 700, color: "#0f172a" }}
+              sx={{ fontSize: 16, fontWeight: 700, color: "text.primary" }}
             >
               {machineName}
             </Typography>
@@ -219,15 +225,19 @@ export default function MachineECharts({
               <FuseSvgIcon size={14}>heroicons-outline:clock</FuseSvgIcon>
             }
             sx={{
-              backgroundColor: "#fff",
-              color: "#0058c2",
+              backgroundColor: isDark ? alpha(theme.palette.primary.main, 0.1) : "background.paper",
+              color: isDark ? "#ffffff" : "primary.main",
               boxShadow: "none",
-              border: "1px solid #e2e8f0",
+              border: "1px solid",
+              borderColor: isDark ? "primary.main" : "divider",
               fontSize: 11,
               fontWeight: 700,
               height: 32,
               px: 2,
-              "&:hover": { backgroundColor: "#f1f5f9", boxShadow: "none" },
+              "&:hover": { 
+                backgroundColor: isDark ? alpha(theme.palette.primary.main, 0.2) : alpha(theme.palette.primary.main, 0.05), 
+                boxShadow: "none" 
+              },
             }}
           >
             HISTORIAL
@@ -236,7 +246,7 @@ export default function MachineECharts({
             sx={{
               width: "1px",
               height: 24,
-              backgroundColor: "#cbd5e1",
+              backgroundColor: "divider",
               mx: 0.5,
             }}
           />
@@ -245,7 +255,7 @@ export default function MachineECharts({
               sx={{
                 fontSize: 9,
                 fontWeight: 800,
-                color: "#64748b",
+                color: "text.secondary",
                 textTransform: "uppercase",
                 mb: 0.2,
               }}
@@ -253,7 +263,7 @@ export default function MachineECharts({
               Artículo
             </Typography>
             <Typography
-              sx={{ fontSize: 13, fontWeight: 600, color: "#475569" }}
+              sx={{ fontSize: 13, fontWeight: 600, color: "text.primary", opacity: 0.8 }}
             >
               {articleName || "N/A"}
             </Typography>
@@ -262,7 +272,7 @@ export default function MachineECharts({
             sx={{
               width: "1px",
               height: 24,
-              backgroundColor: "#cbd5e1",
+              backgroundColor: "divider",
               mx: 0.5,
             }}
           />
@@ -271,7 +281,7 @@ export default function MachineECharts({
               sx={{
                 fontSize: 9,
                 fontWeight: 800,
-                color: "#64748b",
+                color: "text.secondary",
                 textTransform: "uppercase",
                 mb: 0.2,
               }}
@@ -279,7 +289,7 @@ export default function MachineECharts({
               Promedio Turno
             </Typography>
             <Typography
-              sx={{ fontSize: 14, fontWeight: 800, color: "#0058c2" }}
+              sx={{ fontSize: 14, fontWeight: 800, color: "primary.main" }}
             >
               {averageValue}%
             </Typography>
@@ -295,9 +305,9 @@ export default function MachineECharts({
               size="small"
               onClick={() => setShowAverage(!showAverage)}
               sx={{
-                color: showAverage ? "#0058c2" : "#64748b",
+                color: showAverage ? "primary.main" : "text.secondary",
                 backgroundColor: showAverage
-                  ? "rgba(0, 88, 194, 0.08)"
+                  ? alpha(theme.palette.primary.main, 0.08)
                   : "transparent",
               }}
             >
@@ -311,7 +321,7 @@ export default function MachineECharts({
             sx={{
               width: "1px",
               height: 20,
-              backgroundColor: "#cbd5e1",
+              backgroundColor: "divider",
               mx: 1,
               my: "auto",
             }}
@@ -321,7 +331,7 @@ export default function MachineECharts({
             <IconButton
               size="small"
               onClick={() => handleAction("zoom")}
-              sx={{ color: "#64748b" }}
+              sx={{ color: "text.secondary" }}
             >
               <FuseSvgIcon size={18}>
                 heroicons-outline:magnifying-glass-plus
@@ -332,7 +342,7 @@ export default function MachineECharts({
             <IconButton
               size="small"
               onClick={() => handleAction("restore")}
-              sx={{ color: "#64748b" }}
+              sx={{ color: "text.secondary" }}
             >
               <FuseSvgIcon size={18}>heroicons-outline:arrow-path</FuseSvgIcon>
             </IconButton>
@@ -341,7 +351,7 @@ export default function MachineECharts({
             <IconButton
               size="small"
               onClick={() => handleAction("fullscreen")}
-              sx={{ color: "#64748b" }}
+              sx={{ color: "text.secondary" }}
             >
               <FuseSvgIcon size={18}>
                 heroicons-outline:arrows-pointing-out
@@ -352,7 +362,7 @@ export default function MachineECharts({
             <IconButton
               size="small"
               onClick={() => handleAction("download")}
-              sx={{ color: "#64748b" }}
+              sx={{ color: "text.secondary" }}
             >
               <FuseSvgIcon size={18}>heroicons-outline:camera</FuseSvgIcon>
             </IconButton>
@@ -361,7 +371,7 @@ export default function MachineECharts({
       </Box>
 
       {/* Área del Gráfico */}
-      <Box sx={{ py: 2, px: 2, backgroundColor: "#fff", position: "relative" }}>
+      <Box sx={{ py: 2, px: 2, backgroundColor: "background.paper", position: "relative" }}>
         <ReactECharts
           ref={chartRef}
           option={option}

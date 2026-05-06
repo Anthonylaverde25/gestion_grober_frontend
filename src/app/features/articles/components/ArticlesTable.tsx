@@ -16,13 +16,19 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/EditOutlined';
 import VisibilityIcon from '@mui/icons-material/VisibilityOutlined';
+import { useNavigate } from 'react-router';
+import { useTheme, alpha } from '@mui/material/styles';
 
 /**
  * ArticlesTable Component
  * Spreadsheet-style presentation with View and Edit actions.
+ * Optimized for Dark Mode and industrial aesthetics.
  */
 export default function ArticlesTable() {
   const { articles, isLoading } = useArticles();
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
 
   const tableData = useMemo(() => {
     return articles.map((article, index) => ({
@@ -38,29 +44,47 @@ export default function ArticlesTable() {
         accessorKey: 'code',
         header: 'Código',
         size: 100,
-        Cell: ({ cell }) => (
-          <Typography className="font-mono text-12 font-bold text-primary">
+        Cell: ({ cell, row }) => (
+          <Box 
+            component="span"
+            onClick={() => navigate(`/articles/${row.original.id}`)}
+            sx={{ 
+                fontFamily: 'monospace',
+                fontSize: '12px',
+                fontWeight: 900,
+                cursor: 'pointer',
+                textDecoration: 'none',
+                '&:hover': { textDecoration: 'underline' },
+                // Forzamos el color para evitar herencia o clases globales
+                color: isDark ? `${theme.palette.primary.light} !important` : `${theme.palette.primary.main} !important`,
+            }}
+          >
             {cell.getValue<string>()}
-          </Typography>
+          </Box>
         ),
       },
       {
         accessorKey: 'name',
         header: 'Descripción del Artículo',
         size: 300,
+        Cell: ({ cell }) => (
+            <Typography sx={{ fontSize: '13px', fontWeight: 600, color: 'text.primary' }}>
+                {cell.getValue<string>()}
+            </Typography>
+        )
       },
       {
         accessorKey: 'clientName',
         header: 'Producido para',
         size: 200,
         Cell: ({ cell }) => (
-          <Typography className="text-12 opacity-80 italic">
+          <Typography sx={{ fontSize: '12px', opacity: 0.8, fontStyle: 'italic', color: 'text.secondary' }}>
             {cell.getValue<string>()}
           </Typography>
         ),
       },
     ],
-    [],
+    [theme.palette.mode, navigate],
   );
 
   const table = useMaterialReactTable({
@@ -90,7 +114,7 @@ export default function ArticlesTable() {
         <Tooltip title="Ver Detalles">
           <IconButton 
             size="small" 
-            onClick={() => console.log('Ver:', row.original.id)}
+            onClick={() => navigate(`/articles/${row.original.id}`)}
             sx={{ color: 'text.secondary', opacity: 0.7, '&:hover': { opacity: 1, color: 'primary.main' } }}
           >
             <VisibilityIcon sx={{ fontSize: 18 }} />
@@ -137,6 +161,7 @@ export default function ArticlesTable() {
             fontWeight: 600,
             textTransform: 'none',
             borderColor: 'divider',
+            color: 'text.secondary'
           }}
         >
           Importar Artículos
@@ -149,37 +174,57 @@ export default function ArticlesTable() {
         borderRadius: '0',
         border: '1px solid',
         borderColor: 'divider',
+        bgcolor: 'background.paper'
       },
     },
     muiTableProps: {
       sx: {
         borderCollapse: 'collapse',
         '& .MuiTableCell-root': {
-          border: '1px solid rgba(224, 224, 224, 1)',
+          border: '1px solid',
+          borderColor: 'divider',
           fontFamily: 'var(--fuse-font-family, "Inter", sans-serif)',
           fontSize: '13px',
+          color: 'text.primary'
         },
       },
     },
     muiTableHeadCellProps: {
       sx: {
-        backgroundColor: '#f8f9fa',
+        backgroundColor: isDark ? alpha(theme.palette.background.default, 0.5) : '#f8f9fa',
         fontWeight: 700,
-        color: '#1d2d3e',
+        color: 'text.primary',
         textTransform: 'uppercase',
         fontSize: '11px',
         letterSpacing: '0.05em',
+        borderBottom: '2px solid',
+        borderBottomColor: 'divider'
       },
     },
     muiTableBodyCellProps: {
       sx: {
         paddingY: '4px',
+        color: 'text.primary'
       },
     },
+    muiTopToolbarProps: {
+        sx: {
+            bgcolor: 'background.paper',
+            borderBottom: '1px solid',
+            borderColor: 'divider'
+        }
+    },
+    muiBottomToolbarProps: {
+        sx: {
+            bgcolor: 'background.paper',
+            borderTop: '1px solid',
+            borderColor: 'divider'
+        }
+    }
   });
 
   return (
-    <Box className="w-full h-full">
+    <Box className="w-full h-full" sx={{ bgcolor: 'background.default' }}>
       <MaterialReactTable table={table} />
     </Box>
   );

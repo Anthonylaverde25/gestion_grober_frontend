@@ -1,6 +1,7 @@
 import ReactECharts from 'echarts-for-react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
+import { useTheme, alpha } from '@mui/material/styles';
 
 interface GlobalHeatmapChartProps {
     machines: any[];
@@ -8,6 +9,8 @@ interface GlobalHeatmapChartProps {
 }
 
 export default function GlobalHeatmapChart({ machines, chartData }: GlobalHeatmapChartProps) {
+    const theme = useTheme();
+    const isDark = theme.palette.mode === 'dark';
     const machineNames = machines.map(m => m.name);
     const times = chartData.map(d => d.time);
     
@@ -20,8 +23,11 @@ export default function GlobalHeatmapChart({ machines, chartData }: GlobalHeatma
     });
 
     const option = {
+        backgroundColor: 'transparent',
         tooltip: {
             position: 'top',
+            backgroundColor: isDark ? theme.palette.background.paper : 'rgba(255, 255, 255, 0.98)',
+            textStyle: { color: theme.palette.text.primary, fontSize: 12 },
             formatter: (params: any) => {
                 return `${machineNames[params.value[1]]}<br/>Hora: ${times[params.value[0]]}<br/>Eficiencia: <b>${params.value[2]}%</b>`;
             }
@@ -36,15 +42,15 @@ export default function GlobalHeatmapChart({ machines, chartData }: GlobalHeatma
         xAxis: {
             type: 'category',
             data: times,
-            splitArea: { show: true },
-            axisLabel: { color: '#64748b', fontSize: 10 },
+            splitArea: { show: true, areaStyle: { color: isDark ? [alpha(theme.palette.background.default, 0.2), alpha(theme.palette.background.default, 0.4)] : ['#fcfdfe', '#f8f9fa'] } },
+            axisLabel: { color: theme.palette.text.secondary, fontSize: 10 },
             axisLine: { show: false }
         },
         yAxis: {
             type: 'category',
             data: machineNames,
-            splitArea: { show: true },
-            axisLabel: { color: '#64748b', fontSize: 11, fontWeight: 600 },
+            splitArea: { show: true, areaStyle: { color: isDark ? [alpha(theme.palette.background.default, 0.2), alpha(theme.palette.background.default, 0.4)] : ['#fcfdfe', '#f8f9fa'] } },
+            axisLabel: { color: theme.palette.text.secondary, fontSize: 11, fontWeight: 600 },
             axisLine: { show: false }
         },
         visualMap: {
@@ -55,9 +61,14 @@ export default function GlobalHeatmapChart({ machines, chartData }: GlobalHeatma
             left: 'center',
             bottom: '0%',
             itemWidth: 15,
-            textStyle: { color: '#64748b', fontSize: 10, fontWeight: 700 },
+            textStyle: { color: theme.palette.text.secondary, fontSize: 10, fontWeight: 700 },
             inRange: {
-                color: [
+                color: isDark ? [
+                    alpha(theme.palette.error.main, 0.4),
+                    alpha(theme.palette.warning.main, 0.6),
+                    alpha(theme.palette.success.main, 0.6),
+                    theme.palette.success.main
+                ] : [
                     '#fee2e2', // Muy bajo (Rojo suave)
                     '#fef3c7', // Medio (Amarillo)
                     '#dcfce7', // Bueno (Verde suave)
@@ -84,14 +95,18 @@ export default function GlobalHeatmapChart({ machines, chartData }: GlobalHeatma
     return (
         <Box sx={{ mb: 4 }}>
             <Box sx={{ 
-                mb: 2, px: 3, py: 2, 
-                backgroundColor: '#f1f5f9', 
-                borderLeft: '4px solid #0f172a' 
+                mb: 0, px: 3, py: 2, 
+                backgroundColor: isDark ? alpha(theme.palette.background.default, 0.5) : '#f1f5f9', 
+                borderLeft: '4px solid',
+                borderLeftColor: 'text.primary',
+                borderTop: '1px solid',
+                borderRight: '1px solid',
+                borderColor: 'divider'
             }}>
-                <Typography sx={{ fontSize: 9, fontWeight: 800, color: '#64748b', textTransform: 'uppercase', mb: 0.2 }}>Análisis de Intensidad</Typography>
-                <Typography sx={{ fontSize: 18, fontWeight: 700, color: '#0f172a' }}>Mapa de Calor de Planta</Typography>
+                <Typography sx={{ fontSize: 9, fontWeight: 800, color: 'text.secondary', textTransform: 'uppercase', mb: 0.2 }}>Análisis de Intensidad</Typography>
+                <Typography sx={{ fontSize: 18, fontWeight: 700, color: 'text.primary' }}>Mapa de Calor de Planta</Typography>
             </Box>
-            <Box sx={{ p: 2, backgroundColor: '#fff', border: '1px solid #e2e8f0' }}>
+            <Box sx={{ p: 2, backgroundColor: 'background.paper', border: '1px solid', borderColor: 'divider' }}>
                 <ReactECharts option={option} style={{ height: '400px', width: '100%' }} />
             </Box>
         </Box>

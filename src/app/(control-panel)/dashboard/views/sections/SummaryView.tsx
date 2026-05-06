@@ -12,11 +12,15 @@ import GlobalECharts from '../../components/GlobalECharts';
 import GlobalHeatmapChart from '../../components/GlobalHeatmapChart';
 import GlobalRadarChart from '../../components/GlobalRadarChart';
 import useSession from '@/hooks/useSession';
+import { useTheme, alpha } from '@mui/material/styles';
 
 const MACHINE_COLORS = ['#0058c2', '#ca4e00', '#16a34a', '#ba1a1a', '#7b2600', '#505f76'];
 
 export default function SummaryView() {
     const { user = { displayName: 'Anthony' } } = useSession();
+    const theme = useTheme();
+    const isDark = theme.palette.mode === 'dark';
+
     const { 
         machines, 
         machineHistories, 
@@ -54,11 +58,11 @@ export default function SummaryView() {
             {/* Header & Scale Selector */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <Box>
-                    <Typography sx={{ fontSize: 24, fontWeight: 700, color: '#0f172a' }}>
+                    <Typography sx={{ fontSize: 24, fontWeight: 700, color: 'text.primary' }}>
                         ¡Hola, {user.displayName}!
                     </Typography>
-                    <Typography sx={{ fontSize: 13, color: '#64748b' }}>
-                        Planta: <strong>{activeCompany?.name}</strong> • Sistema de Análisis de Producción
+                    <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>
+                        Planta: <Box component="strong" sx={{ color: 'text.primary' }}>{activeCompany?.name}</Box> • Sistema de Análisis de Producción
                     </Typography>
                 </Box>
 
@@ -73,13 +77,13 @@ export default function SummaryView() {
                             border: 'none',
                             borderRadius: '8px !important',
                             mx: 0.5,
-                            color: '#64748b',
+                            color: 'text.secondary',
                             fontWeight: 600,
                             fontSize: 12,
                             '&.Mui-selected': {
-                                backgroundColor: '#f1f5f9',
-                                color: '#0f172a',
-                                '&:hover': { backgroundColor: '#e2e8f0' }
+                                backgroundColor: isDark ? 'primary.main' : '#f1f5f9',
+                                color: isDark ? 'primary.contrastText' : 'text.primary',
+                                '&:hover': { backgroundColor: isDark ? 'primary.dark' : '#e2e8f0' }
                             }
                         }
                     }}
@@ -101,8 +105,8 @@ export default function SummaryView() {
 
             {/* Section: Detalle Individual por Máquina */}
             <Box sx={{ mt: 4 }}>
-                <Typography sx={{ fontSize: 12, fontWeight: 800, color: '#64748b', letterSpacing: '0.1em', mb: 1 }}>DETALLE TÉCNICO</Typography>
-                <Typography sx={{ fontSize: 22, fontWeight: 700, color: '#0f172a', mb: 4 }}>Análisis por Línea de Producción</Typography>
+                <Typography sx={{ fontSize: 12, fontWeight: 800, color: 'text.secondary', letterSpacing: '0.1em', mb: 1, textTransform: 'uppercase' }}>Detalle Técnico</Typography>
+                <Typography sx={{ fontSize: 22, fontWeight: 700, color: 'text.primary', mb: 4 }}>Análisis por Línea de Producción</Typography>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                     {machineHistories.map((history, index) => (
                         <MachineECharts 
@@ -123,17 +127,18 @@ export default function SummaryView() {
                     elevation={0}
                     sx={{
                         p: 0,
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid',
+                        borderColor: 'divider',
                         borderRadius: 3,
                         overflow: 'hidden',
                         display: 'flex',
-                        backgroundColor: '#f8fafc'
+                        backgroundColor: 'background.paper'
                     }}
                 >
                     <Box sx={{ p: 6, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                         <Box sx={{
-                            backgroundColor: '#0f172a',
-                            color: '#fff',
+                            backgroundColor: 'secondary.main',
+                            color: 'secondary.contrastText',
                             px: 1.5,
                             py: 0.5,
                             borderRadius: 1,
@@ -145,25 +150,23 @@ export default function SummaryView() {
                         }}>
                             IA PREDICTIVA
                         </Box>
-                        <Typography sx={{ fontSize: 24, fontWeight: 700, color: '#0f172a', mb: 2 }}>
+                        <Typography sx={{ fontSize: 24, fontWeight: 700, color: 'text.primary', mb: 2 }}>
                             Prevé cuellos de botella en la Planta Córdoba
                         </Typography>
-                        <Typography sx={{ fontSize: 15, color: '#64748b', mb: 4, maxWidth: 500, lineHeight: 1.6 }}>
+                        <Typography sx={{ fontSize: 15, color: 'text.secondary', mb: 4, maxWidth: 500, lineHeight: 1.6 }}>
                             Nuestros algoritmos sugieren que la línea 02 podría fallar en las próximas 48 horas debido a vibraciones térmicas. Revisa el plan de mantenimiento preventivo.
                         </Typography>
                         <Button
                             variant="contained"
+                            color="secondary"
                             disableElevation
                             sx={{
-                                backgroundColor: '#0f172a',
-                                color: '#fff',
                                 textTransform: 'none',
                                 fontWeight: 700,
                                 alignSelf: 'start',
                                 px: 4,
                                 py: 1.5,
-                                borderRadius: 2,
-                                '&:hover': { backgroundColor: '#1e293b' }
+                                borderRadius: 2
                             }}
                         >
                             Ver Plan de Mantenimiento
@@ -173,7 +176,7 @@ export default function SummaryView() {
                         <img
                             src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800"
                             alt="Factory"
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.9 }}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: isDark ? 0.6 : 0.9 }}
                         />
                     </Box>
                 </Paper>
@@ -181,20 +184,31 @@ export default function SummaryView() {
 
             {/* Section: Acciones Pendientes */}
             <Box sx={{ mt: 4, mb: 8 }}>
-                <Paper elevation={0} sx={{ p: 0, border: '1px solid #e2e8f0', borderRadius: 3, overflow: 'hidden' }}>
-                    <Box sx={{ p: 2.5, borderBottom: '1px solid #f1f5f9', backgroundColor: '#fff' }}>
-                        <Typography sx={{ fontSize: 16, fontWeight: 700, color: '#0f172a' }}>Alertas de Calidad Críticas</Typography>
+                <Paper elevation={0} sx={{ p: 0, border: '1px solid', borderColor: 'divider', borderRadius: 3, overflow: 'hidden', bgcolor: 'background.paper' }}>
+                    <Box sx={{ p: 2.5, borderBottom: '1px solid', borderColor: 'divider', backgroundColor: isDark ? alpha(theme.palette.background.default, 0.5) : '#f8f9fa' }}>
+                        <Typography sx={{ fontSize: 16, fontWeight: 700, color: 'text.primary' }}>Alertas de Calidad Críticas</Typography>
                     </Box>
-                    <Box sx={{ p: 4, display: 'flex', alignItems: 'center', gap: 3, backgroundColor: '#fff' }}>
-                        <Box sx={{ width: 48, height: 48, backgroundColor: '#fef2f2', borderRadius: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', border: '1px solid #fee2e2' }}>
+                    <Box sx={{ p: 4, display: 'flex', alignItems: 'center', gap: 3 }}>
+                        <Box sx={{ 
+                            width: 48, 
+                            height: 48, 
+                            backgroundColor: isDark ? alpha(theme.palette.error.main, 0.1) : '#fef2f2', 
+                            borderRadius: 2, 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            color: 'error.main', 
+                            border: '1px solid',
+                            borderColor: isDark ? alpha(theme.palette.error.main, 0.3) : '#fee2e2' 
+                        }}>
                             <FuseSvgIcon size={24}>heroicons-outline:exclamation-triangle</FuseSvgIcon>
                         </Box>
                         <Box sx={{ flex: 1 }}>
-                            <Typography sx={{ fontSize: 15, fontWeight: 600, color: '#0f172a' }}>3 desviaciones de calidad detectadas</Typography>
-                            <Typography sx={{ fontSize: 13, color: '#64748b' }}>Planta Córdoba • Línea 03 • Última actualización: hace 12 min</Typography>
+                            <Typography sx={{ fontSize: 15, fontWeight: 600, color: 'text.primary' }}>3 desviaciones de calidad detectadas</Typography>
+                            <Typography sx={{ fontSize: 13, color: 'text.secondary' }}>Planta Córdoba • Línea 03 • Última actualización: hace 12 min</Typography>
                         </Box>
                         <Button
-                            sx={{ textTransform: 'none', fontWeight: 700, fontSize: 13, color: '#0058c2' }}
+                            sx={{ textTransform: 'none', fontWeight: 700, fontSize: 13, color: 'primary.main' }}
                             endIcon={<FuseSvgIcon size={16}>heroicons-outline:chevron-right</FuseSvgIcon>}
                         >
                             Revisar Alertas

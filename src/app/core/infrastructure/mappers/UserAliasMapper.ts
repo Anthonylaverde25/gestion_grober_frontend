@@ -7,6 +7,7 @@ export class UserAliasMapper {
       userId: dto.user_id,
       name: dto.name,
       legajo: dto.legajo,
+      isActive: dto.is_active,
     });
   }
 
@@ -15,6 +16,7 @@ export class UserAliasMapper {
       user_id: alias.userId,
       name: alias.name,
       legajo: alias.legajo,
+      is_active: alias.isActive,
     };
   }
 }

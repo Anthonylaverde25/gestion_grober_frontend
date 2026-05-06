@@ -20,6 +20,7 @@ import { CampaignSchema, CampaignFormData } from '../schemas/CampaignSchema';
 import { useMachines } from '@/app/(control-panel)/settings/api/hooks/machines/useMachines';
 import { useArticles } from '@/app/features/articles/hooks/useArticles';
 import { useClients } from '@/app/features/client/hooks/useClients';
+import { useTheme, alpha } from '@mui/material/styles';
 
 interface CampaignDialogProps {
   open: boolean;
@@ -29,6 +30,8 @@ interface CampaignDialogProps {
 }
 
 export default function CampaignDialog({ open, onClose, onSubmit, isSubmitting }: CampaignDialogProps) {
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
   const { machines } = useMachines();
   const { articles } = useArticles();
   const { clients } = useClients();
@@ -79,16 +82,20 @@ export default function CampaignDialog({ open, onClose, onSubmit, isSubmitting }
     disableUnderline: true,
     sx: {
       borderRadius: '8px 8px 0 0',
-      backgroundColor: 'grey.100',
+      backgroundColor: isDark ? alpha(theme.palette.background.default, 0.5) : 'grey.100',
       '&:hover': {
-        backgroundColor: 'grey.200',
+        backgroundColor: isDark ? alpha(theme.palette.background.default, 0.8) : 'grey.200',
       },
       '&.Mui-focused': {
-        backgroundColor: 'grey.200',
+        backgroundColor: isDark ? theme.palette.background.default : 'grey.200',
       },
       '& .MuiFilledInput-input': {
         pt: '20px',
-        pb: '8px'
+        pb: '8px',
+        color: 'text.primary'
+      },
+      '& .MuiInputLabel-root': {
+        color: 'text.secondary'
       }
     }
   };
@@ -111,8 +118,9 @@ export default function CampaignDialog({ open, onClose, onSubmit, isSubmitting }
       PaperProps={{
         sx: {
           borderRadius: '24px',
-          boxShadow: '0 20px 70px rgba(0,0,0,0.08)',
-          backgroundImage: 'none'
+          boxShadow: isDark ? '0 20px 70px rgba(0,0,0,0.5)' : '0 20px 70px rgba(0,0,0,0.08)',
+          backgroundImage: 'none',
+          bgcolor: 'background.paper'
         }
       }}
     >
@@ -126,14 +134,14 @@ export default function CampaignDialog({ open, onClose, onSubmit, isSubmitting }
             justifyContent: 'space-between',
             borderBottom: '1px solid',
             borderColor: 'divider',
-            bgcolor: '#f4f8fb'
+            bgcolor: isDark ? alpha(theme.palette.primary.main, 0.1) : '#f4f8fb'
           }}
         >
           <Box>
             <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'text.primary', lineHeight: 1.2 }}>
               Iniciar Nueva Campaña
             </Typography>
-            <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 500, fontSize: '0.75rem' }}>
+            <Typography variant="caption" sx={{ fontWeight: 500, fontSize: '0.75rem', color: 'text.secondary' }}>
               Configuración de producción en línea
             </Typography>
           </Box>
@@ -144,7 +152,7 @@ export default function CampaignDialog({ open, onClose, onSubmit, isSubmitting }
       </DialogTitle>
 
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <DialogContent sx={{ p: 4, px: 5 }}>
+        <DialogContent sx={{ p: 4, px: 5, bgcolor: 'background.paper' }}>
           <Stack spacing={4}>
             {/* Sección de Identificación */}
             <Box>
@@ -254,8 +262,8 @@ export default function CampaignDialog({ open, onClose, onSubmit, isSubmitting }
           </Stack>
         </DialogContent>
 
-        <DialogActions sx={{ p: 4, px: 5, bgcolor: 'grey.50', borderTop: '1px solid', borderColor: 'divider' }}>
-          <Button onClick={handleClose} color="inherit" disabled={isSubmitting} sx={{ fontWeight: 600, textTransform: 'none', px: 3 }}>
+        <DialogActions sx={{ p: 4, px: 5, bgcolor: isDark ? alpha(theme.palette.background.default, 0.5) : 'grey.50', borderTop: '1px solid', borderColor: 'divider' }}>
+          <Button onClick={handleClose} color="inherit" disabled={isSubmitting} sx={{ fontWeight: 600, textTransform: 'none', px: 3, color: 'text.secondary' }}>
             Cancelar
           </Button>
           <Button

@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { ArticleDialog } from '../components/ArticleDialog';
 import { useArticles } from '../hooks/useArticles';
 import { ArticleFormData } from '../schemas/ArticleSchema';
+import Typography from '@mui/material/Typography';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -30,6 +31,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 /**
  * ArticlesPage Component
  * Standardized with PageHeader and corporate layout.
+ * Optimized for Dark Mode.
  */
 export default function ArticlesPage() {
   const { activeCompany } = useBusiness();
@@ -48,14 +50,14 @@ export default function ArticlesPage() {
       <Root
         header={
           <PageHeader
-            title="Gestión de Artículos"
+            title={<Typography variant="h5" sx={{ fontWeight: 900, color: 'text.primary' }}>Gestión de Artículos</Typography>}
             subtitle={`Visualizando el catálogo de envases para ${activeCompany?.name || 'la organización'}`}
             actions={
               <Button
                 variant="contained"
                 color="secondary"
                 startIcon={<AddIcon />}
-                className="rounded-8 font-bold"
+                sx={{ borderRadius: '8px', fontWeight: 800, textTransform: 'none' }}
                 size="large"
                 onClick={handleOpenDialog}
               >
@@ -65,7 +67,7 @@ export default function ArticlesPage() {
           />
         }
         content={
-          <Box className="w-full h-full flex flex-col">
+          <Box className="w-full h-full flex flex-col" sx={{ bgcolor: 'background.default' }}>
             <ArticlesTable />
           </Box>
         }

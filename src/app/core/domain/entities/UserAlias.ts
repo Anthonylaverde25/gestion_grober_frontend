@@ -3,6 +3,7 @@ export interface UserAliasProps {
   userId: number;
   name: string;
   legajo: string;
+  isActive: boolean;
 }
 
 export class UserAlias {
@@ -10,12 +11,14 @@ export class UserAlias {
   public readonly userId: number;
   public readonly name: string;
   public readonly legajo: string;
+  public readonly isActive: boolean;
 
   constructor(props: UserAliasProps) {
     this.id = props.id;
     this.userId = props.userId;
     this.name = props.name;
     this.legajo = props.legajo;
+    this.isActive = props.isActive;
   }
 
   static create(props: UserAliasProps): UserAlias {

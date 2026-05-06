@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { ClientDialog } from '../components/ClientDialog';
 import { useClients } from '../hooks/useClients';
 import { ClientFormData } from '../schemas/ClientSchema';
+import Typography from '@mui/material/Typography';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -30,6 +31,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 /**
  * ClientsPage Component
  * Main page for managing business clients.
+ * Optimized for Dark Mode.
  */
 export default function ClientsPage() {
   const { activeCompany } = useBusiness();
@@ -48,14 +50,14 @@ export default function ClientsPage() {
       <Root
         header={
           <PageHeader
-            title="Gestión de Clientes"
+            title={<Typography variant="h5" sx={{ fontWeight: 900, color: 'text.primary' }}>Gestión de Clientes</Typography>}
             subtitle={`Administrando la cartera de clientes para ${activeCompany?.name || 'la organización'}`}
             actions={
               <Button
                 variant="contained"
                 color="secondary"
                 startIcon={<AddIcon />}
-                className="rounded-8 font-bold"
+                sx={{ borderRadius: '8px', fontWeight: 800, textTransform: 'none' }}
                 size="large"
                 onClick={handleOpenDialog}
               >
@@ -65,7 +67,7 @@ export default function ClientsPage() {
           />
         }
         content={
-          <Box className="w-full h-full flex flex-col">
+          <Box className="w-full h-full flex flex-col" sx={{ bgcolor: 'background.default' }}>
             <ClientsTable />
           </Box>
         }

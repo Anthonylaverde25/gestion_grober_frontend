@@ -16,13 +16,17 @@ import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/EditOutlined';
 import VisibilityIcon from '@mui/icons-material/VisibilityOutlined';
 import { Client } from '@/app/core/domain/entities/Client';
+import { useTheme, alpha } from '@mui/material/styles';
 
 /**
  * ClientsTable Component
  * Spreadsheet-style presentation for clients.
+ * Optimized for Dark Mode and industrial aesthetics.
  */
 export default function ClientsTable() {
   const { clients, isLoading } = useClients();
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
 
   const columns = useMemo<MRT_ColumnDef<Client>[]>(
     () => [
@@ -31,27 +35,45 @@ export default function ClientsTable() {
         header: 'CUIT / Tax ID',
         size: 150,
         Cell: ({ cell }) => (
-          <Typography className="font-mono text-12 font-bold text-primary">
+          <Box 
+            component="span"
+            sx={{ 
+                fontFamily: 'monospace',
+                fontSize: '12px',
+                fontWeight: 900,
+                color: isDark ? `${theme.palette.primary.light} !important` : `${theme.palette.primary.main} !important`,
+            }}
+          >
             {cell.getValue<string>()}
-          </Typography>
+          </Box>
         ),
       },
       {
         accessorKey: 'commercialName',
-        header: 'Commercial Name',
+        header: 'Nombre Comercial',
         size: 250,
+        Cell: ({ cell }) => (
+            <Typography sx={{ fontSize: '13px', fontWeight: 600, color: 'text.primary' }}>
+                {cell.getValue<string>()}
+            </Typography>
+        )
       },
       {
         accessorKey: 'businessName',
-        header: 'Business Name',
+        header: 'Razón Social',
         size: 250,
+        Cell: ({ cell }) => (
+            <Typography sx={{ fontSize: '12px', color: 'text.secondary' }}>
+                {cell.getValue<string>()}
+            </Typography>
+        )
       },
       {
         accessorKey: 'technicalContact',
-        header: 'Contact',
+        header: 'Contacto Técnico',
         size: 200,
         Cell: ({ cell }) => (
-          <Typography className="text-12 opacity-80 italic">
+          <Typography sx={{ fontSize: '12px', opacity: 0.8, fontStyle: 'italic', color: 'text.secondary' }}>
             {cell.getValue<string>() || 'N/A'}
           </Typography>
         ),
@@ -60,9 +82,14 @@ export default function ClientsTable() {
         accessorKey: 'email',
         header: 'Email',
         size: 200,
+        Cell: ({ cell }) => (
+            <Typography sx={{ fontSize: '12px', color: 'text.primary' }}>
+                {cell.getValue<string>()}
+            </Typography>
+        )
       },
     ],
-    [],
+    [theme.palette.mode],
   );
 
   const table = useMaterialReactTable({
@@ -89,7 +116,7 @@ export default function ClientsTable() {
     },
     renderRowActions: ({ row }) => (
       <Box sx={{ display: 'flex', gap: '4px', justifyContent: 'center' }}>
-        <Tooltip title="View Details">
+        <Tooltip title="Ver Detalles">
           <IconButton 
             size="small" 
             onClick={() => console.log('View:', row.original.id)}
@@ -98,7 +125,7 @@ export default function ClientsTable() {
             <VisibilityIcon sx={{ fontSize: 18 }} />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Edit Client">
+        <Tooltip title="Editar Cliente">
           <IconButton 
             size="small" 
             onClick={() => console.log('Edit:', row.original.id)}
@@ -127,7 +154,7 @@ export default function ClientsTable() {
             textTransform: 'none',
           }}
         >
-          Export Excel
+          Exportar Excel
         </Button>
 
         <Button
@@ -139,9 +166,10 @@ export default function ClientsTable() {
             fontWeight: 600,
             textTransform: 'none',
             borderColor: 'divider',
+            color: 'text.secondary'
           }}
         >
-          Import Clients
+          Importar Clientes
         </Button>
       </Box>
     ),
@@ -151,37 +179,57 @@ export default function ClientsTable() {
         borderRadius: '0',
         border: '1px solid',
         borderColor: 'divider',
+        bgcolor: 'background.paper'
       },
     },
     muiTableProps: {
       sx: {
         borderCollapse: 'collapse',
         '& .MuiTableCell-root': {
-          border: '1px solid rgba(224, 224, 224, 1)',
+          border: '1px solid',
+          borderColor: 'divider',
           fontFamily: 'var(--fuse-font-family, "Inter", sans-serif)',
           fontSize: '13px',
+          color: 'text.primary'
         },
       },
     },
     muiTableHeadCellProps: {
       sx: {
-        backgroundColor: '#f8f9fa',
+        backgroundColor: isDark ? alpha(theme.palette.background.default, 0.5) : '#f8f9fa',
         fontWeight: 700,
-        color: '#1d2d3e',
+        color: 'text.primary',
         textTransform: 'uppercase',
         fontSize: '11px',
         letterSpacing: '0.05em',
+        borderBottom: '2px solid',
+        borderBottomColor: 'divider'
       },
     },
     muiTableBodyCellProps: {
       sx: {
         paddingY: '4px',
+        color: 'text.primary'
       },
     },
+    muiTopToolbarProps: {
+        sx: {
+            bgcolor: 'background.paper',
+            borderBottom: '1px solid',
+            borderColor: 'divider'
+        }
+    },
+    muiBottomToolbarProps: {
+        sx: {
+            bgcolor: 'background.paper',
+            borderTop: '1px solid',
+            borderColor: 'divider'
+        }
+    }
   });
 
   return (
-    <Box className="w-full h-full">
+    <Box className="w-full h-full" sx={{ bgcolor: 'background.default' }}>
       <MaterialReactTable table={table} />
     </Box>
   );

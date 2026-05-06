@@ -5,6 +5,7 @@ import { Machine } from "@/app/core/domain/entities/Machine";
 import StartCampaignModal from "./StartCampaignModal";
 import RegisterLineYieldModal from "./RegisterLineYieldModal";
 import RegisterPackingSheetModal from "./RegisterPackingSheetModal";
+import { useTheme, alpha } from "@mui/material/styles";
 
 interface MachinePerformanceCardProps {
   machine: Machine;
@@ -12,6 +13,8 @@ interface MachinePerformanceCardProps {
 
 export default function MachinePerformanceCard({ machine }: MachinePerformanceCardProps) {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
   const isOperational = machine.status === "operational";
   const [isStartModalOpen, setIsStartModalOpen] = useState(false);
   const [isYieldModalOpen, setIsYieldModalOpen] = useState(false);
@@ -19,19 +22,34 @@ export default function MachinePerformanceCard({ machine }: MachinePerformanceCa
 
   const hasCampaign = !!machine.currentCampaignId;
 
+  const cardStyle = {
+    backgroundColor: theme.palette.background.paper,
+    borderColor: theme.palette.divider,
+    color: theme.palette.text.primary,
+    opacity: !isOperational && !hasCampaign ? 0.75 : 1,
+  };
+
+  const secondaryTextStyle = {
+    color: theme.palette.text.secondary
+  };
+
+  const subContainerStyle = {
+    backgroundColor: isDark ? alpha(theme.palette.background.default, 0.5) : '#f8fafc',
+    borderColor: theme.palette.divider
+  };
+
   return (
     <>
       <div
-        className={`bg-surface-container-lowest dark:bg-surface-container-lowest border border-outline-variant dark:border-outline-variant p-stack-md flex flex-col gap-stack-md hover:border-primary transition-all shadow-none rounded-none ${
-          !isOperational && !hasCampaign ? "opacity-75" : ""
-        }`}
+        className="border p-stack-md flex flex-col gap-stack-md transition-all shadow-none rounded-none hover:border-primary"
+        style={cardStyle}
       >
         <div className="flex justify-between items-start">
           <div>
-            <h3 className="font-data-tabular text-body-main font-semibold text-on-surface">
+            <h3 className="font-data-tabular text-body-main font-semibold">
               {machine.name}
             </h3>
-            <p className="text-[12px] text-on-surface-variant">
+            <p className="text-[12px]" style={secondaryTextStyle}>
               ID: {machine.id.split("-")[0]}
             </p>
           </div>
@@ -47,30 +65,30 @@ export default function MachinePerformanceCard({ machine }: MachinePerformanceCa
         </div>
 
         <div className="space-y-2">
-          <div className="flex justify-between text-[13px] border bg-surface-container-low dark:bg-surface-container-low p-1 rounded-none">
-            <span className="text-on-surface-variant">Cliente</span>
-            <span className="font-data-tabular font-bold text-on-surface truncate max-w-[150px]">
+          <div className="flex justify-between text-[13px] border p-1 rounded-none" style={subContainerStyle}>
+            <span style={secondaryTextStyle}>Cliente</span>
+            <span className="font-data-tabular font-bold truncate max-w-[150px]">
               {hasCampaign ? machine.currentClientName : "--"}
             </span>
           </div>
           <div className="flex justify-between text-[13px]">
-            <span className="text-on-surface-variant">Artículo Actual</span>
-            <span className="font-data-tabular text-on-surface text-[11px] font-bold truncate max-w-[150px]">
+            <span style={secondaryTextStyle}>Artículo Actual</span>
+            <span className="font-data-tabular text-[11px] font-bold truncate max-w-[150px]">
               {hasCampaign ? machine.currentArticleName : "--"}
             </span>
           </div>
           
           {hasCampaign && (
-            <div className="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden mt-2">
+            <div className="w-full h-1.5 rounded-full overflow-hidden mt-2" style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}>
               <div
-                className="h-full bg-primary transition-all duration-1000"
-                style={{ width: "65%" }} // Placeholder for real progress if available
+                className="h-full transition-all duration-1000"
+                style={{ width: "65%", backgroundColor: theme.palette.primary.main }} 
               ></div>
             </div>
           )}
           
           <div className="flex justify-between text-[11px]">
-            <span className="text-on-surface-variant italic">
+            <span className="italic" style={secondaryTextStyle}>
               Estado: {hasCampaign ? "En Producción" : "Standby"}
             </span>
           </div>
@@ -81,7 +99,8 @@ export default function MachinePerformanceCard({ machine }: MachinePerformanceCa
             <>
               <button
                 onClick={() => setIsYieldModalOpen(true)}
-                className="flex-1 h-10 font-label-caps text-label-caps rounded-none bg-primary text-on-primary hover:bg-primary-container active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                className="flex-1 h-10 font-label-caps text-label-caps rounded-none active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                style={{ backgroundColor: theme.palette.secondary.main, color: theme.palette.secondary.contrastText }}
               >
                 <span className="material-symbols-outlined text-[18px]">add_notes</span>
                 Log Yield
@@ -90,7 +109,8 @@ export default function MachinePerformanceCard({ machine }: MachinePerformanceCa
               <Tooltip title="Vista de Tabla">
                 <button
                   onClick={() => setIsPackingModalOpen(true)}
-                  className="w-10 h-10 border border-outline-variant dark:border-outline-variant rounded-none hover:bg-surface-variant transition-colors flex items-center justify-center text-on-surface-variant"
+                  className="w-10 h-10 border rounded-none transition-colors flex items-center justify-center"
+                  style={{ borderColor: theme.palette.divider, color: theme.palette.text.secondary }}
                 >
                   <span className="material-symbols-outlined text-[18px]">grid_on</span>
                 </button>
@@ -99,7 +119,8 @@ export default function MachinePerformanceCard({ machine }: MachinePerformanceCa
               <Tooltip title="Historial de Rendimiento">
                 <button
                   onClick={() => navigate(`/production/lines-performance/${machine.currentCampaignId}/history`)}
-                  className="w-10 h-10 border border-outline-variant dark:border-outline-variant rounded-none hover:bg-surface-variant transition-colors flex items-center justify-center text-on-surface-variant"
+                  className="w-10 h-10 border rounded-none transition-colors flex items-center justify-center"
+                  style={{ borderColor: theme.palette.divider, color: theme.palette.text.secondary }}
                 >
                   <span className="material-symbols-outlined text-[18px]">history</span>
                 </button>
@@ -108,7 +129,8 @@ export default function MachinePerformanceCard({ machine }: MachinePerformanceCa
           ) : (
             <button
               onClick={() => setIsStartModalOpen(true)}
-              className="flex-1 h-10 font-label-caps text-label-caps rounded-none border border-outline text-on-surface-variant hover:bg-surface dark:hover:bg-surface-variant active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              className="flex-1 h-10 font-label-caps text-label-caps rounded-none border active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+              style={{ borderColor: theme.palette.divider, color: theme.palette.text.secondary }}
             >
               <span className="material-symbols-outlined text-[18px]">play_arrow</span>
               Iniciar Campaña

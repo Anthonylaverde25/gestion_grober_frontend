@@ -10,6 +10,7 @@ import CampaignDialog from '../components/CampaignDialog';
 import { useCampaigns } from '../hooks/useCampaigns';
 import { CampaignFormData } from '../schemas/CampaignSchema';
 import { useBusiness } from '@/app/contexts/BusinessContext';
+import Typography from '@mui/material/Typography';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -27,6 +28,11 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   },
 }));
 
+/**
+ * CampaignsPage Component
+ * Standardized with corporate PageHeader format from Articles.
+ * Optimized for Dark Mode.
+ */
 export default function CampaignsPage() {
   const { activeCompany } = useBusiness();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -44,14 +50,14 @@ export default function CampaignsPage() {
       <Root
         header={
           <PageHeader
-            title="Monitoreo de Campañas"
+            title={<Typography variant="h5" sx={{ fontWeight: 900, color: 'text.primary' }}>Monitoreo de Campañas</Typography>}
             subtitle={`Control de producción en tiempo real para ${activeCompany?.name || 'la organización'}`}
             actions={
               <Button
                 variant="contained"
                 color="secondary"
                 startIcon={<AddIcon />}
-                className="rounded-8 font-bold"
+                sx={{ borderRadius: '8px', fontWeight: 800, textTransform: 'none' }}
                 size="large"
                 onClick={handleOpenDialog}
               >
@@ -61,7 +67,7 @@ export default function CampaignsPage() {
           />
         }
         content={
-          <Box className="w-full h-full flex flex-col">
+          <Box className="w-full h-full flex flex-col" sx={{ bgcolor: 'background.default' }}>
             <CampaignsTable />
           </Box>
         }

@@ -1,15 +1,13 @@
 import FusePageSimple from "@fuse/core/FusePageSimple";
-import { styled } from "@mui/material/styles";
+import { styled, useTheme } from "@mui/material/styles";
 import PageHeader from "@/app/components/PageHeader";
 import { useParams, useNavigate } from "react-router";
 import { useLineYieldHistory } from "@/app/features/production/hooks/useLineYieldHistory";
 import { useCampaign } from "@/app/features/production/hooks/useCampaign";
-import Button from "@mui/material/Button";
-import Icon from "@mui/material/Icon";
 import CircularProgress from "@mui/material/CircularProgress";
 import YieldCampaignHeader from "../components/campaign-logs/YieldCampaignHeader";
 import YieldHistoryTable from "../components/campaign-logs/YieldHistoryTable";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -29,8 +27,8 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 
 export default function YieldHistoryPage() {
   const { campaignId } = useParams();
-  const navigate = useNavigate();
-
+  const theme = useTheme();
+  const isDark = theme.palette.mode === 'dark';
 
   const { campaign, isLoading: campaignLoading } = useCampaign(campaignId);
   const { history, isLoading: historyLoading } =
@@ -63,6 +61,19 @@ export default function YieldHistoryPage() {
     );
   }
 
+  const cardStyle = {
+    backgroundColor: theme.palette.background.paper,
+    borderColor: theme.palette.divider,
+  };
+
+  const labelStyle = {
+    color: theme.palette.text.secondary
+  };
+
+  const valueStyle = {
+    color: theme.palette.text.primary
+  };
+
   return (
     <Root
       header={
@@ -80,37 +91,37 @@ export default function YieldHistoryPage() {
             {/* Dashboard Summary Section */}
             <section>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-                <div className="bg-surface-container-lowest border border-outline-variant p-stack-md flex flex-col gap-1 rounded-none shadow-none">
-                  <span className="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">
+                <div className="border p-stack-md flex flex-col gap-1 rounded-none shadow-none" style={cardStyle}>
+                  <span className="font-label-caps text-label-caps uppercase text-[10px]" style={labelStyle}>
                     Registros en Campaña
                   </span>
                   <div className="flex items-end gap-2">
-                    <span className="text-3xl font-bold text-on-surface">
+                    <span className="text-3xl font-bold" style={valueStyle}>
                       {history.length}
                     </span>
-                    <span className="text-on-surface-variant mb-1 font-medium">
+                    <span className="mb-1 font-medium" style={labelStyle}>
                       Entradas
                     </span>
                   </div>
                 </div>
 
-                <div className="bg-surface-container-lowest border border-outline-variant p-stack-md flex flex-col gap-1 rounded-none shadow-none">
-                  <span className="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">
+                <div className="border p-stack-md flex flex-col gap-1 rounded-none shadow-none" style={cardStyle}>
+                  <span className="font-label-caps text-label-caps uppercase text-[10px]" style={labelStyle}>
                     Promedio Forming Yield
                   </span>
                   <div className="flex items-end gap-2">
-                    <span className="text-3xl font-bold text-on-surface-variant">
+                    <span className="text-3xl font-bold" style={labelStyle}>
                       {avgForming}%
                     </span>
                   </div>
                 </div>
 
-                <div className="bg-surface-container-lowest border border-outline-variant p-stack-md flex flex-col gap-1 rounded-none shadow-none">
-                  <span className="font-label-caps text-label-caps text-on-surface-variant uppercase text-[10px]">
+                <div className="border p-stack-md flex flex-col gap-1 rounded-none shadow-none" style={cardStyle}>
+                  <span className="font-label-caps text-label-caps uppercase text-[10px]" style={labelStyle}>
                     Promedio Packing Yield
                   </span>
                   <div className="flex items-end gap-2">
-                    <span className="text-3xl font-bold text-primary">
+                    <span className="text-3xl font-bold" style={{ color: theme.palette.primary.main }}>
                       {avgPacking}%
                     </span>
                   </div>

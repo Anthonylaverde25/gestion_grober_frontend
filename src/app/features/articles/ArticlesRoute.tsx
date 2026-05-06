@@ -1,6 +1,7 @@
 import authRoles from "@auth/authRoles";
 import { FuseRouteItemType } from "@fuse/utils/FuseUtils";
 import ArticlesPage from "./pages/ArticlesPage";
+import ArticleDetailPage from "./pages/ArticleDetailPage";
 
 /**
  * Articles Route Configuration
@@ -9,8 +10,17 @@ import ArticlesPage from "./pages/ArticlesPage";
 const ArticlesRoute: FuseRouteItemType[] = [
   {
     path: "articles",
-    element: <ArticlesPage />,
     auth: authRoles.user,
+    children: [
+      {
+        path: "",
+        element: <ArticlesPage />,
+      },
+      {
+        path: ":articleId",
+        element: <ArticleDetailPage />,
+      }
+    ]
   },
 ];
 

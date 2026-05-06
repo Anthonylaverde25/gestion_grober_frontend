@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -6,51 +7,161 @@ import {
   Button,
   Typography,
   Box,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  CircularProgress
+  CircularProgress,
+  Chip,
+  IconButton,
+  Tooltip
 } from '@mui/material';
+import {
+  MaterialReactTable,
+  useMaterialReactTable,
+  type MRT_ColumnDef,
+} from 'material-react-table';
+import { MRT_Localization_ES } from 'material-react-table/locales/es';
 import IdentificationIcon from '@mui/icons-material/Badge';
+import AddIcon from '@mui/icons-material/Add';
+import VisibilityIcon from '@mui/icons-material/VisibilityOutlined';
 import { useUserAliases } from '../../api/hooks/team/useUserAliases';
 import { SettingsTeamMember } from '../../types';
+import { UserAlias } from '@/app/core/domain/entities/UserAlias';
 
 interface ViewAliasesDialogProps {
   open: boolean;
   onClose: () => void;
   member: SettingsTeamMember | null;
+  onAddAlias?: (member: SettingsTeamMember) => void;
 }
 
-export function ViewAliasesDialog({ open, onClose, member }: ViewAliasesDialogProps) {
+export function ViewAliasesDialog({ open, onClose, member, onAddAlias }: ViewAliasesDialogProps) {
   const { aliases, isLoading } = useUserAliases(member ? parseInt(member.id) : undefined);
 
-  const sectionLabelStyles = {
-    color: '#0f172a',
-    fontWeight: 900,
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.1em',
-    fontSize: '11px',
-    mb: 1.5,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 1,
-    '&::after': {
-      content: '""',
-      flex: 1,
-      height: '1px',
-      bgcolor: '#f1f5f9'
-    }
-  };
+  const columns = useMemo<MRT_ColumnDef<UserAlias>[]>(
+    () => [
+      {
+        accessorKey: 'name',
+        header: 'Nombre del Operario',
+        size: 200,
+        Cell: ({ cell }) => (
+          <Typography sx={{ fontSize: '13px', fontWeight: 600, color: '#1e293b' }}>
+            {cell.getValue<string>()}
+          </Typography>
+        ),
+      },
+      {
+        accessorKey: 'legajo',
+        header: 'Legajo',
+        size: 60,
+        Cell: ({ cell }) => (
+          <Typography sx={{ fontSize: '12px', fontWeight: 700, color: '#0070f2', fontFamily: 'monospace' }}>
+            {cell.getValue<string>()}
+          </Typography>
+        ),
+      },
+      {
+        accessorKey: 'isActive',
+        header: 'Estado',
+        size: 70,
+        Cell: ({ cell }) => (
+          <Chip
+            label={cell.getValue<boolean>() ? 'ACTIVO' : 'INACTIVO'}
+            size="small"
+            sx={{ 
+              fontWeight: 800, 
+              fontSize: '10px', 
+              borderRadius: '4px' 
+            }}
+          />
+        ),
+      },
+      {
+        id: 'actions',
+        header: 'Acciones',
+        size: 70,
+        Cell: ({ row }) => (
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Tooltip title="Ver Detalles">
+              <IconButton size="small">
+                <VisibilityIcon sx={{ fontSize: 18, color: '#64748b' }} />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        ),
+      },
+    ],
+    [],
+  );
+
+  const table = useMaterialReactTable({
+    columns,
+    data: aliases,
+    enableDensityToggle: false,
+    enablePagination: false,
+    enableColumnFilters: false,
+    enableGlobalFilter: false,
+    enableTopToolbar: true,
+    enableBottomToolbar: false,
+    localization: MRT_Localization_ES,
+    initialState: {
+      density: 'compact',
+    },
+    muiTablePaperProps: {
+      elevation: 0,
+      sx: { borderRadius: 0, border: '1px solid #e2e8f0' }
+    },
+    muiTableProps: {
+      sx: {
+        borderCollapse: 'separate',
+        borderSpacing: 0,
+        '& .MuiTableCell-root': {
+          border: '1px solid rgba(224, 224, 224, 1)',
+          fontSize: '12px',
+          py: 1,
+        },
+      },
+    },
+    muiTableHeadCellProps: {
+      sx: {
+        backgroundColor: '#f8f9fa',
+        fontWeight: 700,
+        color: '#1d2d3e',
+        textTransform: 'uppercase',
+        fontSize: '11px',
+        letterSpacing: '0.05em',
+      },
+    },
+    renderTopToolbarCustomActions: () => (
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', pr: 1 }}>
+        <Typography variant="caption" sx={{ fontWeight: 800, color: 'text.secondary', ml: 1 }}>
+          LISTADO DE OPERARIOS VINCULADOS
+        </Typography>
+        <Button
+          variant="contained"
+          size="small"
+          disableElevation
+          startIcon={<AddIcon />}
+          onClick={() => member && onAddAlias?.(member)}
+          sx={{
+            borderRadius: '6px',
+            bgcolor: '#0070f2',
+            fontSize: '11px',
+            fontWeight: 700,
+            textTransform: 'none',
+            px: 1.5,
+            height: '28px',
+            '&:hover': { bgcolor: '#005bbd' }
+          }}
+        >
+          Nuevo Alias
+        </Button>
+      </Box>
+    ),
+  });
 
   return (
-    <Dialog 
-      open={open} 
-      onClose={onClose} 
-      fullWidth 
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
       maxWidth="md"
       PaperProps={{
         sx: {
@@ -80,10 +191,6 @@ export function ViewAliasesDialog({ open, onClose, member }: ViewAliasesDialogPr
         </Box>
 
         <Box sx={{ p: 3 }}>
-          <Typography variant="caption" sx={sectionLabelStyles}>
-            Listado de Operarios Vinculados
-          </Typography>
-
           {isLoading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
               <CircularProgress size={24} />
@@ -93,40 +200,38 @@ export function ViewAliasesDialog({ open, onClose, member }: ViewAliasesDialogPr
               <Typography sx={{ fontSize: '13px', color: '#64748b', fontWeight: 600 }}>
                 No hay alias registrados para este usuario.
               </Typography>
+              <Button
+                variant="contained"
+                size="small"
+                disableElevation
+                startIcon={<AddIcon />}
+                onClick={() => member && onAddAlias?.(member)}
+                sx={{
+                  mt: 2,
+                  borderRadius: '6px',
+                  bgcolor: '#0070f2',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  textTransform: 'none',
+                }}
+              >
+                Registrar Primer Alias
+              </Button>
             </Box>
           ) : (
-            <TableContainer sx={{ border: '1px solid #e2e8f0' }}>
-              <Table size="small">
-                <TableHead sx={{ bgcolor: '#f1f5f9' }}>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 800, fontSize: '10px', textTransform: 'uppercase', color: '#475569' }}>Nombre del Operario</TableCell>
-                    <TableCell sx={{ fontWeight: 800, fontSize: '10px', textTransform: 'uppercase', color: '#475569' }}>Legajo</TableCell>
-                    <TableCell sx={{ fontWeight: 800, fontSize: '10px', textTransform: 'uppercase', color: '#475569' }}>Estado</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {aliases.map((alias) => (
-                    <TableRow key={alias.id} sx={{ '&:hover': { bgcolor: '#f8fafc' } }}>
-                      <TableCell sx={{ fontSize: '13px', fontWeight: 600, color: '#1e293b' }}>{alias.name}</TableCell>
-                      <TableCell sx={{ fontSize: '13px', fontWeight: 700, color: '#0070f2', fontFamily: 'monospace' }}>{alias.legajo}</TableCell>
-                      <TableCell sx={{ fontSize: '11px', fontWeight: 800, color: '#10b981', textTransform: 'uppercase' }}>Activo</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+            <MaterialReactTable table={table} />
           )}
         </Box>
       </DialogContent>
 
       <DialogActions sx={{ p: 2.5, px: 3, bgcolor: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
-        <Button 
-          onClick={onClose} 
-          sx={{ 
-            color: '#64748b', 
-            fontWeight: 800, 
-            fontSize: '11px', 
-            textTransform: 'uppercase', 
+        <Button
+          onClick={onClose}
+          sx={{
+            color: '#64748b',
+            fontWeight: 800,
+            fontSize: '11px',
+            textTransform: 'uppercase',
             letterSpacing: '0.05em',
             borderRadius: 0,
             ml: 'auto',
