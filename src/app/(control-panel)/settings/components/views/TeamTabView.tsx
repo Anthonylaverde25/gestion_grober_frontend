@@ -71,7 +71,11 @@ function TeamTabView() {
 				legajo: aliasData.legajo
 			});
 			setIsAliasModalOpen(false);
-			setSelectedMember(null);
+			
+			// Solo limpiamos el miembro seleccionado si NO estamos viendo la lista completa de alias
+			if (!isViewAliasesModalOpen) {
+				setSelectedMember(null);
+			}
 		} catch (error) {
 			console.error('Error creating alias:', error);
 		}

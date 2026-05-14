@@ -546,7 +546,8 @@ export default function ExtractionMachineHistory() {
             </Box>
           </section>
         </div>
-      }
-    />
-  );
+      </Box>
+    }
+  />
+);
 }
