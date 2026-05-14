@@ -1,13 +1,15 @@
 import ky, { KyInstance } from 'ky';
 
-const apiUrl = (import.meta?.env?.VITE_API_BASE_URL as string) || 'http://localhost:8000';
+const apiUrl = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_BASE_URL_LOCAL;
 
 export const API_BASE_URL = apiUrl;
+
+console.log('📡 API Base URL configurada en:', API_BASE_URL);
 
 let globalHeaders: Record<string, string> = {};
 
 export const api: KyInstance = ky.create({
-        prefixUrl: `${API_BASE_URL}/api`,	hooks: {
+	prefixUrl: `${API_BASE_URL}/api`, hooks: {
 		beforeRequest: [
 			(request) => {
 				Object.entries(globalHeaders).forEach(([key, value]) => {
