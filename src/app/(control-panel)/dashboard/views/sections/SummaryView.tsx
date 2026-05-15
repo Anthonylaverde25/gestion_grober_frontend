@@ -5,6 +5,8 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Button from '@mui/material/Button';
 import { useDashboardOverview } from '../../api/hooks/useDashboardOverview';
+import { useExtractionDashboard } from '@/app/features/extraction/hooks/useExtractionDashboard';
+import { useLinesPerformanceSummary } from '@/app/features/production/hooks/useLinesPerformanceSummary';
 import Skeleton from '@mui/material/Skeleton';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import MachineECharts from '../../components/MachineECharts';
@@ -13,6 +15,7 @@ import ActiveYieldComparisonChart from '../../components/ActiveYieldComparisonCh
 import GlobalECharts from '../../components/GlobalECharts';
 import GlobalHeatmapChart from '../../components/GlobalHeatmapChart';
 import GlobalRadarChart from '../../components/GlobalRadarChart';
+import PerformanceStats from '@/app/(control-panel)/production/lines/performance/components/PerformanceStats';
 import useSession from '@/hooks/useSession';
 import { useTheme, alpha } from '@mui/material/styles';
 
@@ -26,9 +29,14 @@ export default function SummaryView() {
     const {
         activeMachines,
         yieldSeries,
-        isLoading,
+        isLoading: overviewLoading,
         activeCompany
     } = useDashboardOverview();
+
+    const { furnaces, isLoading: furnacesLoading } = useExtractionDashboard();
+    const { data: performanceSummary, isLoading: summaryLoading } = useLinesPerformanceSummary();
+
+    const isLoading = overviewLoading || furnacesLoading;
 
     if (isLoading) {
         return (
@@ -68,6 +76,15 @@ export default function SummaryView() {
                         Planta {activeCompany?.name || 'Cargando...'}
                     </Typography>
                 </Box>
+            </Box>
+
+            {/* Performance Stats Cards */}
+            <Box sx={{ width: '100%', mb: 6 }}>
+                <PerformanceStats 
+                    furnaces={furnaces} 
+                    summary={performanceSummary as any} 
+                    layout="horizontal" 
+                />
             </Box>
 
             {/* Section: Consola Unificada de Operaciones (Gráfico + Tabla) */}

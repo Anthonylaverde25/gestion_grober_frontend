@@ -23,5 +23,6 @@ export const QUERY_KEYS = {
   dashboard: {
     all: ['dashboard'] as const,
     overview: (companyId?: string) => [...QUERY_KEYS.dashboard.all, 'overview', companyId].filter(Boolean) as const,
+    linesPerformanceSummary: (companyId?: string) => [...QUERY_KEYS.dashboard.all, 'lines-performance-summary', companyId].filter(Boolean) as const,
   }
 } as const;
