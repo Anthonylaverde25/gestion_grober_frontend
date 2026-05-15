@@ -19,14 +19,16 @@ function SettingsAppSidebarContent(props: SettingsAppSidebarContentProps) {
     <div>
       <div
         className={clsx(
-          "flex items-center justify-between p-4 border border-b-slate-400",
+          "flex items-center justify-center p-4 border border-b-slate-400",
           className,
         )}
       >
-        <Typography className="text-4xl leading-none font-extrabold tracking-tight">
-          {" "}
-          Configuracion general
-        </Typography>
+        <div className="">
+          <Typography variant="h5" gutterBottom className="text-xl leading-tight font-bold tracking-tight text-[#0f172a] uppercase w-full">
+            Configuración General
+          </Typography>
+        </div>
+
         {isMobile && (
           <IconButton
             onClick={() => onSetSidebarOpen(false)}

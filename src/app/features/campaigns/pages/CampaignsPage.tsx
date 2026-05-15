@@ -28,6 +28,9 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   },
 }));
 
+import WatermarkView from '@/app/components/ui/WatermarkView';
+import CircularProgress from '@mui/material/CircularProgress';
+
 /**
  * CampaignsPage Component
  * Standardized with corporate PageHeader format from Articles.
@@ -36,7 +39,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 export default function CampaignsPage() {
   const { activeCompany } = useBusiness();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { startCampaign, isStarting } = useCampaigns();
+  const { campaigns, isLoading, startCampaign, isStarting } = useCampaigns();
 
   const handleOpenDialog = () => setIsDialogOpen(true);
   const handleCloseDialog = () => setIsDialogOpen(false);
@@ -68,7 +71,13 @@ export default function CampaignsPage() {
         }
         content={
           <Box className="w-full h-full flex flex-col" sx={{ bgcolor: 'background.default' }}>
-            <CampaignsTable />
+            {isLoading ? (
+                <Box className="flex-1 flex items-center justify-center"><CircularProgress /></Box>
+            ) : campaigns.length === 0 ? (
+                <Box className="flex-1 flex items-center justify-center"><WatermarkView /></Box>
+            ) : (
+                <CampaignsTable />
+            )}
           </Box>
         }
       />

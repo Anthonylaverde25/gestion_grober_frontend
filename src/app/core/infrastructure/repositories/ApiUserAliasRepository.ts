@@ -30,4 +30,9 @@ export class ApiUserAliasRepository implements UserAliasRepository {
     });
     return response.data.data.map((dto) => UserAliasMapper.toDomain(dto));
   }
+
+  async toggleStatus(id: string): Promise<UserAlias> {
+    const response = await axiosInstance.patch<{ data: any }>(`/api/v1/user-aliases/${id}/toggle-status`);
+    return UserAliasMapper.toDomain(response.data.data);
+  }
 }

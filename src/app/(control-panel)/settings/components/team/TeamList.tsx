@@ -1,5 +1,5 @@
 import { Stack, Divider, Box } from '@mui/material';
-import { SettingsTeamMember } from '../../types';
+import { SettingsTeamMember } from '../../api/types';
 import { TeamListItem } from './TeamListItem';
 
 interface TeamListProps {

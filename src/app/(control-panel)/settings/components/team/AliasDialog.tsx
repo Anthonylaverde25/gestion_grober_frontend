@@ -16,7 +16,7 @@ import FingerprintIcon from '@mui/icons-material/Fingerprint';
 import PersonIcon from '@mui/icons-material/Person';
 import BadgeIcon from '@mui/icons-material/Badge';
 import { AliasSchema, AliasFormData } from '../../schemas/AliasSchema';
-import { SettingsTeamMember } from '../../types';
+import { SettingsTeamMember } from '../../api/types';
 
 interface AliasDialogProps {
   open: boolean;

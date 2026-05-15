@@ -1,5 +1,4 @@
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import { SettingsHeader } from "../ui/SettingsHeader";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 import { useFurnaces } from "../../api/hooks/furnaces/useFurnaces";
@@ -26,25 +25,15 @@ function FurnacesTabView() {
   return (
     <div className="w-full">
       <div className="flex flex-col gap-8">
-        <div className="flex items-center justify-between w-full">
-          <div>
-            <Typography className="text-xl font-medium">
-              Configuración de Hornos
-            </Typography>
-            <Typography color="text.secondary">
-              Gestione los parámetros técnicos y operativos de los hornos de la
-              planta.
-            </Typography>
-          </div>
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={<AddIcon />}
-            onClick={handleOpenDialog}
-          >
-            Nuevo Horno
-          </Button>
-        </div>
+        <SettingsHeader
+          title="Configuración de Hornos"
+          description="Gestione los parámetros técnicos y operativos de los hornos de la planta."
+          action={{
+            label: "Nuevo Horno",
+            icon: <AddIcon />,
+            onClick: handleOpenDialog
+          }}
+        />
 
         <Box className="w-full">
           <FurnacesTable data={furnaces} isLoading={isLoading} />

@@ -1,6 +1,6 @@
 import { Box, Typography, Avatar, IconButton, Tooltip, Stack } from '@mui/material';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import { SettingsTeamMember } from '../../types';
+import { SettingsTeamMember } from '../../api/types';
 
 interface TeamListItemProps {
 	member: SettingsTeamMember;

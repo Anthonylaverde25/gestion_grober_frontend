@@ -28,6 +28,9 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   },
 }));
 
+import WatermarkView from '@/app/components/ui/WatermarkView';
+import CircularProgress from '@mui/material/CircularProgress';
+
 /**
  * ClientsPage Component
  * Main page for managing business clients.
@@ -36,7 +39,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 export default function ClientsPage() {
   const { activeCompany } = useBusiness();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { createClient, isCreating } = useClients();
+  const { clients, isLoading, createClient, isCreating } = useClients();
 
   const handleOpenDialog = () => setIsDialogOpen(true);
   const handleCloseDialog = () => setIsDialogOpen(false);
@@ -68,7 +71,13 @@ export default function ClientsPage() {
         }
         content={
           <Box className="w-full h-full flex flex-col" sx={{ bgcolor: 'background.default' }}>
-            <ClientsTable />
+             {isLoading ? (
+                <Box className="flex-1 flex items-center justify-center"><CircularProgress /></Box>
+            ) : clients.length === 0 ? (
+                <Box className="flex-1 flex items-center justify-center"><WatermarkView /></Box>
+            ) : (
+                <ClientsTable />
+            )}
           </Box>
         }
       />

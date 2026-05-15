@@ -32,9 +32,6 @@ function SettingsAppHeader(props: SettingsAppHeaderProps) {
 						<FuseSvgIcon>lucide:menu</FuseSvgIcon>
 					</IconButton>
 				)}
-				<Typography className="text-3xl leading-none font-bold tracking-tight lg:ml-0">
-					{currentNavigation?.title}
-				</Typography>
 			</div>
 		</div>
 	);

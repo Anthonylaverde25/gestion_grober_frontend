@@ -7,8 +7,11 @@ import UserMenu from 'src/components/theme-layouts/components/UserMenu';
 import Logo from '../../../../components/Logo';
 
 const Root = styled('div')(({ theme }) => ({
-	backgroundColor: theme.vars.palette.background.default,
+	backgroundColor: '#eff6ff', // bg-blue-50
 	color: theme.vars.palette.text.primary,
+	...theme.applyStyles('dark', {
+		backgroundColor: theme.vars.palette.background.default
+	}),
 	'& ::-webkit-scrollbar-thumb': {
 		boxShadow: `inset 0 0 0 20px ${'rgba(255, 255, 255, 0.24)'}`,
 		...theme.applyStyles('light', {
@@ -45,7 +48,7 @@ function NavbarStyle1Content(props: NavbarStyle1ContentProps) {
 
 	return (
 		<Root className={clsx('flex h-full flex-auto flex-col overflow-hidden', className)}>
-			<div className="flex h-12 shrink-0 flex-row items-center px-5 md:h-16">
+			<div className="flex h-auto shrink-0 flex-row items-center px-5 py-4">
 				<Logo />
 			</div>
 

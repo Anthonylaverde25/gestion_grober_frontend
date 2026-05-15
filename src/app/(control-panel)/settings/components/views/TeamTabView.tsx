@@ -5,13 +5,14 @@ import { Box, Typography } from '@mui/material';
 import { useTeamMembers } from '../../api/hooks/team/useTeamMembers';
 import { useUserAliases } from '../../api/hooks/team/useUserAliases';
 import { useBusiness } from '@/app/contexts/BusinessContext';
-import { TeamHeader } from '../team/TeamHeader';
+import { SettingsHeader } from '../ui/SettingsHeader';
+import AddIcon from '@mui/icons-material/Add';
 import { TeamFilterBar } from '../team/TeamFilterBar';
 import { TeamList } from '../team/TeamList';
 import CreateUserModal from '../team/CreateUserModal';
 import { AliasDialog } from '../team/AliasDialog';
 import { ViewAliasesDialog } from '../team/ViewAliasesDialog';
-import { SettingsTeamMember } from '../../types';
+import { SettingsTeamMember } from '../../api/types';
 
 function TeamTabView() {
 	const { activeCompany } = useBusiness();
@@ -97,10 +98,15 @@ function TeamTabView() {
 
 	return (
 		<Box sx={{ bgcolor: 'white', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-			{/* Componente de Cabecera */}
-			<TeamHeader 
-				count={filteredData.length} 
-				onAddUser={handleAddUser} 
+			{/* Componente de Cabecera Genérico */}
+			<SettingsHeader 
+				title="Integrantes del Equipo"
+				description={`${filteredData.length} usuarios registrados en el sistema`}
+				action={{
+					label: "Añadir Usuario",
+					icon: <AddIcon />,
+					onClick: handleAddUser
+				}}
 			/>
 
 			{/* Barra de Filtros */}

@@ -13,6 +13,7 @@ import { useAccountSettings } from '../../api/hooks/account/useAccountSettings';
 import { useUpdateAccountSettings } from '../../api/hooks/account/useUpdateAccountSettings';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { SettingsHeader } from '../ui/SettingsHeader';
 
 const defaultValues: FormType = {
 	id: '',
@@ -46,42 +47,39 @@ const schema = z.object({
 type FormType = z.infer<typeof schema>;
 
 function AccountTabView() {
-        const { data: accountSettings } = useAccountSettings();
-        const { mutate: updateAccountSettings } = useUpdateAccountSettings();
+	const { data: accountSettings } = useAccountSettings();
+	const { mutate: updateAccountSettings } = useUpdateAccountSettings();
 
-        const { control, reset, handleSubmit, formState } = useForm<FormType>({
-                defaultValues,
-                mode: 'all',
-                resolver: zodResolver(schema)
-        });
+	const { control, reset, handleSubmit, formState } = useForm<FormType>({
+		defaultValues,
+		mode: 'all',
+		resolver: zodResolver(schema)
+	});
 
-        const { isValid, dirtyFields, errors } = formState;
+	const { isValid, dirtyFields, errors } = formState;
 
-        useEffect(() => {
-                reset(accountSettings);
-        }, [accountSettings, reset]);
+	useEffect(() => {
+		reset(accountSettings);
+	}, [accountSettings, reset]);
 
-        /**
-         * Form Submit
-         */
-        function onSubmit(formData: FormType) {
-                updateAccountSettings(formData);
-        }
+	/**
+	 * Form Submit
+	 */
+	function onSubmit(formData: FormType) {
+		updateAccountSettings(formData);
+	}
 
-        return (
-                <div className="w-full">
-                        <form
-                                onSubmit={handleSubmit(onSubmit)}
-                                className="flex w-full flex-col gap-12"
-                        >
-
+	return (
+		<div className="w-full">
+			<form
+				onSubmit={handleSubmit(onSubmit)}
+				className="flex w-full flex-col gap-12"
+			>
 				<div className="flex flex-col gap-4">
-					<div className="w-full">
-						<Typography className="text-xl font-medium">Profile</Typography>
-						<Typography color="text.secondary">
-							Following information is publicly displayed, be careful!
-						</Typography>
-					</div>
+					<SettingsHeader
+						title="Profile"
+						description="Following information is publicly displayed, be careful!"
+					/>
 
 					<div className="grid w-full gap-4 sm:grid-cols-4">
 						<div className="sm:col-span-4">

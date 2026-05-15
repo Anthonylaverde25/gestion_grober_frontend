@@ -1,5 +1,6 @@
+import { SettingsHeader } from "../ui/SettingsHeader";
 import AddIcon from "@mui/icons-material/Add";
-import { Box, Button, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useMemo, useState } from "react";
 import { useFurnaces } from "../../api/hooks/furnaces/useFurnaces";
 import { useMachines } from "../../api/hooks/machines/useMachines";
@@ -76,25 +77,16 @@ function MachinesTabView() {
   return (
     <div className="w-full">
       <div className="flex flex-col gap-8">
-        <div className="flex items-center justify-between w-full">
-          <div>
-            <Typography className="text-xl font-medium">
-              Configuración de Máquinas
-            </Typography>
-            <Typography color="text.secondary">
-              Gestione la maquinaria conectada a los hornos de producción.
-            </Typography>
-          </div>
-          <Button
-            variant="contained"
-            color="secondary"
-            startIcon={<AddIcon />}
-            onClick={handleOpenDialog}
-            disabled={furnaces.length === 0}
-          >
-            Nueva Máquina
-          </Button>
-        </div>
+        <SettingsHeader
+          title="Configuración de Máquinas"
+          description="Gestione la maquinaria conectada a los hornos de producción."
+          action={{
+            label: "Nueva Máquina",
+            icon: <AddIcon />,
+            onClick: handleOpenDialog,
+            disabled: furnaces.length === 0
+          }}
+        />
 
         <Box className="w-full">
           <MachinesTable

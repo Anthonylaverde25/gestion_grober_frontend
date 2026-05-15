@@ -30,10 +30,10 @@ export default function PerformanceStats({ furnaces }: PerformanceStatsProps) {
   };
 
   return (
-    <header className="mb-stack-lg">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+    <header className="mb-20">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {/* Active Campaigns Card */}
-        <div className="border p-stack-md flex flex-col gap-1 shadow-none rounded-none" style={cardStyle}>
+        <div className="border p-10 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
           <span className="font-label-caps text-label-caps uppercase" style={labelStyle}>
             Máquinas en Campaña
           </span>
@@ -57,7 +57,7 @@ export default function PerformanceStats({ furnaces }: PerformanceStatsProps) {
         </div>
 
         {/* Global Yield (Average Forma) Card */}
-        <div className="border p-stack-md flex flex-col gap-1 shadow-none rounded-none" style={cardStyle}>
+        <div className="border p-10 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
           <span className="font-label-caps text-label-caps uppercase" style={labelStyle}>
             Promedio Eficiencia Forma
           </span>
@@ -74,7 +74,7 @@ export default function PerformanceStats({ furnaces }: PerformanceStatsProps) {
         </div>
 
         {/* Packing Yield Card */}
-        <div className="border p-stack-md flex flex-col gap-1 shadow-none rounded-none" style={cardStyle}>
+        <div className="border p-10 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
           <span className="font-label-caps text-label-caps uppercase" style={labelStyle}>
             Promedio Eficiencia Empaque
           </span>

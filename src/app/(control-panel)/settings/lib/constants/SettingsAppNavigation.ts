@@ -9,31 +9,31 @@ const SettingsAppNavigation: FuseNavItemType = {
 	children: [
 
 		{
-		        id: 'apps.settings.account',
-		        icon: 'lucide:circle-user',
-		        title: 'Account',
-		        type: 'item',
-		        url: '/settings/account',
-		        subtitle: 'Manage your public profile and private information'
+			id: 'apps.settings.account',
+			icon: 'lucide:circle-user',
+			title: 'Account',
+			type: 'item',
+			url: '/settings/account',
+			subtitle: 'Manage your public profile and private information'
 		},
 		{
-		        id: 'apps.settings.furnaces',
-		        icon: 'lucide:flame',
-		        title: 'Hornos',
-		        type: 'item',
-		        url: '/settings/furnaces',
-		        subtitle: 'Configuración técnica y operativa de los hornos'
+			id: 'apps.settings.furnaces',
+			icon: 'lucide:flame',
+			title: 'Hornos',
+			type: 'item',
+			url: '/settings/furnaces',
+			subtitle: 'Configuración técnica y operativa de los hornos'
 		},
 		{
-		        id: 'apps.settings.machines',
-		        icon: 'lucide:cpu',
-		        title: 'Máquinas',
-		        type: 'item',
-		        url: '/settings/machines',
-		        subtitle: 'Gestión y mantenimiento de la maquinaria'
+			id: 'apps.settings.machines',
+			icon: 'lucide:cpu',
+			title: 'Máquinas',
+			type: 'item',
+			url: '/settings/machines',
+			subtitle: 'Gestión y mantenimiento de la maquinaria'
 		},
 		{
-		        id: 'apps.settings.notifications',
+			id: 'apps.settings.notifications',
 
 			icon: 'lucide:bell',
 			title: 'Notifications',
@@ -44,7 +44,7 @@ const SettingsAppNavigation: FuseNavItemType = {
 		{
 			id: 'apps.settings.team',
 			icon: 'lucide:users',
-			title: 'Team',
+			title: 'Equipo',
 			type: 'item',
 			url: '/settings/team',
 			subtitle: 'Manage your existing team and change roles/permissions'

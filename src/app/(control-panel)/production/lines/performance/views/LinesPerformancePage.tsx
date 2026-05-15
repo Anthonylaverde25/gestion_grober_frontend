@@ -11,7 +11,10 @@ import PerformanceStats from "../components/PerformanceStats";
 import FurnacePerformanceSection from "../components/FurnacePerformanceSection";
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
+import Button from '@mui/material/Button';
 import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router';
+import WatermarkView from '@/app/components/ui/WatermarkView';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -38,6 +41,11 @@ export default function LinesPerformancePage() {
   const { furnaces, isLoading, error } = useExtractionDashboard();
   const [showOnlyActive, setShowOnlyActive] = useState(false);
   const theme = useTheme();
+  const navigate = useNavigate();
+
+  const totalActiveCampaigns = useMemo(() => {
+    return furnaces.reduce((acc, f) => acc + (f.machines?.filter((m: any) => m.currentCampaignId).length || 0), 0);
+  }, [furnaces]);
 
   const filteredFurnaces = useMemo(() => {
     if (!showOnlyActive) return furnaces;
@@ -74,15 +82,27 @@ export default function LinesPerformancePage() {
   return (
     <Root
       header={
-        <PageHeader 
-          title={<Typography variant="h5" sx={{ fontWeight: 900, color: 'text.primary' }}>Rendimiento de Líneas</Typography>} 
-          subtitle="Gestión de campanas y registro de mermas (Line Yield)" 
+        <PageHeader
+          title={<Typography variant="h5" sx={{ fontWeight: 900, color: 'text.primary' }}>Rendimiento de Líneas</Typography>}
+          subtitle="Gestión de campanas y registro de mermas (Line Yield)"
           actions={
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              {totalActiveCampaigns === 0 && !isLoading && (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  size="small"
+                  onClick={() => navigate(furnaces.length === 0 ? '/settings/production' : '/campaigns')}
+                  startIcon={<span className="material-symbols-outlined">play_arrow</span>}
+                  sx={{ borderRadius: '8px', fontWeight: 800, textTransform: 'none' }}
+                >
+                  {furnaces.length === 0 ? "Configurar" : "Iniciar Campaña"}
+                </Button>
+              )}
               <FormControlLabel
                 control={
-                  <Switch 
-                    checked={showOnlyActive} 
+                  <Switch
+                    checked={showOnlyActive}
                     onChange={(e) => setShowOnlyActive(e.target.checked)}
                     size="small"
                   />
@@ -98,42 +118,24 @@ export default function LinesPerformancePage() {
         />
       }
       content={
-        <div className="pb-16 px-margin-edge max-w-[1600px] mx-auto w-full pt-8" style={{ color: theme.palette.text.primary }}>
-          <PerformanceStats furnaces={filteredFurnaces} />
-          
-          <div className="space-y-stack-lg">
-            {filteredFurnaces.map((furnace) => (
-              <FurnacePerformanceSection key={furnace.id} furnace={furnace} />
-            ))}
+        <>
+          <div className="pb-32 mt-4 px-margin-edge max-w-[1600px] mx-auto w-full pt-8" style={{ color: theme.palette.text.primary }}>
+            {totalActiveCampaigns === 0 && !isLoading ? (
+              <WatermarkView />
+            ) : (
+              <>
+                <PerformanceStats furnaces={filteredFurnaces} />
 
-            {filteredFurnaces.length === 0 && !isLoading && (
-              <Box className="p-12 text-center" sx={{ bgcolor: 'background.paper', border: '1px dashed', borderColor: 'divider' }}>
-                <span className="material-symbols-outlined text-4xl mb-2" style={{ color: theme.palette.text.secondary }}>
-                  inventory_2
-                </span>
-                <Typography variant="h6" sx={{ color: 'text.primary' }}>
-                  {showOnlyActive ? "No hay campañas activas actualmente" : "No se encontraron hornos configurados"}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  className="mb-4"
-                  sx={{ color: 'text.secondary' }}
-                >
-                  {showOnlyActive 
-                    ? "Todas las líneas de producción están detenidas o sin campaña registrada." 
-                    : "Para comenzar a monitorear el rendimiento, primero debes configurar tus hornos y máquinas."
-                  }
-                </Typography>
-                {!showOnlyActive && (
-                  <Link
-                    to="/settings/production"
-                    className="font-bold hover:underline"
-                    style={{ color: theme.palette.primary.main }}
-                  >
-                    Configurar Producción
-                  </Link>
-                )}
-              </Box>
+                <div className="space-y-stack-lg">
+                  {filteredFurnaces.map((furnace) => (
+                    <FurnacePerformanceSection key={furnace.id} furnace={furnace} />
+                  ))}
+
+                  {filteredFurnaces.length === 0 && showOnlyActive && (
+                    <WatermarkView />
+                  )}
+                </div>
+              </>
             )}
           </div>
 
@@ -150,7 +152,7 @@ export default function LinesPerformancePage() {
               add
             </span>
           </motion.button>
-        </div>
+        </>
       }
     />
   );

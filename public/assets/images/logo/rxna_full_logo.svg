@@ -1,0 +1,19 @@
+<svg width="450" height="120" viewBox="0 0 450 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- LAYERED GLASS ICON COMPOSITION -->
+  <g transform="translate(10, 20)">
+    <!-- Layer 1: Metallic Grey Base -->
+    <rect x="30" y="10" width="60" height="70" fill="#94a3b8" fill-opacity="0.2" stroke="#64748b" stroke-width="1.5" rx="2" transform="skewX(-10)"/>
+    <!-- Layer 2: Soft Glass Blue -->
+    <rect x="15" y="5" width="60" height="70" fill="#0ea5e9" fill-opacity="0.15" stroke="#0ea5e9" stroke-width="1.5" rx="2" transform="skewX(-5)"/>
+    <!-- Layer 3: Vibrant Glass Highlight -->
+    <rect x="0" y="0" width="60" height="70" fill="#38bdf8" fill-opacity="0.25" stroke="#38bdf8" stroke-width="2" rx="2"/>
+    
+    <!-- Refraction Line Details -->
+    <line x1="5" y1="5" x2="55" y2="65" stroke="white" stroke-opacity="0.3" stroke-width="1"/>
+    <line x1="10" y1="0" x2="60" y2="60" stroke="white" stroke-opacity="0.3" stroke-width="1"/>
+  </g>
+  
+  <!-- EXPANSIVE BRAND TYPOGRAPHY -->
+  <text x="100" y="70" fill="#0f172a" style="font-family: 'Inter', 'Roboto', sans-serif; font-weight: 950; font-size: 64px; letter-spacing: -4px;">RXNA</text>
+  <text x="105" y="100" fill="#0ea5e9" style="font-family: 'Inter', 'Roboto', sans-serif; font-weight: 800; font-size: 20px; letter-spacing: 12px;">GLASS</text>
+</svg>
