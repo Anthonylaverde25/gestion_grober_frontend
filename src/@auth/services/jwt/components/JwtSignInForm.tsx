@@ -75,24 +75,50 @@ function JwtSignInForm() {
 			className="flex w-full flex-col justify-center"
 			onSubmit={handleSubmit(onSubmit)}
 		>
-			<Controller
-				name="email"
-				control={control}
-				render={({ field }) => (
-					<TextField
-						{...field}
-						className="mb-6"
-						label="Email"
-						autoFocus
-						type="email"
-						error={!!errors.email}
-						helperText={errors?.email?.message}
-						variant="outlined"
-						required
-						fullWidth
-					/>
-				)}
-			/>
+			<div className='mb-5'>
+				<Controller
+					name="email"
+					control={control}
+					render={({ field }) => (
+						<TextField
+							{...field}
+							className="mb-[10px]"
+							label="Correo Electrónico"
+							autoFocus
+							type="email"
+							error={!!errors.email}
+							helperText={errors?.email?.message}
+							variant="filled"
+							required
+							fullWidth
+							sx={{
+								'& .MuiFilledInput-root': {
+									backgroundColor: 'rgba(255, 255, 255, 0.08)',
+									'&:hover': {
+										backgroundColor: 'rgba(255, 255, 255, 0.12)',
+									},
+									'&.Mui-focused': {
+										backgroundColor: 'rgba(255, 255, 255, 0.15)',
+									},
+								},
+								'& .MuiInputLabel-root': {
+									color: 'rgba(255, 255, 255, 0.7)',
+									fontWeight: 600,
+									'&.Mui-focused': {
+										color: 'secondary.main',
+									},
+								},
+								'& .MuiFilledInput-input': {
+									color: '#ffffff',
+									paddingTop: '24px',
+									paddingBottom: '12px',
+								}
+							}}
+						/>
+					)}
+				/>
+			</div>
+
 
 			<Controller
 				name="password"
@@ -100,56 +126,55 @@ function JwtSignInForm() {
 				render={({ field }) => (
 					<TextField
 						{...field}
-						className="mb-6"
-						label="Password"
+						className="mb-[10px]"
+						label="Contraseña"
 						type="password"
 						error={!!errors.password}
 						helperText={errors?.password?.message}
-						variant="outlined"
+						variant="filled"
 						required
 						fullWidth
+						sx={{
+							'& .MuiFilledInput-root': {
+								backgroundColor: 'rgba(255, 255, 255, 0.08)',
+								'&:hover': {
+									backgroundColor: 'rgba(255, 255, 255, 0.12)',
+								},
+								'&.Mui-focused': {
+									backgroundColor: 'rgba(255, 255, 255, 0.15)',
+								},
+							},
+							'& .MuiInputLabel-root': {
+								color: 'rgba(255, 255, 255, 0.7)',
+								fontWeight: 600,
+								'&.Mui-focused': {
+									color: 'secondary.main',
+								},
+							},
+							'& .MuiFilledInput-input': {
+								color: '#ffffff',
+								paddingTop: '24px',
+								paddingBottom: '12px',
+							}
+						}}
 					/>
 				)}
 			/>
 
-			<div className="flex flex-col items-center justify-center sm:flex-row sm:justify-between">
-				<Controller
-					name="remember"
-					control={control}
-					render={({ field }) => (
-						<FormControl>
-							<FormControlLabel
-								label="Remember me"
-								control={
-									<Checkbox
-										size="small"
-										{...field}
-									/>
-								}
-							/>
-						</FormControl>
-					)}
-				/>
 
-				<Link
-					className="text-md font-medium"
-					to="/#"
+			<div className='mt-5'>
+				<Button
+					variant="contained"
+					color="secondary"
+					className="mt-4 w-full"
+					aria-label="Iniciar Sesión"
+					disabled={_.isEmpty(dirtyFields) || !isValid}
+					type="submit"
+					size="large"
 				>
-					Forgot password?
-				</Link>
+					Iniciar Sesión
+				</Button>
 			</div>
-
-			<Button
-				variant="contained"
-				color="secondary"
-				className="mt-4 w-full"
-				aria-label="Sign in"
-				disabled={_.isEmpty(dirtyFields) || !isValid}
-				type="submit"
-				size="large"
-			>
-				Sign in
-			</Button>
 		</form>
 	);
 }

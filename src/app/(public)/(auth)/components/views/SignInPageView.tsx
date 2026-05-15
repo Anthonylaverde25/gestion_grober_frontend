@@ -1,107 +1,77 @@
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import { useState } from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import _ from 'lodash';
-import { lighten } from '@mui/material/styles';
 import JwtLoginTab from '../tabs/sign-in/JwtSignInTab';
-import FirebaseSignInTab from '../tabs/sign-in/FirebaseSignInTab';
-import AwsSignInTab from '../tabs/sign-in/AwsSignInTab';
 import SignInPageTitle from '../ui/SignInPageTitle';
-import AuthPagesMessageSection from '../ui/AuthPagesMessageSection';
+import { styled, useTheme } from '@mui/material/styles';
 
-const tabs = [
-	{
-		id: 'jwt',
-		title: 'JWT',
-		logo: '/assets/images/logo/jwt.svg',
-		logoClass: 'h-9 p-1 bg-black rounded-lg'
-	},
-	{
-		id: 'firebase',
-		title: 'Firebase',
-		logo: '/assets/images/logo/firebase.svg',
-		logoClass: 'h-9'
-	},
-	{
-		id: 'aws',
-		title: 'AWS',
-		logo: '/assets/images/logo/aws-amplify.svg',
-		logoClass: 'h-9'
+const Watermark = styled('div')(() => ({
+	position: 'absolute',
+	top: '-250px',
+	left: '-250px',
+	width: '1400px',
+	height: '1400px',
+	display: 'flex',
+	alignItems: 'center',
+	justifyContent: 'center',
+	zIndex: 0,
+	pointerEvents: 'none',
+	opacity: 0.1,
+	'& img': {
+		width: '100%',
+		height: 'auto',
+		filter: 'grayscale(1) brightness(2)',
 	}
-];
+}));
 
 /**
  * The sign in page.
+ * Ultra-Minimalist: No Card Design.
  */
 function SignInPageView() {
-	const [selectedTabId, setSelectedTabId] = useState(tabs[0].id);
-
-	function handleSelectTab(id: string) {
-		setSelectedTabId(id);
-	}
+	const theme = useTheme();
+	const isDark = theme.palette.mode === 'dark';
 
 	return (
-		<div className="flex min-w-0 flex-auto flex-col items-center sm:flex-row sm:justify-center md:items-start md:justify-start">
-			<Paper className="h-full w-full px-4 py-2 sm:h-auto sm:w-auto sm:rounded-xl sm:p-12 sm:shadow-sm md:flex md:h-full md:w-1/2 md:items-center md:justify-end md:rounded-none md:p-16 md:shadow-none ltr:border-r-1 rtl:border-l-1">
-				<div className="mx-auto flex w-full max-w-80 flex-col gap-8 sm:mx-0 sm:w-80">
-					<SignInPageTitle />
-					<div>
-						<Tabs
-							value={_.findIndex(tabs, { id: selectedTabId })}
-							variant="fullWidth"
-							className="mb-8 w-full"
-							classes={{
-								indicator: 'flex justify-center bg-transparent w-full h-full'
-							}}
-							TabIndicatorProps={{
-								children: (
-									<Box
-										sx={{ borderColor: (theme) => theme.vars.palette.secondary.main }}
-										className="h-full w-full rounded-lg border-1 border-solid"
-									/>
-								)
-							}}
-						>
-							{tabs.map((item) => (
-								<Tab
-									disableRipple
-									onClick={() => handleSelectTab(item.id)}
-									key={item.id}
-									icon={
-										<img
-											className={item.logoClass}
-											src={item.logo}
-											alt={item.title}
-										/>
-									}
-									className="min-w-0"
-									label={item.title}
-								/>
-							))}
-						</Tabs>
+		<Box
+			className="flex min-h-full w-full flex-col items-center justify-center p-16 sm:p-24"
+			sx={{
+				background: 'radial-gradient(circle at center, #1e293b 0%, #0f172a 100%)',
+				position: 'relative',
+				overflow: 'hidden'
+			}}
+		>
+			{/* Large Brand Watermark */}
+			<Watermark>
+				<img
+					src={isDark ? "/assets/images/logo/rxna_full_logo_dark.svg" : "/assets/images/logo/rxna_full_logo.svg"}
+					alt="Watermark"
+				/>
+			</Watermark>
 
-						{selectedTabId === 'jwt' && <JwtLoginTab />}
-						{selectedTabId === 'firebase' && <FirebaseSignInTab />}
-						{selectedTabId === 'aws' && <AwsSignInTab />}
-					</div>
+			{/* Background elements for industrial feel */}
+			<Box
+				className="absolute inset-0 opacity-10 pointer-events-none"
+				sx={{
+					backgroundImage: 'radial-gradient(#64748b 1px, transparent 1px)',
+					backgroundSize: '40px 40px',
+				}}
+			/>
 
-					<Box
-						className="text-md rounded-lg px-4 py-2 leading-[1.625]"
-						sx={{
-							backgroundColor: (theme) => lighten(theme.palette.primary.main, 0.8),
-							color: 'primary.dark'
-						}}
-					>
-						You are browsing <b>Fuse React Demo</b>. Click on the "Sign in" button to access the Demo and
-						Documentation.
-					</Box>
-				</div>
-			</Paper>
+			<Box className="relative z-10 w-full max-w-[600px] flex flex-col gap-4">
+				<SignInPageTitle />
+				<JwtLoginTab />
 
-			<AuthPagesMessageSection />
-		</div>
+				<Box
+					className="mt-8 flex items-center"
+					sx={{ opacity: 0.3 }}
+				>
+					<div className="w-2 h-2 rounded-full bg-secondary-main mr-3" />
+					<span className="text-[10px] font-bold tracking-[0.2em] uppercase text-white">
+						Industrial Secure Terminal
+					</span>
+					<div className="flex-grow ml-4 border-t border-white/10" />
+				</Box>
+			</Box>
+		</Box>
 	);
 }
 
