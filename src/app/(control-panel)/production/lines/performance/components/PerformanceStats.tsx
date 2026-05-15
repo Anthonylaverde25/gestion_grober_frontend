@@ -3,9 +3,11 @@ import { useTheme } from "@mui/material/styles";
 
 interface PerformanceStatsProps {
   furnaces: Furnace[];
+  summary?: { avg_forming: number; avg_packing: number };
+  layout?: 'vertical' | 'horizontal';
 }
 
-export default function PerformanceStats({ furnaces }: PerformanceStatsProps) {
+export default function PerformanceStats({ furnaces, summary, layout = 'vertical' }: PerformanceStatsProps) {
   const theme = useTheme();
   const isDark = theme.palette.mode === 'dark';
 
@@ -30,9 +32,9 @@ export default function PerformanceStats({ furnaces }: PerformanceStatsProps) {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className={`flex ${layout === 'horizontal' ? 'flex-col md:flex-row' : 'flex-col'} gap-6 w-full`}>
       {/* Active Campaigns Card */}
-      <div className="border p-8 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
+      <div className="flex-1 border p-8 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
         <span className="font-label-caps text-[11px] uppercase opacity-70" style={labelStyle}>
           Máquinas en Campaña
         </span>
@@ -56,29 +58,35 @@ export default function PerformanceStats({ furnaces }: PerformanceStatsProps) {
       </div>
 
       {/* Global Yield (Average Forma) Card */}
-      <div className="border p-8 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
+      <div className="flex-1 border p-8 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
         <span className="font-label-caps text-[11px] uppercase opacity-70" style={labelStyle}>
           Eficiencia Forma (Avg)
         </span>
         <div className="flex items-end gap-2">
-          <span className="font-headline-md text-24 font-black">--.-%</span>
+          <span className="font-headline-md text-24 font-black">
+            {summary?.avg_forming != null ? `${summary.avg_forming}%` : '--.-%'}
+          </span>
           <span className="font-label-caps text-[10px] mb-1 font-bold" style={labelStyle}>
             Target 95%
           </span>
         </div>
         <div className="text-[11px] font-medium flex items-center gap-2 mt-2" style={labelStyle}>
-          <span className="material-symbols-outlined text-[16px] text-amber-500">warning</span>
-          Datos en sincronización...
+          <span className="material-symbols-outlined text-[16px] text-amber-500">
+            {summary ? "check_circle" : "warning"}
+          </span>
+          {summary ? "Datos en tiempo real" : "Datos en sincronización..."}
         </div>
       </div>
 
       {/* Packing Yield Card */}
-      <div className="border p-8 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
+      <div className="flex-1 border p-8 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
         <span className="font-label-caps text-[11px] uppercase opacity-70" style={labelStyle}>
           Eficiencia Empaque (Avg)
         </span>
         <div className="flex items-end gap-2">
-          <span className="font-headline-md text-24 font-black">--.-%</span>
+          <span className="font-headline-md text-24 font-black">
+            {summary?.avg_packing != null ? `${summary.avg_packing}%` : '--.-%'}
+          </span>
           <span className="font-label-caps text-[10px] mb-1 font-bold" style={labelStyle}>
             Target 98%
           </span>

@@ -15,6 +15,7 @@ import Button from '@mui/material/Button';
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import WatermarkView from '@/app/components/ui/WatermarkView';
+import { useLinesPerformanceSummary } from '@/app/features/production/hooks/useLinesPerformanceSummary';
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -42,6 +43,7 @@ export default function LinesPerformancePage() {
   const [showOnlyActive, setShowOnlyActive] = useState(false);
   const theme = useTheme();
   const navigate = useNavigate();
+  const { data: performanceSummary, isLoading: summaryLoading } = useLinesPerformanceSummary();
 
   const totalActiveCampaigns = useMemo(() => {
     return furnaces.reduce((acc, f) => acc + (f.machines?.filter((m: any) => m.currentCampaignId).length || 0), 0);
@@ -137,7 +139,7 @@ export default function LinesPerformancePage() {
                 </Typography>
               </div>
 
-              <PerformanceStats furnaces={filteredFurnaces} />
+              <PerformanceStats furnaces={filteredFurnaces} summary={performanceSummary} />
             </aside>
           )}
 
@@ -157,19 +159,6 @@ export default function LinesPerformancePage() {
               </div>
             )}
           </div>
-
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="fixed bottom-8 right-8 w-14 h-14 btn-primary rounded-full shadow-lg flex items-center justify-center transition-all z-99"
-          >
-            <span
-              className="material-symbols-outlined"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              add
-            </span>
-          </motion.button>
         </div>
       }
     />

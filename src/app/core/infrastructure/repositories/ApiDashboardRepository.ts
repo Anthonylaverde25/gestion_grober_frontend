@@ -34,4 +34,10 @@ export class ApiDashboardRepository {
     const response = await axiosInstance.get('/api/v1/dashboard/overview', { params });
     return response.data.data;
   }
+
+  async getLinesPerformanceSummary(companyId?: string): Promise<{ avg_forming: number; avg_packing: number }> {
+    const params = companyId ? { company_id: companyId } : {};
+    const response = await axiosInstance.get('/api/v1/dashboard/lines-performance/summary', { params });
+    return response.data.data;
+  }
 }

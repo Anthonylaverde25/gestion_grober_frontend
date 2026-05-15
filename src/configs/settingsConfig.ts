@@ -57,7 +57,7 @@ const settingsConfig: FuseSettingsConfigType = {
 	/**
 	 * The loginRedirectUrl property defines the default redirect URL for the logged-in user.
 	 */
-	loginRedirectUrl: '/'
+	loginRedirectUrl: '/dashboard'
 };
 
 export default settingsConfig;

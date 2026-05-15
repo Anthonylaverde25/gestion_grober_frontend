@@ -1,8 +1,9 @@
-// src/styles/scss/base/_buttons.scss
+/* src/styles/scss/base/_buttons.scss */
+@use "sass:color";
 @use "../abstracts/colors" as *;
 
-// Estilos para los botones primarios en los headers de las páginas
-// y cualquier botón que use la clase .btn-primary-industrial
+/* Estilos para los botones primarios en los headers de las páginas
+   y cualquier botón que use la clase .btn-primary-industrial */
 
 .btn-primary {
   background-color: $industrial-primary !important;
@@ -10,8 +11,9 @@
   font-weight: 800 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.05em !important;
-  border-radius: 6px !important; // Más cuadrado/industrial
-  padding: 10px 24px !important;
+  font-size: 12px !important;
+  border-radius: 6px !important; /* Más cuadrado/industrial */
+  padding: 6px 16px !important;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   display: inline-flex;
@@ -20,7 +22,7 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
 
   &:hover {
-    background-color: lighten($industrial-primary, 5%) !important;
+    background-color: color.adjust($industrial-primary, $lightness: 5%) !important;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
     transform: translateY(-1px);
     border-color: rgba(255, 255, 255, 0.2) !important;
@@ -37,16 +39,16 @@
     transform: none;
   }
 
-  // Soporte para iconos de Lucide/MUI dentro del botón
+  /* Soporte para iconos de Lucide/MUI dentro del botón */
   svg,
   .MuiSvgIcon-root {
-    margin-right: 8px;
-    width: 18px;
-    height: 18px;
+    margin-right: 6px;
+    width: 14px;
+    height: 14px;
   }
 }
 
-// Alias para compatibilidad con MUI
+/* Alias para compatibilidad con MUI */
 .MuiButton-containedPrimary {
   @extend .btn-primary;
 }
