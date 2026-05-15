@@ -1,8 +1,8 @@
-// src/styles/scss/base/_buttons.scss
+/* src/styles/scss/base/_buttons.scss */
 @use "../abstracts/colors" as *;
 
-// Estilos para los botones primarios en los headers de las páginas
-// y cualquier botón que use la clase .btn-primary-industrial
+/* Estilos para los botones primarios en los headers de las páginas
+   y cualquier botón que use la clase .btn-primary-industrial */
 
 .btn-primary {
   background-color: $industrial-primary !important;
@@ -37,7 +37,7 @@
     transform: none;
   }
 
-  // Soporte para iconos de Lucide/MUI dentro del botón
+  /* Soporte para iconos de Lucide/MUI dentro del botón */
   svg,
   .MuiSvgIcon-root {
     margin-right: 8px;
@@ -46,7 +46,7 @@
   }
 }
 
-// Alias para compatibilidad con MUI
+/* Alias para compatibilidad con MUI */
 .MuiButton-containedPrimary {
   @extend .btn-primary;
 }
