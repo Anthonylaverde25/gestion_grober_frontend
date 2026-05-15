@@ -22,9 +22,15 @@ function MachinesTabView() {
     isLoading,
     createMachine,
     isCreating,
+    updateMachine,
+    isUpdating,
     changeMachineArticle,
     isChangingArticle,
   } = useMachines();
+
+  const handleUpdateStatus = async (id: string, status: string) => {
+    await updateMachine({ id, data: { status } });
+  };
 
   const furnaceNamesById = useMemo(
     () =>
@@ -95,6 +101,8 @@ function MachinesTabView() {
             articleNamesById={articleNamesById}
             isLoading={isLoading || isLoadingFurnaces || isLoadingArticles}
             onChangeArticle={handleOpenArticleDialog}
+            onUpdateStatus={handleUpdateStatus}
+            isUpdating={isUpdating}
           />
         </Box>
       </div>

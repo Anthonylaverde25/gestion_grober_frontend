@@ -45,19 +45,19 @@ export default function MachinePerformanceCard({ machine }: MachinePerformanceCa
         style={cardStyle}
       >
         <div className="flex justify-between items-start">
-          <div>
-            <h3 className="font-data-tabular text-body-main font-semibold">
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-black uppercase tracking-tighter opacity-50" style={secondaryTextStyle}>
+              MÁQUINA | LÍNEA
+            </span>
+            <h3 className="font-data-tabular text-body-main font-black uppercase text-[15px] tracking-tight">
               {machine.name}
             </h3>
-            <p className="text-[12px]" style={secondaryTextStyle}>
-              ID: {machine.id.split("-")[0]}
-            </p>
           </div>
           <span
-            className={`px-2 py-0.5 text-[10px] font-bold rounded border uppercase tracking-wider ${
+            className={`px-2 py-1 text-[9px] font-black rounded-sm border uppercase tracking-widest ${
               hasCampaign
-                ? "bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800"
-                : "bg-slate-200 text-slate-700 border-slate-300 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700"
+                ? "bg-blue-600 text-white border-blue-700 shadow-sm"
+                : "bg-slate-100 text-slate-600 border-slate-300 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700"
             }`}
           >
             {hasCampaign ? "En Campaña" : "Disponible"}
@@ -106,6 +106,7 @@ export default function MachinePerformanceCard({ machine }: MachinePerformanceCa
                 Log Yield
               </button>
 
+              {/* 
               <Tooltip title="Vista de Tabla">
                 <button
                   onClick={() => setIsPackingModalOpen(true)}
@@ -114,7 +115,8 @@ export default function MachinePerformanceCard({ machine }: MachinePerformanceCa
                 >
                   <span className="material-symbols-outlined text-[18px]">grid_on</span>
                 </button>
-              </Tooltip>
+              </Tooltip> 
+              */}
 
               <Tooltip title="Historial de Rendimiento">
                 <button
@@ -127,19 +129,17 @@ export default function MachinePerformanceCard({ machine }: MachinePerformanceCa
               </Tooltip>
             </>
           ) : (
-            <button
-              onClick={() => setIsStartModalOpen(true)}
-              className="flex-1 h-10 font-label-caps text-label-caps rounded-none border active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-              style={{ borderColor: theme.palette.divider, color: theme.palette.text.secondary }}
+            <div
+              className="flex-1 h-10 font-label-caps text-[10px] font-black uppercase tracking-widest rounded-none border flex items-center justify-center gap-2 opacity-60"
+              style={{ borderColor: theme.palette.divider, color: theme.palette.text.secondary, backgroundColor: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)' }}
             >
-              <span className="material-symbols-outlined text-[18px]">play_arrow</span>
-              Iniciar Campaña
-            </button>
+              <span className="material-symbols-outlined text-[18px]">block</span>
+              Sin Producción Activa
+            </div>
           )}
         </div>
       </div>
 
-      <StartCampaignModal open={isStartModalOpen} onClose={() => setIsStartModalOpen(false)} machine={machine} />
       <RegisterLineYieldModal open={isYieldModalOpen} onClose={() => setIsYieldModalOpen(false)} machine={machine} />
       <RegisterPackingSheetModal open={isPackingModalOpen} onClose={() => setIsPackingModalOpen(false)} machine={machine} />
     </>

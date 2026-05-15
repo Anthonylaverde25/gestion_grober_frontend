@@ -7,11 +7,8 @@ import UserMenu from 'src/components/theme-layouts/components/UserMenu';
 import Logo from '../../../../components/Logo';
 
 const Root = styled('div')(({ theme }) => ({
-	backgroundColor: '#eff6ff', // bg-blue-50
+	backgroundColor: theme.vars.palette.background.paper,
 	color: theme.vars.palette.text.primary,
-	...theme.applyStyles('dark', {
-		backgroundColor: theme.vars.palette.background.default
-	}),
 	'& ::-webkit-scrollbar-thumb': {
 		boxShadow: `inset 0 0 0 20px ${'rgba(255, 255, 255, 0.24)'}`,
 		...theme.applyStyles('light', {

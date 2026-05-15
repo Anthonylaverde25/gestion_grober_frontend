@@ -9,7 +9,7 @@ import { Box } from "@mui/material";
 
 function FurnacesTabView() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { furnaces, isLoading, createFurnace, isCreating } = useFurnaces();
+  const { furnaces, isLoading, createFurnace, isCreating, updateFurnace, isUpdating } = useFurnaces();
 
   const handleOpenDialog = () => setIsDialogOpen(true);
   const handleCloseDialog = () => setIsDialogOpen(false);
@@ -20,6 +20,10 @@ function FurnacesTabView() {
       glassTypeId: data.glassTypeId!,
       maxCapacityTons: data.maxCapacityTons!,
     });
+  };
+
+  const handleUpdateStatus = async (id: string, status: string) => {
+    await updateFurnace({ id, data: { status } });
   };
 
   return (
@@ -36,7 +40,12 @@ function FurnacesTabView() {
         />
 
         <Box className="w-full">
-          <FurnacesTable data={furnaces} isLoading={isLoading} />
+          <FurnacesTable 
+            data={furnaces} 
+            isLoading={isLoading} 
+            onUpdateStatus={handleUpdateStatus}
+            isUpdating={isUpdating}
+          />
         </Box>
       </div>
 

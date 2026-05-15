@@ -21,10 +21,6 @@ const Route: FuseRouteItemType = {
         ),
         children: [
                 {
-                        path: 'account',
-                        element: <AccountTabView />
-                },
-                {
                         path: 'furnaces',
                         element: <FurnacesTabView />
                 },
@@ -33,16 +29,12 @@ const Route: FuseRouteItemType = {
                         element: <MachinesTabView />
                 },
                 {
-                        path: 'notifications',
-                        element: <NotificationsTabView />
-                },
-                {
                         path: 'team',
                         element: <TeamTabView />
                 },
                 {
                         path: '',
-                        element: <Navigate to="account" />
+                        element: <Navigate to="furnaces" />
                 }
         ]
 };

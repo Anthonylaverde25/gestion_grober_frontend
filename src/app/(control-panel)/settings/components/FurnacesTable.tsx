@@ -5,7 +5,8 @@ import {
   type MRT_ColumnDef,
 } from 'material-react-table';
 import { Furnace } from '@/app/core/domain/entities/Furnace';
-import { Box, Chip, IconButton, Tooltip, Typography, Button } from '@mui/material';
+import { Box, Chip, IconButton, Tooltip, Typography, Button, MenuItem, Select, FormControl } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import { MRT_Localization_ES } from 'material-react-table/locales/es';
 import EditIcon from '@mui/icons-material/EditOutlined';
 import VisibilityIcon from '@mui/icons-material/VisibilityOutlined';
@@ -14,9 +15,11 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 interface FurnacesTableProps {
   data: Furnace[];
   isLoading: boolean;
+  onUpdateStatus?: (id: string, status: string) => void;
+  isUpdating?: boolean;
 }
 
-export function FurnacesTable({ data, isLoading }: FurnacesTableProps) {
+export function FurnacesTable({ data, isLoading, onUpdateStatus, isUpdating }: FurnacesTableProps) {
   const columns = useMemo<MRT_ColumnDef<Furnace>[]>(
     () => [
       {
@@ -45,27 +48,51 @@ export function FurnacesTable({ data, isLoading }: FurnacesTableProps) {
       {
         accessorKey: 'status',
         header: 'Estado Operativo',
-        size: 150,
-        Cell: ({ cell }) => {
-          const status = cell.getValue<string>();
-          const colors: Record<string, any> = {
-            operational: { label: 'OPERATIVO', color: 'success' },
-            maintenance: { label: 'MANTENIMIENTO', color: 'warning' },
-            shutdown: { label: 'APAGADO', color: 'error' },
-          };
-          const config = colors[status] || { label: status, color: 'default' };
-          return (
-            <Chip 
-              label={config.label} 
-              color={config.color} 
-              size="small" 
-              sx={{ height: 20, fontSize: 10, fontWeight: 700 }}
-            />
-          );
-        },
+        size: 180,
+        Cell: ({ row }) => (
+          <FormControl size="small" fullWidth>
+            <Select
+              value={row.original.status}
+              onChange={(e) => {
+                if (onUpdateStatus) {
+                  onUpdateStatus(row.original.id, e.target.value as string);
+                }
+              }}
+              disabled={isUpdating}
+              sx={{ 
+                height: 28, 
+                fontSize: '10px', 
+                fontWeight: 800,
+                backgroundColor: (theme) => alpha(theme.palette.background.default, 0.5),
+                '& .MuiSelect-select': {
+                  py: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  textTransform: 'uppercase'
+                },
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'divider'
+                }
+              }}
+            >
+              <MenuItem value="operational" sx={{ fontSize: '10px', fontWeight: 800 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'success.main', mr: 1 }} />
+                OPERATIVO
+              </MenuItem>
+              <MenuItem value="maintenance" sx={{ fontSize: '10px', fontWeight: 800 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'warning.main', mr: 1 }} />
+                MANTENIMIENTO
+              </MenuItem>
+              <MenuItem value="shutdown" sx={{ fontSize: '10px', fontWeight: 800 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'error.main', mr: 1 }} />
+                APAGADO
+              </MenuItem>
+            </Select>
+          </FormControl>
+        ),
       },
     ],
-    [],
+    [onUpdateStatus, isUpdating],
   );
 
   const table = useMaterialReactTable({
@@ -152,9 +179,9 @@ export function FurnacesTable({ data, isLoading }: FurnacesTableProps) {
     },
     muiTableHeadCellProps: {
       sx: {
-        backgroundColor: '#f8f9fa',
+        backgroundColor: (theme) => theme.palette.mode === 'dark' ? alpha(theme.palette.primary.main, 0.05) : '#f8f9fa',
         fontWeight: 700,
-        color: '#1d2d3e',
+        color: 'text.primary',
         textTransform: 'uppercase',
         fontSize: '11px',
         letterSpacing: '0.05em',

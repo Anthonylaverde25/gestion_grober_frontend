@@ -58,9 +58,9 @@ export default function CampaignsPage() {
             actions={
               <Button
                 variant="contained"
-                color="secondary"
+                color="primary"
+                className="btn-primary"
                 startIcon={<AddIcon />}
-                sx={{ borderRadius: '8px', fontWeight: 800, textTransform: 'none' }}
                 size="large"
                 onClick={handleOpenDialog}
               >

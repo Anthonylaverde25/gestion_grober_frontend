@@ -7,15 +7,6 @@ const SettingsAppNavigation: FuseNavItemType = {
 	icon: 'lucide:settings',
 	url: '/settings',
 	children: [
-
-		{
-			id: 'apps.settings.account',
-			icon: 'lucide:circle-user',
-			title: 'Account',
-			type: 'item',
-			url: '/settings/account',
-			subtitle: 'Manage your public profile and private information'
-		},
 		{
 			id: 'apps.settings.furnaces',
 			icon: 'lucide:flame',
@@ -31,15 +22,6 @@ const SettingsAppNavigation: FuseNavItemType = {
 			type: 'item',
 			url: '/settings/machines',
 			subtitle: 'Gestión y mantenimiento de la maquinaria'
-		},
-		{
-			id: 'apps.settings.notifications',
-
-			icon: 'lucide:bell',
-			title: 'Notifications',
-			type: 'item',
-			url: '/settings/notifications',
-			subtitle: "Manage when you'll be notified on which channels"
 		},
 		{
 			id: 'apps.settings.team',

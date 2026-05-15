@@ -7,4 +7,5 @@ export interface MachineRepository {
     machineId: string,
     articleId: string | null,
   ): Promise<Machine>;
+  update(id: string, machine: Partial<Machine>): Promise<Machine>;
 }

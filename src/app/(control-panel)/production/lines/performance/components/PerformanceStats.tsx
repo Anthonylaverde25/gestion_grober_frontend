@@ -30,66 +30,64 @@ export default function PerformanceStats({ furnaces }: PerformanceStatsProps) {
   };
 
   return (
-    <header className="mb-20">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {/* Active Campaigns Card */}
-        <div className="border p-10 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
-          <span className="font-label-caps text-label-caps uppercase" style={labelStyle}>
-            Máquinas en Campaña
+    <div className="flex flex-col gap-6">
+      {/* Active Campaigns Card */}
+      <div className="border p-8 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
+        <span className="font-label-caps text-[11px] uppercase opacity-70" style={labelStyle}>
+          Máquinas en Campaña
+        </span>
+        <div className="flex items-end gap-2">
+          <span className="font-headline-md text-24 font-black">
+            {activeCampaigns} / {totalMachines}
           </span>
-          <div className="flex items-end gap-2">
-            <span className="font-headline-md text-headline-md">
-              {activeCampaigns} / {totalMachines}
-            </span>
-            <span className="font-label-caps text-label-caps mb-1" style={labelStyle}>
-              Activas
-            </span>
-          </div>
-          <div className="w-full h-1.5 mt-2 rounded-full overflow-hidden" style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}>
-            <div
-              className="h-full transition-all duration-1000"
-              style={{
-                width: `${totalMachines > 0 ? (activeCampaigns / totalMachines) * 100 : 0}%`,
-                backgroundColor: theme.palette.primary.main
-              }}
-            ></div>
-          </div>
+          <span className="font-label-caps text-[10px] mb-1 font-bold" style={labelStyle}>
+            Activas
+          </span>
         </div>
-
-        {/* Global Yield (Average Forma) Card */}
-        <div className="border p-10 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
-          <span className="font-label-caps text-label-caps uppercase" style={labelStyle}>
-            Promedio Eficiencia Forma
-          </span>
-          <div className="flex items-end gap-2">
-            <span className="font-headline-md text-headline-md">--.-%</span>
-            <span className="font-label-caps text-label-caps mb-1" style={labelStyle}>
-              Target 95%
-            </span>
-          </div>
-          <div className="text-[12px] font-medium flex items-center gap-1" style={labelStyle}>
-            <span className="material-symbols-outlined text-sm">trending_up</span>{" "}
-            Cálculo en tiempo real pendiente
-          </div>
-        </div>
-
-        {/* Packing Yield Card */}
-        <div className="border p-10 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
-          <span className="font-label-caps text-label-caps uppercase" style={labelStyle}>
-            Promedio Eficiencia Empaque
-          </span>
-          <div className="flex items-end gap-2">
-            <span className="font-headline-md text-headline-md">--.-%</span>
-            <span className="font-label-caps text-label-caps mb-1" style={labelStyle}>
-              Target 98%
-            </span>
-          </div>
-          <div className="text-[12px] font-medium flex items-center gap-1" style={labelStyle}>
-            <span className="material-symbols-outlined text-sm">analytics</span>{" "}
-            Monitoreo de rendimiento activo
-          </div>
+        <div className="w-full h-2 mt-2 rounded-full overflow-hidden" style={{ backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }}>
+          <div
+            className="h-full transition-all duration-1000 shadow-[0_0_10px_rgba(59,130,246,0.5)]"
+            style={{
+              width: `${totalMachines > 0 ? (activeCampaigns / totalMachines) * 100 : 0}%`,
+              backgroundColor: theme.palette.primary.main
+            }}
+          ></div>
         </div>
       </div>
-    </header>
+
+      {/* Global Yield (Average Forma) Card */}
+      <div className="border p-8 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
+        <span className="font-label-caps text-[11px] uppercase opacity-70" style={labelStyle}>
+          Eficiencia Forma (Avg)
+        </span>
+        <div className="flex items-end gap-2">
+          <span className="font-headline-md text-24 font-black">--.-%</span>
+          <span className="font-label-caps text-[10px] mb-1 font-bold" style={labelStyle}>
+            Target 95%
+          </span>
+        </div>
+        <div className="text-[11px] font-medium flex items-center gap-2 mt-2" style={labelStyle}>
+          <span className="material-symbols-outlined text-[16px] text-amber-500">warning</span>
+          Datos en sincronización...
+        </div>
+      </div>
+
+      {/* Packing Yield Card */}
+      <div className="border p-8 flex flex-col gap-2 shadow-none rounded-none" style={cardStyle}>
+        <span className="font-label-caps text-[11px] uppercase opacity-70" style={labelStyle}>
+          Eficiencia Empaque (Avg)
+        </span>
+        <div className="flex items-end gap-2">
+          <span className="font-headline-md text-24 font-black">--.-%</span>
+          <span className="font-label-caps text-[10px] mb-1 font-bold" style={labelStyle}>
+            Target 98%
+          </span>
+        </div>
+        <div className="text-[11px] font-medium flex items-center gap-2 mt-2" style={labelStyle}>
+          <span className="material-symbols-outlined text-[16px] text-blue-500">info</span>
+          Monitoreo activo
+        </div>
+      </div>
+    </div>
   );
 }

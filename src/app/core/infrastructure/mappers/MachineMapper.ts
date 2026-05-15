@@ -16,16 +16,16 @@ export class MachineMapper {
     });
   }
 
-  static toDTO(entity: Machine): MachineDTO {
-    return {
-      id: entity.id,
-      company_id: entity.companyId,
-      furnace_id: entity.furnaceId,
-      current_article_id: entity.currentArticleId,
-      name: entity.name,
-      status: entity.status,
-      // Note: mapping current_campaign back to DTO is usually not needed for requests,
-      // but if needed we can omit it or pass null
-    };
+  static toDTO(entity: Partial<Machine>): any {
+    const dto: any = {};
+    
+    if (entity.id) dto.id = entity.id;
+    if (entity.companyId) dto.company_id = entity.companyId;
+    if (entity.furnaceId) dto.furnace_id = entity.furnaceId;
+    if (entity.currentArticleId) dto.current_article_id = entity.currentArticleId;
+    if (entity.name) dto.name = entity.name;
+    if (entity.status) dto.status = entity.status;
+
+    return dto;
   }
 }

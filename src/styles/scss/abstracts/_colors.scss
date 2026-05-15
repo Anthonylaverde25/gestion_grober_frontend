@@ -1,0 +1,13 @@
+// Industrial Palette Grober
+$industrial-surface: #1e293b; // Color para Sidebar, Header y Superficies oscuras
+$industrial-primary: #3b82f6; // Color de acción (Botones) - Azul vibrante
+$industrial-primary-dark: #2563eb; // Variante oscura para Hover/Active
+$industrial-accent: #0ea5e9; // Color de acento (Cian)
+$industrial-text-on-primary: #ffffff;
+
+// MUI & Tailwind Sync
+:root {
+  --industrial-surface: #{$industrial-surface};
+  --industrial-primary: #{$industrial-primary};
+  --industrial-accent: #{$industrial-accent};
+}

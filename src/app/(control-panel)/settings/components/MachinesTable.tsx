@@ -11,7 +11,11 @@ import {
   IconButton,
   Tooltip,
   Typography,
+  FormControl,
+  Select,
+  MenuItem,
 } from "@mui/material";
+import { alpha } from "@mui/material/styles";
 import { MRT_Localization_ES } from "material-react-table/locales/es";
 import EditIcon from "@mui/icons-material/EditOutlined";
 import VisibilityIcon from "@mui/icons-material/VisibilityOutlined";
@@ -25,6 +29,8 @@ interface MachinesTableProps {
   articleNamesById: Record<string, string>;
   isLoading: boolean;
   onChangeArticle: (machine: Machine) => void;
+  onUpdateStatus?: (id: string, status: string) => void;
+  isUpdating?: boolean;
 }
 
 export function MachinesTable({
@@ -33,6 +39,8 @@ export function MachinesTable({
   articleNamesById,
   isLoading,
   onChangeArticle,
+  onUpdateStatus,
+  isUpdating,
 }: MachinesTableProps) {
   const columns = useMemo<MRT_ColumnDef<Machine>[]>(
     () => [
@@ -49,7 +57,7 @@ export function MachinesTable({
       {
         accessorKey: "furnaceId",
         header: "Horno Asociado",
-        size: 220,
+        size: 200,
         Cell: ({ row }) => (
           <Typography className="text-13">
             {furnaceNamesById[row.original.furnaceId] || "Sin referencia"}
@@ -59,7 +67,7 @@ export function MachinesTable({
       {
         accessorKey: "currentArticleId",
         header: "Artículo Actual",
-        size: 280,
+        size: 240,
         Cell: ({ row }) => (
           <Typography className="text-13">
             {row.original.currentArticleId
@@ -72,37 +80,51 @@ export function MachinesTable({
       {
         accessorKey: "status",
         header: "Estado Operativo",
-        size: 150,
-        Cell: ({ cell }) => {
-          const status = cell.getValue<string>();
-          const colors: Record<
-            string,
-            {
-              label: string;
-              color: "success" | "warning" | "error" | "default";
-            }
-          > = {
-            operational: { label: "OPERATIVA", color: "success" },
-            maintenance: { label: "MANTENIMIENTO", color: "warning" },
-            shutdown: { label: "DETENIDA", color: "error" },
-          };
-          const config = colors[status] || {
-            label: status,
-            color: "default" as const,
-          };
-
-          return (
-            <Chip
-              label={config.label}
-              color={config.color}
-              size="small"
-              sx={{ height: 20, fontSize: 10, fontWeight: 700 }}
-            />
-          );
-        },
+        size: 180,
+        Cell: ({ row }) => (
+          <FormControl size="small" fullWidth>
+            <Select
+              value={row.original.status}
+              onChange={(e) => {
+                if (onUpdateStatus) {
+                  onUpdateStatus(row.original.id, e.target.value as string);
+                }
+              }}
+              disabled={isUpdating}
+              sx={{ 
+                height: 28, 
+                fontSize: '10px', 
+                fontWeight: 800,
+                backgroundColor: (theme) => alpha(theme.palette.background.default, 0.5),
+                '& .MuiSelect-select': {
+                  py: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  textTransform: 'uppercase'
+                },
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: 'divider'
+                }
+              }}
+            >
+              <MenuItem value="operational" sx={{ fontSize: '10px', fontWeight: 800 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'success.main', mr: 1 }} />
+                OPERATIVA
+              </MenuItem>
+              <MenuItem value="maintenance" sx={{ fontSize: '10px', fontWeight: 800 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'warning.main', mr: 1 }} />
+                MANTENIMIENTO
+              </MenuItem>
+              <MenuItem value="shutdown" sx={{ fontSize: '10px', fontWeight: 800 }}>
+                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'error.main', mr: 1 }} />
+                DETENIDA
+              </MenuItem>
+            </Select>
+          </FormControl>
+        ),
       },
     ],
-    [articleNamesById, furnaceNamesById],
+    [articleNamesById, furnaceNamesById, onUpdateStatus, isUpdating],
   );
 
   const table = useMaterialReactTable({
@@ -212,12 +234,12 @@ export function MachinesTable({
     },
     muiTableHeadCellProps: {
       sx: {
-        backgroundColor: "#f8f9fa",
+        backgroundColor: (theme) => theme.palette.mode === 'dark' ? alpha(theme.palette.primary.main, 0.05) : '#f8f9fa',
         fontWeight: 700,
-        color: "#1d2d3e",
-        textTransform: "uppercase",
-        fontSize: "11px",
-        letterSpacing: "0.05em",
+        color: 'text.primary',
+        textTransform: 'uppercase',
+        fontSize: '11px',
+        letterSpacing: '0.05em',
       },
     },
     muiTableBodyCellProps: {

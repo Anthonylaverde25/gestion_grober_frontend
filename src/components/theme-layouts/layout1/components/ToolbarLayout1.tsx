@@ -12,6 +12,7 @@ import LanguageSwitcher from "../../components/LanguageSwitcher";
 import NavigationShortcuts from "../../components/navigation/NavigationShortcuts";
 import NavigationSearch from "../../components/navigation/NavigationSearch";
 import QuickPanelToggleButton from "../../components/quickPanel/QuickPanelToggleButton";
+import UserMenu from "../../components/UserMenu";
 import { Layout1ConfigDefaultsType } from "@/components/theme-layouts/layout1/Layout1Config";
 import useThemeMediaQuery from "../../../../@fuse/hooks/useThemeMediaQuery";
 import { AppBar, Divider, IconButton, Tooltip } from "@mui/material";
@@ -44,15 +45,11 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
         id="fuse-toolbar"
         className={clsx("relative z-20 flex", className)}
         sx={(theme) => ({
-          backgroundColor: '#eff6ff', // bg-blue-50
+          backgroundColor: theme.vars.palette.background.paper,
           color: theme.vars.palette.text.primary,
           borderBottom: '1px solid',
           borderColor: theme.vars.palette.divider,
           boxShadow: 'none',
-          ...theme.applyStyles('dark', {
-            backgroundColor: theme.vars.palette.background.default,
-            borderColor: 'transparent',
-          }),
         })}
       >
         <Toolbar className="min-h-12 p-0 md:min-h-16">
@@ -65,7 +62,7 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
               </>
             )}
 
-            {!isMobile && <NavigationShortcuts />}
+            <FullScreenToggle />
           </div>
           <div className="flex items-center overflow-x-auto">
             <CompanySwitcher />
@@ -75,7 +72,6 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
           <div className="flex items-center overflow-x-auto px-2 py-2 md:px-4">
             {/* <LanguageSwitcher /> */}
             <AdjustFontSize />
-            <FullScreenToggle />
             <LightDarkModeToggle
               lightTheme={_.find(themeOptions, { id: "Default" })}
               darkTheme={_.find(themeOptions, { id: "Default Dark" })}
@@ -93,6 +89,22 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
                 </IconButton>
               </Tooltip>
             )}
+
+            <Divider orientation="vertical" flexItem variant="middle" sx={{ height: 24, alignSelf: 'center', mx: 1.5 }} />
+
+            <UserMenu 
+              arrowIcon="lucide:chevron-down" 
+              popoverProps={{
+                anchorOrigin: {
+                  vertical: 'bottom',
+                  horizontal: 'right'
+                },
+                transformOrigin: {
+                  vertical: 'top',
+                  horizontal: 'right'
+                }
+              }}
+            />
 
             {/* <NavigationSearch /> */}
             {/* <QuickPanelToggleButton /> */}

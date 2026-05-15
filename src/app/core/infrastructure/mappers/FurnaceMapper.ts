@@ -18,15 +18,20 @@ export class FurnaceMapper {
     }
 
 
-    static toDTO(entity: Furnace): FurnaceDTO {
-        return {
-            id: entity.id,
-            company_id: entity.companyId,
-            glass_type_id: entity.glassTypeId,
-            name: entity.name,
-            max_capacity_tons: entity.maxCapacityTons,
-            status: entity.status,
-            machines: entity.machines.map(m => MachineMapper.toDTO(m))
-        };
+    static toDTO(entity: Partial<Furnace>): any {
+        const dto: any = {};
+        
+        if (entity.id) dto.id = entity.id;
+        if (entity.companyId) dto.company_id = entity.companyId;
+        if (entity.glassTypeId) dto.glass_type_id = entity.glassTypeId;
+        if (entity.name) dto.name = entity.name;
+        if (entity.maxCapacityTons) dto.max_capacity_tons = entity.maxCapacityTons;
+        if (entity.status) dto.status = entity.status;
+        
+        if (entity.machines) {
+            dto.machines = entity.machines.map(m => MachineMapper.toDTO(m));
+        }
+
+        return dto;
     }
 }

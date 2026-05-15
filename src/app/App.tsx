@@ -88,7 +88,7 @@ function App() {
                   </BusinessProvider>
                 </SnackbarProvider>
               </Authentication>
-              <ReactQueryDevtools initialIsOpen={false} />
+              {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </QueryClientProvider>
           </LocalizationProvider>
         </AppContext>

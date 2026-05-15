@@ -19,6 +19,7 @@ export function useLineYield() {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.production.campaigns.detail(variables.campaignId) });
       // Actualización en caliente para el dashboard
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.production.yields.all() });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
     },
   });
 
@@ -30,6 +31,7 @@ export function useLineYield() {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.production.campaigns.detail(variables.campaignId) });
       // Actualización en caliente para el dashboard
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.production.yields.all() });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.dashboard.all });
     },
   });
 

@@ -19,5 +19,9 @@ export const QUERY_KEYS = {
       all: () => [...QUERY_KEYS.production.all, 'machines'] as const,
       dashboard: (companyId: string) => [...QUERY_KEYS.production.machines.all(), 'dashboard', companyId] as const,
     }
+  },
+  dashboard: {
+    all: ['dashboard'] as const,
+    overview: (companyId?: string) => [...QUERY_KEYS.dashboard.all, 'overview', companyId].filter(Boolean) as const,
   }
 } as const;

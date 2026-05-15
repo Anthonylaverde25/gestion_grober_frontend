@@ -85,7 +85,7 @@ export default function ArticleDetailPage() {
                     actions={
                         <Box sx={{ display: 'flex', gap: 1.5 }}>
                             <Button variant="outlined" startIcon={<span className="material-symbols-outlined">download</span>} sx={{ borderRadius: '8px', fontWeight: 800, textTransform: 'none', borderColor: 'divider', color: 'text.secondary' }}>Descargar Ficha</Button>
-                            <Button variant="contained" color="secondary" sx={{ borderRadius: '8px', fontWeight: 800, textTransform: 'none' }}>Editar Artículo</Button>
+                            <Button variant="contained" color="primary" className="btn-primary" size="large">Editar Artículo</Button>
                         </Box>
                     }
                 />
@@ -110,7 +110,6 @@ export default function ArticleDetailPage() {
                                 <ArticleCampaignHistory 
                                     campaignStats={campaignStats} 
                                 />
-
                             </Box>
                         </Box>
                     </Box>

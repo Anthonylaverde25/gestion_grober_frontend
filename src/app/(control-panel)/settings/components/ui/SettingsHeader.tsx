@@ -17,19 +17,20 @@ export function SettingsHeader({ title, description, action }: SettingsHeaderPro
 	return (
 		<Box sx={{ 
 			px: 3, 
-			py: 3, 
-			borderBottom: '1px solid #f2f2f2',
+			py: 2, 
+			borderBottom: '1px solid',
+			borderColor: 'divider',
 			display: 'flex', 
 			alignItems: 'center', 
 			justifyContent: 'space-between',
-			bgcolor: 'white'
+			bgcolor: (theme) => theme.palette.mode === 'dark' ? 'background.paper' : '#f8fafc'
 		}}>
 			<Box sx={{ flex: 1 }}>
-				<Typography sx={{ fontSize: '20px', fontWeight: 700, color: '#0f172a', letterSpacing: '-0.02em' }}>
+				<Typography variant="h6" sx={{ fontWeight: 900, color: 'text.primary', letterSpacing: '-0.02em', textTransform: 'uppercase', fontSize: '16px' }}>
 					{title}
 				</Typography>
 				{description && (
-					<Typography sx={{ fontSize: '13px', color: '#64748b', mt: 0.5 }}>
+					<Typography sx={{ fontSize: '12px', color: 'text.secondary', mt: 0.2, opacity: 0.8 }}>
 						{description}
 					</Typography>
 				)}
@@ -38,20 +39,11 @@ export function SettingsHeader({ title, description, action }: SettingsHeaderPro
 			{action && (
 				<Button
 					variant="contained"
-					disableElevation
+					color="primary"
+					className="btn-primary"
 					startIcon={action.icon}
 					onClick={action.onClick}
 					disabled={action.disabled || action.loading}
-					sx={{ 
-						bgcolor: '#0f172a',
-						'&:hover': { bgcolor: '#1e293b' },
-						borderRadius: '6px',
-						fontSize: '13px',
-						fontWeight: 600,
-						textTransform: 'none',
-						px: 2,
-						height: '36px'
-					}}
 				>
 					{action.label}
 				</Button>

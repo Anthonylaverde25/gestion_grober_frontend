@@ -81,7 +81,12 @@ export const themesConfig: FuseThemesType = {
 	default: {
 		palette: {
 			mode: 'light',
-			primary: { main: '#1F232B', light: '#363B44', dark: '#0F1115', contrastText: '#FFFFFF' },
+			primary: {
+				main: '#3b82f6',
+				light: '#60a5fa',
+				dark: '#2563eb',
+				contrastText: '#FFFFFF'
+			},
 			secondary: { main: '#1565C0', light: '#3C83D6', dark: '#0E4B90', contrastText: '#FFFFFF' },
 			...neutralsLightTheme,
 			text: { primary: '#1F232B', secondary: '#4B5563', disabled: '#9CA3AF' },
@@ -133,22 +138,111 @@ export const themesConfig: FuseThemesType = {
 			}
 		}
 	},
+	industrialDark: {
+		palette: {
+			mode: 'dark',
+			primary: {
+				main: '#3b82f6',
+				light: '#60a5fa',
+				dark: '#2563eb',
+				contrastText: '#FFFFFF'
+			},
+			secondary: {
+				main: '#3C83D6',
+				light: '#5A9AF0',
+				dark: '#1D5EB0',
+				contrastText: '#FFFFFF'
+			},
+			...neutralsDarkTheme,
+			text: {
+				primary: '#FFFFFF',
+				secondary: 'rgb(148, 163, 184)',
+				disabled: 'rgb(156, 163, 175)'
+			},
+			background: {
+				default: '#0f172a',
+				paper: '#1e293b'
+			},
+			divider: 'rgba(255, 255, 255, 0.12)',
+			action: {
+				active: '#CDD1D9',
+				hover: 'rgba(255,255,255,0.08)',
+				selected: 'rgba(255,255,255,0.16)',
+				disabled: 'rgba(255,255,255,0.3)',
+				disabledBackground: 'rgba(255,255,255,0.12)',
+				focus: 'rgba(255,255,255,0.12)'
+			}
+		}
+	},
 	defaultNavbar: {
 		palette: {
-			mode: 'light',
-			...neutralsLightTheme,
-			primary: { main: '#1F232B', light: '#363B44', dark: '#0F1115', contrastText: '#FFFFFF' },
-			secondary: { main: '#1565C0', light: '#3C83D6', dark: '#0E4B90', contrastText: '#FFFFFF' },
-			text: { primary: '#1F232B', secondary: '#4B5563', disabled: '#9CA3AF' },
-			background: { default: '#E5E7EB', paper: '#FFFFFF' },
-			divider: '#E5E7EB',
+			mode: 'dark',
+			primary: {
+				main: '#3b82f6',
+				light: '#60a5fa',
+				dark: '#2563eb',
+				contrastText: '#FFFFFF'
+			},
+			secondary: {
+				main: '#3C83D6',
+				light: '#5A9AF0',
+				dark: '#1D5EB0',
+				contrastText: '#FFFFFF'
+			},
+			...neutralsDarkTheme,
+			text: {
+				primary: '#FFFFFF',
+				secondary: 'rgb(148, 163, 184)',
+				disabled: 'rgb(156, 163, 175)'
+			},
+			background: {
+				default: '#0f172a',
+				paper: '#1e293b'
+			},
+			divider: 'rgba(255, 255, 255, 0.12)',
 			action: {
-				active: '#4B5563',
-				hover: '#E5E7EB',
-				selected: '#D1D5DB',
-				disabled: '#BFC4CC',
-				disabledBackground: '#F6F7F8',
-				focus: '#D1D5DB'
+				active: '#CDD1D9',
+				hover: 'rgba(255,255,255,0.08)',
+				selected: 'rgba(255,255,255,0.16)',
+				disabled: 'rgba(255,255,255,0.3)',
+				disabledBackground: 'rgba(255,255,255,0.12)',
+				focus: 'rgba(255,255,255,0.12)'
+			}
+		}
+	},
+	defaultToolbar: {
+		palette: {
+			mode: 'dark',
+			primary: {
+				main: '#3b82f6',
+				light: '#60a5fa',
+				dark: '#2563eb',
+				contrastText: '#FFFFFF'
+			},
+			secondary: {
+				main: '#3C83D6',
+				light: '#5A9AF0',
+				dark: '#1D5EB0',
+				contrastText: '#FFFFFF'
+			},
+			...neutralsDarkTheme,
+			text: {
+				primary: '#FFFFFF',
+				secondary: 'rgb(148, 163, 184)',
+				disabled: 'rgb(156, 163, 175)'
+			},
+			background: {
+				default: '#0f172a',
+				paper: '#1e293b'
+			},
+			divider: 'rgba(255, 255, 255, 0.12)',
+			action: {
+				active: '#CDD1D9',
+				hover: 'rgba(255,255,255,0.08)',
+				selected: 'rgba(255,255,255,0.16)',
+				disabled: 'rgba(255,255,255,0.3)',
+				disabledBackground: 'rgba(255,255,255,0.12)',
+				focus: 'rgba(255,255,255,0.12)'
 			}
 		}
 	},

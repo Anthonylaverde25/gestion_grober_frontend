@@ -66,19 +66,6 @@ export default function QuickActions() {
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-      <Tooltip title="Notificaciones" placement="bottom">
-        <IconButton
-          sx={{
-            width: 40,
-            height: 40,
-            color: 'inherit',
-            '&:hover': { bgcolor: 'action.hover' }
-          }}
-        >
-          <FuseSvgIcon size={20}>heroicons-outline:bell</FuseSvgIcon>
-        </IconButton>
-      </Tooltip>
-
       <Tooltip title="Acciones Rápidas" placement="bottom">
         <IconButton
           onClick={handleOpen}

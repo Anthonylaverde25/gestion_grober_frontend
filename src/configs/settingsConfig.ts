@@ -42,7 +42,7 @@ const settingsConfig: FuseSettingsConfigType = {
 	theme: {
 		main: themesConfig.default,
 		navbar: themesConfig.defaultNavbar,
-		toolbar: themesConfig.default,
+		toolbar: themesConfig.defaultToolbar,
 		footer: themesConfig.default
 	},
 

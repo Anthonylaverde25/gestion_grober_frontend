@@ -6,7 +6,7 @@ const themeOptions = [
 		section: {
 			main: themesConfig.default,
 			navbar: themesConfig.defaultNavbar,
-			toolbar: themesConfig.default,
+			toolbar: themesConfig.defaultToolbar,
 			footer: themesConfig.default
 		}
 	},
@@ -14,8 +14,8 @@ const themeOptions = [
 		id: 'Default Dark',
 		section: {
 			main: themesConfig.defaultDark,
-			navbar: themesConfig.defaultDark,
-			toolbar: themesConfig.defaultDark,
+			navbar: themesConfig.defaultNavbar,
+			toolbar: themesConfig.defaultToolbar,
 			footer: themesConfig.defaultDark
 		}
 	},

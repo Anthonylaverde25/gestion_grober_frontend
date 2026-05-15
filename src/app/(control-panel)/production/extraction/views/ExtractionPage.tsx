@@ -115,7 +115,7 @@ export default function ExtractionPage() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center transition-all z-99"
+            className="fixed bottom-8 right-8 w-14 h-14 btn-primary rounded-full shadow-lg flex items-center justify-center transition-all z-99"
           >
             <span
               className="material-symbols-outlined"

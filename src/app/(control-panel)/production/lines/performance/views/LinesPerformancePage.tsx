@@ -90,11 +90,11 @@ export default function LinesPerformancePage() {
               {totalActiveCampaigns === 0 && !isLoading && (
                 <Button
                   variant="contained"
-                  color="secondary"
+                  color="primary"
+                  className="btn-primary"
                   size="small"
                   onClick={() => navigate(furnaces.length === 0 ? '/settings/production' : '/campaigns')}
                   startIcon={<span className="material-symbols-outlined">play_arrow</span>}
-                  sx={{ borderRadius: '8px', fontWeight: 800, textTransform: 'none' }}
                 >
                   {furnaces.length === 0 ? "Configurar" : "Iniciar Campaña"}
                 </Button>
@@ -118,32 +118,50 @@ export default function LinesPerformancePage() {
         />
       }
       content={
-        <>
-          <div className="pb-32 mt-4 px-margin-edge max-w-[1600px] mx-auto w-full pt-8" style={{ color: theme.palette.text.primary }}>
+        <div className="flex flex-col lg:flex-row w-full h-full">
+          {/* Industrial Aside - General Details (Left) */}
+          {!isLoading && totalActiveCampaigns > 0 && (
+            <aside
+              className="w-full lg:w-[360px] border-r p-8 bg-card flex flex-col gap-8 shadow-sm overflow-y-auto"
+              style={{
+                backgroundColor: theme.palette.background.paper,
+                borderColor: theme.palette.divider
+              }}
+            >
+              <div className="flex flex-col gap-2">
+                <Typography variant="h6" className="font-black uppercase tracking-tight text-14" sx={{ color: 'primary.main' }}>
+                  Resumen Operativo
+                </Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                  Estado global de la planta.
+                </Typography>
+              </div>
+
+              <PerformanceStats furnaces={filteredFurnaces} />
+            </aside>
+          )}
+
+          {/* Main Content Area (Right) */}
+          <div className="flex-1 pb-32 mt-4 px-margin-edge pt-8 overflow-y-auto" style={{ color: theme.palette.text.primary }}>
             {totalActiveCampaigns === 0 && !isLoading ? (
               <WatermarkView />
             ) : (
-              <>
-                <PerformanceStats furnaces={filteredFurnaces} />
+              <div className="space-y-stack-lg max-w-[1800px]">
+                {filteredFurnaces.map((furnace) => (
+                  <FurnacePerformanceSection key={furnace.id} furnace={furnace} />
+                ))}
 
-                <div className="space-y-stack-lg">
-                  {filteredFurnaces.map((furnace) => (
-                    <FurnacePerformanceSection key={furnace.id} furnace={furnace} />
-                  ))}
-
-                  {filteredFurnaces.length === 0 && showOnlyActive && (
-                    <WatermarkView />
-                  )}
-                </div>
-              </>
+                {filteredFurnaces.length === 0 && showOnlyActive && (
+                  <WatermarkView />
+                )}
+              </div>
             )}
           </div>
 
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="fixed bottom-8 right-8 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all z-99"
-            style={{ backgroundColor: theme.palette.primary.main, color: theme.palette.primary.contrastText }}
+            className="fixed bottom-8 right-8 w-14 h-14 btn-primary rounded-full shadow-lg flex items-center justify-center transition-all z-99"
           >
             <span
               className="material-symbols-outlined"
@@ -152,7 +170,7 @@ export default function LinesPerformancePage() {
               add
             </span>
           </motion.button>
-        </>
+        </div>
       }
     />
   );

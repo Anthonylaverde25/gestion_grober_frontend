@@ -32,6 +32,13 @@ export class ApiMachineRepository implements MachineRepository {
     return MachineMapper.toDomain(this.unwrapMachineResponse(response.data));
   }
 
+  async update(id: string, machine: Partial<Machine>): Promise<Machine> {
+    const dto = MachineMapper.toDTO(machine);
+    const response = await axiosInstance.patch(`/api/v1/machines/${id}`, dto);
+
+    return MachineMapper.toDomain(this.unwrapMachineResponse(response.data));
+  }
+
   private unwrapMachineResponse(
     response: MachineDTO | { data?: MachineDTO },
   ): MachineDTO {
